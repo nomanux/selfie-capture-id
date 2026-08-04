@@ -3,7 +3,22 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>DMCI Homes Sales — Capture Live Selfie with ID</title>
+    <title>DMCI Homes Sales — Dashboard</title>
+    <!--
+      No favicon is used in this project (no public/ folder, no favicon
+      file). Browsers request /favicon.ico automatically even without a
+      <link> tag, and Chrome in particular caches whatever icon it last saw
+      for a given localhost port across dev servers/projects — that's what
+      keeps showing up in the tab even though nothing here defines one. This
+      explicit empty icon overrides that cache and stops the auto-request.
+    -->
+    <link rel="icon" href="data:," />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
+      rel="stylesheet"
+    />
   </head>
   <body>
     <div id="root"></div>

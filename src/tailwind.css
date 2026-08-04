@@ -1,1 +1,149 @@
 @import "tailwindcss";
+@config "../tailwind.config.ts";
+
+/*
+ * Button system — class-based, not inline utility strings. Button.tsx just
+ * picks btn-{variant} + btn-{size} (or btn-icon + btn-icon-{size}). Editing
+ * a class here is the single place that changes every button in the app,
+ * including the /component reference page.
+ * Reference: Figma file NcMe5sSgPs65q3Ed2rV1Kv, node 9:9698 ("Button CTA").
+ */
+@layer components {
+  .btn-base {
+    @apply inline-flex cursor-pointer items-center justify-center rounded-md font-semibold transition-colors disabled:cursor-not-allowed;
+  }
+
+  .btn-primary {
+    @apply bg-primary-600 text-white hover:bg-primary-700 disabled:bg-gray-100 disabled:text-gray-400;
+  }
+
+  .btn-secondary {
+    @apply border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 disabled:border-gray-200 disabled:bg-white disabled:text-gray-300;
+  }
+
+  .btn-tertiary {
+    @apply bg-transparent text-primary-600 hover:bg-gray-50 hover:text-primary-700 disabled:bg-transparent disabled:text-gray-300;
+  }
+
+  .btn-xs {
+    @apply h-7 gap-1 px-2.5 text-xs;
+  }
+
+  .btn-sm {
+    @apply h-8 gap-1.5 px-3 text-sm;
+  }
+
+  .btn-md {
+    @apply h-10 gap-1.5 px-4 text-sm;
+  }
+
+  .btn-lg {
+    @apply h-11 gap-2 px-5 text-base;
+  }
+
+  .btn-xl {
+    @apply h-12 gap-2 px-5 text-base;
+  }
+
+  .btn-icon {
+    @apply inline-flex cursor-pointer items-center justify-center rounded-full bg-primary-600 text-white transition-colors hover:bg-primary-700 disabled:cursor-not-allowed disabled:bg-gray-100 disabled:text-gray-400;
+  }
+
+  .btn-icon-xs {
+    @apply h-7 w-7;
+  }
+
+  .btn-icon-sm {
+    @apply h-8 w-8;
+  }
+
+  .btn-icon-md {
+    @apply h-10 w-10;
+  }
+
+  .btn-icon-lg {
+    @apply h-11 w-11;
+  }
+
+  .btn-icon-xl {
+    @apply h-12 w-12;
+  }
+}
+
+/*
+ * Form field system — same class-based approach as buttons. Select.tsx (and
+ * FilterBar's plain text/date inputs) pick these classes instead of holding
+ * their own utility strings, so the /component page and every real usage
+ * (FilterBar, etc.) share one definition.
+ */
+@layer components {
+  .input-field {
+    @apply w-full rounded-md border border-gray-300 bg-white px-3 text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-1 focus:ring-primary-500;
+  }
+
+  .input-sm {
+    @apply h-8;
+  }
+
+  .input-md {
+    @apply h-10;
+  }
+
+  /*
+   * Select — custom combobox, not a native <select> (native options can't be
+   * styled per-item, and the design needs a highlighted-selected row + a
+   * "Clear" action, which a browser's own dropdown UI can't do). Trigger +
+   * floating panel + option rows.
+   */
+  .select-trigger {
+    @apply flex w-full cursor-pointer items-center justify-between gap-2 rounded-md border border-gray-300 bg-white px-3 text-sm text-gray-900 focus:outline-none focus-visible:border-primary-500 focus-visible:ring-1 focus-visible:ring-primary-500 disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-400;
+  }
+
+  .select-trigger-open {
+    @apply border-primary-500 ring-1 ring-primary-500;
+  }
+
+  .select-sm {
+    @apply h-8;
+  }
+
+  .select-md {
+    @apply h-10;
+  }
+
+  .select-panel {
+    @apply absolute z-20 mt-1 w-full rounded-lg border border-gray-200 bg-white py-1 shadow-lg;
+  }
+
+  .select-clear-row {
+    @apply flex justify-end px-4 py-1.5;
+  }
+
+  .select-clear-button {
+    @apply cursor-pointer text-sm font-semibold text-primary-500 hover:text-primary-700;
+  }
+
+  .select-option-list {
+    @apply flex max-h-60 flex-col overflow-y-auto;
+  }
+
+  .select-option {
+    @apply flex w-full cursor-pointer items-center px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-50;
+  }
+
+  .select-option-selected {
+    @apply bg-primary-25 font-semibold text-primary-500 hover:bg-primary-25;
+  }
+
+  .checkbox-field {
+    @apply cursor-pointer rounded border-gray-300 accent-primary-600 focus:outline-none focus:ring-1 focus:ring-primary-500 disabled:cursor-not-allowed disabled:opacity-50;
+  }
+
+  .checkbox-sm {
+    @apply h-4 w-4;
+  }
+
+  .checkbox-md {
+    @apply h-5 w-5;
+  }
+}

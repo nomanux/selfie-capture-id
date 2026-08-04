@@ -12,7 +12,15 @@
  * replace the constant with a local `import` from this folder.
  */
 
+import unitFloorplanB3Png from "./unit-floorplan-b3.png";
+
 const FIGMA_ASSET_BASE = "https://www.figma.com/api/mcp/asset";
+
+// Sample unit floor plan (Accolade Place, "MID UNIT (B3)") supplied by the
+// user as a reference for the "Property Unit Image" modal opened from the
+// Unit / Unit Availability tables' image-icon row action. Bundled locally
+// (not a remote Figma URL) so it never expires.
+export const unitFloorplanB3Url = unitFloorplanB3Png;
 
 // Header logo (shield symbol + "Sales" tag + "DMCI HOMES" wordmark)
 export const logoSymbolUrl = `${FIGMA_ASSET_BASE}/ed578424-0fb6-4807-bc38-a31bc2df91f2`;

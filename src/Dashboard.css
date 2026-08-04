@@ -1,0 +1,47 @@
+/* Dashboard — DMCI Homes Sales admin dashboard
+   Design tokens pulled from Figma (get_variable_defs / get_design_context)
+   file NcMe5sSgPs65q3Ed2rV1Kv, node 170838:208627 "Dashbboard v1". */
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+.db-page {
+  height: 100vh;
+  width: 100%;
+  display: flex;
+  align-items: stretch;
+  background: #ffffff;
+  overflow: hidden;
+}
+
+/* Sidebar sizing/position is handled by Tailwind utility classes directly on
+   the <aside> in Layout.tsx (fixed off-canvas drawer below lg, static in-flow
+   column from lg upward) so it can respond to breakpoints. */
+
+.db-main-col {
+  flex: 1 1 0;
+  min-width: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.db-main {
+  flex: 1 1 0;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  background: #fafafa;
+}
+
+@media (max-width: 1023px) {
+  .db-page {
+    overflow-x: hidden;
+  }
+}

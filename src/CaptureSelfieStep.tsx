@@ -138,10 +138,10 @@ const CURRENT_STEP = 3;
 
 // Tailwind class strings for buttons/inputs (per project convention: interactive
 // controls are styled with Tailwind utility classes, not custom CSS rules).
-const toggleTrackClass = "flex flex-shrink-0 gap-0.5 rounded-full bg-[#f3f4f6] p-[3px]";
+const toggleTrackClass = "flex flex-shrink-0 gap-0.5 rounded-full bg-gray-100 p-[3px]";
 const toggleSegmentBaseClass =
-  "flex h-8 flex-1 min-w-0 cursor-pointer items-center justify-center gap-1.5 rounded-full border-none bg-transparent text-[13px] font-semibold text-[#4b5563] transition-colors hover:text-[#374151]";
-const toggleSegmentActiveClass = "bg-white text-[#07389d] shadow-sm hover:text-[#07389d]";
+  "flex h-8 flex-1 min-w-0 cursor-pointer items-center justify-center gap-1.5 rounded-full border-none bg-transparent text-[13px] font-semibold text-gray-600 transition-colors hover:text-gray-700";
+const toggleSegmentActiveClass = "bg-white text-primary-500 shadow-sm hover:text-primary-500";
 
 // --- Real face detection, loaded lazily from a CDN so no npm install is needed. ---
 // This runs entirely in the browser; it needs the user's real internet connection
@@ -407,24 +407,24 @@ export default function CaptureSelfieStep() {
       <span
         className={
           "inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs transition-colors duration-300 " +
-          (faceDetected ? "border-[#17b26a]/40 bg-[#f6fef9]" : "border-[#f79009]/40 bg-[#fef0c7]")
+          (faceDetected ? "border-success-500/40 bg-success-25" : "border-warning-500/40 bg-warning-100")
         }
       >
-        <span className="font-medium text-[#374151]">Face:</span>
-        <span className={"flex items-center gap-1 font-semibold " + (faceDetected ? "text-[#17b26a]" : "text-[#93370d]")}>
-          {faceDetected ? <CircleCheckIcon className="h-3.5 w-3.5 text-[#17b26a]" /> : <CircleAlertIcon className="h-3.5 w-3.5 animate-pulse text-[#f79009]" />}
+        <span className="font-medium text-gray-700">Face:</span>
+        <span className={"flex items-center gap-1 font-semibold " + (faceDetected ? "text-success-500" : "text-warning-800")}>
+          {faceDetected ? <CircleCheckIcon className="h-3.5 w-3.5 text-success-500" /> : <CircleAlertIcon className="h-3.5 w-3.5 animate-pulse text-warning-500" />}
           {faceDetected ? "Detected" : "Not Detected"}
         </span>
       </span>
       <span
         className={
           "inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs transition-colors duration-300 " +
-          (idHeld ? "border-[#17b26a]/40 bg-[#f6fef9]" : "border-[#f79009]/40 bg-[#fef0c7]")
+          (idHeld ? "border-success-500/40 bg-success-25" : "border-warning-500/40 bg-warning-100")
         }
       >
-        <span className="font-medium text-[#374151]">ID Card:</span>
-        <span className={"flex items-center gap-1 font-semibold " + (idHeld ? "text-[#17b26a]" : "text-[#93370d]")}>
-          {idHeld ? <CircleCheckIcon className="h-3.5 w-3.5 text-[#17b26a]" /> : <CircleAlertIcon className="h-3.5 w-3.5 animate-pulse text-[#f79009]" />}
+        <span className="font-medium text-gray-700">ID Card:</span>
+        <span className={"flex items-center gap-1 font-semibold " + (idHeld ? "text-success-500" : "text-warning-800")}>
+          {idHeld ? <CircleCheckIcon className="h-3.5 w-3.5 text-success-500" /> : <CircleAlertIcon className="h-3.5 w-3.5 animate-pulse text-warning-500" />}
           {idHeld ? "Held" : "Not Held"}
         </span>
       </span>
@@ -544,18 +544,18 @@ export default function CaptureSelfieStep() {
                   ) : showLiveVideoCompact ? (
                     <video ref={videoRef} className="cs-preview-box__video" autoPlay playsInline muted />
                   ) : showLiveVideoExpanded ? (
-                    <div className="flex h-full w-full flex-col items-center justify-center gap-2 bg-[#f3f4f6] text-center text-xs text-[#4b5563]">
+                    <div className="flex h-full w-full flex-col items-center justify-center gap-2 bg-gray-100 text-center text-xs text-gray-600">
                       <ExpandIcon className="h-5 w-5" />
                       Viewing full screen
                     </div>
                   ) : captureMode === "selfie" && cameraError ? (
-                    <div className="flex h-full w-full flex-col items-center justify-center gap-2 p-4 text-center text-xs leading-4 text-[#93370d]">
+                    <div className="flex h-full w-full flex-col items-center justify-center gap-2 p-4 text-center text-xs leading-4 text-warning-800">
                       <CameraOffIcon className="h-6 w-6" />
                       <span>{cameraError}</span>
                       <button
                         type="button"
                         onClick={() => setRetryToken((n) => n + 1)}
-                        className="mt-0.5 h-7 cursor-pointer rounded-full border border-[#f79009] bg-white px-3 text-[11px] font-semibold text-[#93370d]"
+                        className="mt-0.5 h-7 cursor-pointer rounded-full border border-warning-500 bg-white px-3 text-[11px] font-semibold text-warning-800"
                       >
                         Try again
                       </button>
@@ -564,7 +564,7 @@ export default function CaptureSelfieStep() {
                     <button
                       type="button"
                       onClick={handleUploadClick}
-                      className="flex h-full w-full cursor-pointer flex-col items-center justify-center gap-2 border-none bg-transparent p-4 text-center font-sans text-xs leading-4 text-[#07389d]"
+                      className="flex h-full w-full cursor-pointer flex-col items-center justify-center gap-2 border-none bg-transparent p-4 text-center font-sans text-xs leading-4 text-primary-500"
                     >
                       <UploadIcon className="h-6 w-6" />
                       <span>Click to upload a photo of yourself holding your ID</span>
@@ -575,7 +575,7 @@ export default function CaptureSelfieStep() {
                     <button
                       type="button"
                       onClick={handleRetake}
-                      className="group absolute bottom-2.5 left-1/2 flex h-[30px] -translate-x-1/2 cursor-pointer items-center gap-1.5 rounded-full border border-[#d1d5db] bg-white px-3 text-xs font-semibold text-[#374151] shadow-[0_2px_6px_rgba(10,13,18,0.15)] transition-all duration-150 hover:border-[#07389d] hover:text-[#07389d] hover:shadow-[0_4px_10px_rgba(10,13,18,0.2)] active:scale-95"
+                      className="group absolute bottom-2.5 left-1/2 flex h-[30px] -translate-x-1/2 cursor-pointer items-center gap-1.5 rounded-full border border-gray-300 bg-white px-3 text-xs font-semibold text-gray-700 shadow-[0_2px_6px_rgba(10,13,18,0.15)] transition-all duration-150 hover:border-primary-500 hover:text-primary-500 hover:shadow-[0_4px_10px_rgba(10,13,18,0.2)] active:scale-95"
                     >
                       <RotateCcwIcon className="h-3.5 w-3.5 transition-transform duration-300 group-hover:-rotate-180" />
                       Retake
@@ -586,7 +586,7 @@ export default function CaptureSelfieStep() {
                       aria-label="Capture selfie (Ctrl + Space)"
                       title="Capture selfie (Ctrl + Space)"
                       onClick={handleCapture}
-                      className="absolute bottom-2.5 left-1/2 flex h-11 w-11 -translate-x-1/2 cursor-pointer items-center justify-center rounded-full border-[3px] border-white bg-[#06318a] text-white shadow-[0_2px_6px_rgba(10,13,18,0.2)] transition-all duration-150 hover:scale-110 hover:bg-[#052b78] hover:shadow-[0_4px_12px_rgba(10,13,18,0.3)] active:scale-90"
+                      className="absolute bottom-2.5 left-1/2 flex h-11 w-11 -translate-x-1/2 cursor-pointer items-center justify-center rounded-full border-[3px] border-white bg-primary-600 text-white shadow-[0_2px_6px_rgba(10,13,18,0.2)] transition-all duration-150 hover:scale-110 hover:bg-primary-700 hover:shadow-[0_4px_12px_rgba(10,13,18,0.3)] active:scale-90"
                     >
                       <CameraIcon className="h-[18px] w-[18px]" />
                     </button>
@@ -596,10 +596,10 @@ export default function CaptureSelfieStep() {
                 {/* Frame toolbar: shortcut hint + fullscreen/delete, outside the image */}
                 <div className="flex min-h-8 items-center justify-between gap-2">
                   {showLiveVideoCompact || showLiveVideoExpanded ? (
-                    <span className="flex items-center gap-1 text-[11px] font-medium text-[#4b5563]">
-                      <kbd className="rounded border border-[#d1d5db] bg-white px-1.5 py-1 font-sans text-[10px] font-semibold leading-none text-[#374151] shadow-[0_2px_0_#d1d5db]">Ctrl</kbd>
+                    <span className="flex items-center gap-1 text-[11px] font-medium text-gray-600">
+                      <kbd className="rounded border border-gray-300 bg-white px-1.5 py-1 font-sans text-[10px] font-semibold leading-none text-gray-700 shadow-[0_2px_0_#d1d5db]">Ctrl</kbd>
                       +
-                      <kbd className="rounded border border-[#d1d5db] bg-white px-1.5 py-1 font-sans text-[10px] font-semibold leading-none text-[#374151] shadow-[0_2px_0_#d1d5db]">Space</kbd>
+                      <kbd className="rounded border border-gray-300 bg-white px-1.5 py-1 font-sans text-[10px] font-semibold leading-none text-gray-700 shadow-[0_2px_0_#d1d5db]">Space</kbd>
                       to capture
                     </span>
                   ) : (
@@ -612,7 +612,7 @@ export default function CaptureSelfieStep() {
                         aria-label={isExpanded ? "Collapse preview" : "Expand preview to full screen"}
                         title="Full screen"
                         onClick={() => setIsExpanded((v) => !v)}
-                        className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg border border-[#d1d5db] bg-white text-[#374151] transition-all duration-150 hover:border-[#07389d] hover:text-[#07389d] active:scale-90"
+                        className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg border border-gray-300 bg-white text-gray-700 transition-all duration-150 hover:border-primary-500 hover:text-primary-500 active:scale-90"
                       >
                         <ExpandIcon className="h-4 w-4" />
                       </button>
@@ -623,7 +623,7 @@ export default function CaptureSelfieStep() {
                         aria-label="Delete captured photo"
                         title="Delete photo"
                         onClick={handleDelete}
-                        className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg border border-[#f04438]/40 bg-white text-[#f04438] transition-all duration-150 hover:bg-[#f04438] hover:text-white active:scale-90"
+                        className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg border border-error-500/40 bg-white text-error-500 transition-all duration-150 hover:bg-error-500 hover:text-white active:scale-90"
                       >
                         <TrashIcon className="h-4 w-4" />
                       </button>
@@ -658,17 +658,17 @@ export default function CaptureSelfieStep() {
             <div className="cs-footer">
               <button
                 type="button"
-                className="h-[34px] cursor-pointer rounded-lg border border-[#d1d5db] bg-white px-3.5 text-[13px] font-semibold text-[#374151] hover:bg-[#f9fafb]"
+                className="h-[34px] cursor-pointer rounded-lg border border-gray-300 bg-white px-3.5 text-[13px] font-semibold text-gray-700 hover:bg-gray-50"
               >
                 Previous
               </button>
               <div className="cs-footer-right">
-                <button type="button" className="cursor-pointer border-none bg-transparent p-0 text-[13px] font-semibold text-[#052b78] hover:underline">
+                <button type="button" className="cursor-pointer border-none bg-transparent p-0 text-[13px] font-semibold text-primary-700 hover:underline">
                   Save as draft
                 </button>
                 <button
                   type="button"
-                  className="h-[34px] cursor-pointer rounded-lg border-none bg-[#06318a] px-3.5 text-[13px] font-semibold text-white shadow-[0_1px_2px_rgba(10,13,18,0.05)] hover:bg-[#052b78]"
+                  className="h-[34px] cursor-pointer rounded-lg border-none bg-primary-600 px-3.5 text-[13px] font-semibold text-white shadow-[0_1px_2px_rgba(10,13,18,0.05)] hover:bg-primary-700"
                 >
                   Next
                 </button>
@@ -718,7 +718,7 @@ export default function CaptureSelfieStep() {
                   <button
                     type="button"
                     onClick={handleDelete}
-                    className="flex h-10 cursor-pointer items-center gap-1.5 rounded-full bg-[#f04438]/90 px-4 text-sm font-semibold text-white transition-all duration-150 hover:bg-[#f04438] active:scale-95"
+                    className="flex h-10 cursor-pointer items-center gap-1.5 rounded-full bg-error-500/90 px-4 text-sm font-semibold text-white transition-all duration-150 hover:bg-error-500 active:scale-95"
                   >
                     <TrashIcon className="h-4 w-4" />
                     Delete
@@ -730,7 +730,7 @@ export default function CaptureSelfieStep() {
                   aria-label="Capture selfie (Ctrl + Space)"
                   title="Capture selfie (Ctrl + Space)"
                   onClick={handleCapture}
-                  className="flex h-12 w-12 cursor-pointer items-center justify-center rounded-full border-[3px] border-white bg-[#06318a] text-white shadow-[0_2px_6px_rgba(10,13,18,0.3)] transition-all duration-150 hover:scale-110 hover:bg-[#052b78] active:scale-90"
+                  className="flex h-12 w-12 cursor-pointer items-center justify-center rounded-full border-[3px] border-white bg-primary-600 text-white shadow-[0_2px_6px_rgba(10,13,18,0.3)] transition-all duration-150 hover:scale-110 hover:bg-primary-700 active:scale-90"
                 >
                   <CameraIcon className="h-5 w-5" />
                 </button>
