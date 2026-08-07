@@ -44,21 +44,21 @@ export default function GroupedStatsTable({ title, filters, leadingColumns, grou
       orgBadge
     >
       <div className="flex h-full w-full flex-col">
-        <div className="flex shrink-0 flex-col gap-5 px-6 pt-4">
+        <div className="flex shrink-0 flex-col gap-4 px-5 pt-3">
           <PageBackHeading title={title} onBack={() => navigate({ screen: "project-details", project })} />
 
           <FilterBar fields={filters} />
         </div>
 
-        <div className="flex min-h-0 flex-1 flex-col px-6 pb-4 pt-5">
+        <div className="flex min-h-0 flex-1 flex-col px-5 pb-3 pt-4">
         <div className="flex w-full flex-1 flex-col overflow-hidden rounded-xl border border-gray-200 bg-white shadow-[0_1px_2px_rgba(10,13,18,0.05)]">
           <TableCardHeader title="Property List" rightSlot={<DownloadPdfButton />} />
-          <div className="flex-1 overflow-auto [scrollbar-gutter:stable]">
+          <div className="flex-1 min-h-0 overflow-auto [scrollbar-gutter:stable]">
           <table className="w-full min-w-[1100px] border-collapse text-sm">
-            <thead>
-              <tr className="border-b border-gray-100 text-left text-gray-700">
+            <thead className="sticky top-0 z-10 bg-gray-50 [&_th]:text-xs [&_th]:font-semibold">
+              <tr className="border-b border-gray-100 text-left text-gray-500">
                 {leadingColumns.map((col) => (
-                  <th key={col} rowSpan={2} className="px-3 py-3 align-bottom font-semibold">
+                  <th key={col} rowSpan={2} className="px-3 py-2 align-bottom font-semibold">
                     {col}
                   </th>
                 ))}
@@ -68,7 +68,7 @@ export default function GroupedStatsTable({ title, filters, leadingColumns, grou
                   </th>
                 ))}
               </tr>
-              <tr className="border-b border-gray-200 text-left text-gray-400">
+              <tr className="shadow-[inset_0_-1px_0_0_#e5e7eb] text-left text-gray-400">
                 {groups.map((group) =>
                   subColumns.map((sub, i) => (
                     <th key={group + sub} className={"px-3 py-2 text-center text-xs font-medium " + (i === 0 ? "border-l border-gray-100" : "")}>
@@ -80,9 +80,9 @@ export default function GroupedStatsTable({ title, filters, leadingColumns, grou
             </thead>
             <tbody>
               {rows.map((row, rowIndex) => (
-                <tr key={rowIndex} className="border-b border-gray-100 text-gray-700 hover:bg-gray-50">
+                <tr key={rowIndex} className="border-b border-gray-100 text-gray-600 hover:bg-gray-50">
                   {row.leading.map((value, i) => (
-                    <td key={i} className={"px-3 py-3 " + (i === 0 ? "font-semibold text-gray-900" : "")}>
+                    <td key={i} className={"px-3 py-2 " + (i === 0 ? "font-semibold text-gray-900" : "")}>
                       {value}
                     </td>
                   ))}
@@ -91,7 +91,7 @@ export default function GroupedStatsTable({ title, filters, leadingColumns, grou
                       <td
                         key={groupIndex + "-" + subIndex}
                         className={
-                          "px-3 py-3 text-center " +
+                          "px-3 py-2 text-center " +
                           (subIndex === 0 ? "border-l border-gray-100 " : "") +
                           (subIndex === 1 ? "font-semibold text-primary-500" : "text-gray-700")
                         }

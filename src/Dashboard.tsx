@@ -92,7 +92,7 @@ function SectionAccentHeading({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex items-stretch gap-2 sm:gap-3">
       <span className="w-1 shrink-0 rounded-sm bg-primary-500" />
-      <h3 className="text-base font-semibold text-gray-900 sm:text-lg">{children}</h3>
+      <h3 className="text-sm font-semibold text-gray-900 sm:text-base">{children}</h3>
     </div>
   );
 }
@@ -102,18 +102,18 @@ function SectionAccentHeading({ children }: { children: React.ReactNode }) {
 export default function Dashboard() {
   return (
     <Layout active="dashboard" breadcrumb={["Dashboard"]}>
-      <div className="flex w-full flex-col gap-4 px-4 py-4 sm:gap-6 sm:px-6 sm:py-6">
+      <div className="flex w-full flex-col gap-4 px-4 py-4 sm:gap-5 sm:px-5 sm:py-5">
         {/* Page header */}
         <div className="flex flex-col gap-1">
-          <h1 className="text-xl font-semibold text-gray-900 sm:text-2xl">Welcome back, Super Admin</h1>
+          <h1 className="text-lg font-semibold text-gray-900 sm:text-xl">Welcome back, Super Admin</h1>
           <p className="text-sm text-gray-600 sm:text-base">
             Comprehensive overview of Customer Registration Form and Reservation Agreement metrics
           </p>
         </div>
 
         {/* Unit Holding Summary card */}
-        <section className="flex w-full flex-col gap-4 rounded-lg border border-gray-200 bg-white p-4 shadow-[0_1px_2px_rgba(10,13,18,0.05)] sm:gap-5 sm:rounded-xl sm:p-6">
-          <h2 className="text-base font-semibold text-gray-900 sm:text-lg">Unit Holding Summary</h2>
+        <section className="flex w-full flex-col gap-4 rounded-lg border border-gray-200 bg-white p-4 shadow-[0_1px_2px_rgba(10,13,18,0.05)] sm:gap-4 sm:rounded-xl sm:p-5">
+          <h2 className="text-sm font-semibold text-gray-900 sm:text-base">Unit Holding Summary</h2>
 
           <div className="flex flex-col gap-4 sm:gap-5 lg:flex-row">
             {/* Held units / parking slots */}
@@ -139,7 +139,7 @@ export default function Dashboard() {
             {/* Trends distribution chart */}
             <div className="flex flex-1 flex-col gap-4 rounded-lg border border-gray-200 bg-error-25 p-4 sm:gap-5 sm:rounded-xl sm:p-5">
               <div className="flex flex-col items-start justify-between gap-3 sm:flex-row">
-                <h3 className="text-base font-semibold text-gray-900 sm:text-lg">Trends distribution</h3>
+                <h3 className="text-sm font-semibold text-gray-900 sm:text-base">Trends distribution</h3>
                 <div className="flex flex-wrap items-center gap-2 text-xs sm:gap-6 sm:text-sm">
                   {TREND_SERIES.map((series) => (
                     <LegendDot key={series.key} color={series.color} label={series.label} />
@@ -196,7 +196,7 @@ export default function Dashboard() {
               <tbody>
                 {HOLDING_ROWS.map((row, index) => (
                   <tr key={index} className="border-b border-blue-50">
-                    <td className="px-2 py-2 font-medium text-gray-700 sm:px-5 sm:py-3">{row.position}</td>
+                    <td className="px-2 py-2 font-medium text-gray-600 sm:px-5 sm:py-3">{row.position}</td>
                     <td className="px-1 py-2 text-center text-gray-600 sm:px-5 sm:py-3">{row.active}</td>
                     <td className="px-1 py-2 text-center text-gray-600 sm:px-5 sm:py-3">{row.expired}</td>
                     <td className="px-1 py-2 text-center text-gray-600 sm:px-5 sm:py-3">{row.closed}</td>
@@ -218,9 +218,9 @@ export default function Dashboard() {
         </section>
 
         {/* Commission Registry card */}
-        <section className="flex w-full flex-col gap-4 rounded-lg border border-gray-200 bg-white p-4 shadow-[0_1px_2px_rgba(10,13,18,0.05)] sm:gap-6 sm:rounded-xl sm:p-6">
+        <section className="flex w-full flex-col gap-4 rounded-lg border border-gray-200 bg-white p-4 shadow-[0_1px_2px_rgba(10,13,18,0.05)] sm:gap-4 sm:rounded-xl sm:p-5">
           <div className="flex flex-wrap items-center gap-2 sm:gap-3">
-            <h2 className="text-base font-semibold text-gray-900 sm:text-lg">COMMISSION REGISTRY</h2>
+            <h2 className="text-sm font-semibold text-gray-900 sm:text-base">COMMISSION REGISTRY</h2>
             <span className="text-xs font-semibold text-gray-600 sm:text-sm">(19/08/2025 - 25/02/2026)</span>
             <span className="group relative inline-flex">
               <InfoIcon className="h-4 w-4 shrink-0 cursor-help text-gray-500 sm:h-5 sm:w-5" />

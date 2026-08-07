@@ -56,10 +56,10 @@ export default function ForComplianceDetails() {
       ]}
       orgBadge
     >
-      <div className="flex w-full flex-col gap-5 px-6 py-4">
+      <div className="flex w-full flex-col gap-4 px-5 py-3">
         <PageBackHeading title="Compliance Details" onBack={() => navigate({ screen: "compliance" })} />
 
-        <section className="flex w-full flex-col gap-6 rounded-xl border border-gray-200 bg-white p-6 shadow-[0_1px_2px_rgba(10,13,18,0.05)]">
+        <section className="flex w-full flex-col gap-4 rounded-xl border border-gray-200 bg-white p-5 shadow-[0_1px_2px_rgba(10,13,18,0.05)]">
           <h3 className="text-base font-semibold text-gray-900">Information</h3>
           <div className="grid grid-cols-1 gap-x-10 gap-y-4 lg:grid-cols-2">
             <KeyValueList rows={leftRows} />
@@ -84,7 +84,7 @@ export default function ForComplianceDetails() {
               </thead>
               <tbody>
                 {MILESTONES.map((row, index) => (
-                  <tr key={index} className="border-t border-gray-100 text-gray-700">
+                  <tr key={index} className="border-t border-gray-100 text-gray-600">
                     <td className="px-4 py-3">
                       <StatusPill status={row.primarySellerName} />
                     </td>

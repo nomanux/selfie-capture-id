@@ -60,21 +60,21 @@ export default function ProjectDetails() {
       ]}
       orgBadge
     >
-      <div className="flex w-full flex-col gap-5 px-6 py-4">
+      <div className="flex w-full flex-col gap-4 px-5 py-3">
         <PageBackHeading title="Project Details" onBack={() => navigate({ screen: "properties" })} />
 
-        <section className="flex w-full flex-col gap-6 rounded-xl border border-gray-200 bg-white p-6 shadow-[0_1px_2px_rgba(10,13,18,0.05)]">
+        <section className="flex w-full flex-col gap-4 rounded-xl border border-gray-200 bg-white p-5 shadow-[0_1px_2px_rgba(10,13,18,0.05)]">
           <div className="flex flex-wrap items-center justify-between gap-3">
-            <h2 className="text-2xl font-semibold text-primary-500">{project}</h2>
-            <div className="flex flex-wrap gap-2">
+            <h2 className="text-xl font-semibold text-primary-500">{project}</h2>
+            <div className="flex flex-wrap gap-1.5">
               {RESOURCE_TABS.map((tab) => (
                 <button
                   key={tab.label}
                   type="button"
                   onClick={() => navigate({ screen: tab.screen, project })}
-                  className="inline-flex cursor-pointer items-center gap-1.5 rounded-md border border-primary-50 bg-blue-50 px-3 py-1.5 text-sm font-semibold text-primary-500 hover:bg-blue-100"
+                  className="inline-flex cursor-pointer items-center gap-1 rounded-md border border-primary-50 bg-blue-50 px-2 py-1 text-xs font-semibold text-primary-500 hover:bg-blue-100"
                 >
-                  <LinkIcon className="h-3.5 w-3.5" />
+                  <LinkIcon className="h-3 w-3" />
                   {tab.label}
                 </button>
               ))}
@@ -96,7 +96,7 @@ export default function ProjectDetails() {
           </div>
 
           <div className="flex flex-col gap-3">
-            <h3 className="text-lg font-semibold text-gray-900">Overview</h3>
+            <h3 className="text-base font-semibold text-gray-900">Overview</h3>
             <div className="overflow-x-auto rounded-lg border border-gray-200">
               <table className="w-full min-w-[640px] border-collapse text-sm">
                 <thead>
@@ -120,10 +120,10 @@ export default function ProjectDetails() {
                           {row.code}
                         </button>
                       </td>
-                      <td className="px-5 py-3 text-right text-gray-700">{row.total}</td>
-                      <td className="px-5 py-3 text-right text-gray-700">{row.sold}</td>
-                      <td className="px-5 py-3 text-right text-gray-700">{row.available}</td>
-                      <td className="px-5 py-3 text-right text-gray-700">{row.onHold}</td>
+                      <td className="px-5 py-3 text-right text-gray-600">{row.total}</td>
+                      <td className="px-5 py-3 text-right text-gray-600">{row.sold}</td>
+                      <td className="px-5 py-3 text-right text-gray-600">{row.available}</td>
+                      <td className="px-5 py-3 text-right text-gray-600">{row.onHold}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -132,9 +132,9 @@ export default function ProjectDetails() {
           </div>
         </section>
 
-        <section className="flex w-full flex-col gap-4 rounded-xl border border-gray-200 bg-white p-6 shadow-[0_1px_2px_rgba(10,13,18,0.05)]">
+        <section className="flex w-full flex-col gap-4 rounded-xl border border-gray-200 bg-white p-5 shadow-[0_1px_2px_rgba(10,13,18,0.05)]">
           <div className="flex items-center justify-between">
-            <h3 className="text-lg font-semibold text-gray-900">Recently Viewed</h3>
+            <h3 className="text-base font-semibold text-gray-900">Recently Viewed</h3>
             <div className="flex items-center gap-2">
               <button type="button" aria-label="Previous" className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-md border border-gray-300 text-gray-700 hover:bg-gray-50">
                 <ChevronLeftIcon className="h-4 w-4" />

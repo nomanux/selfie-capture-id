@@ -27,7 +27,7 @@ export default function ImagePreviewModal({
         onClick={(event) => event.stopPropagation()}
       >
         <div className="flex items-center justify-between border-b border-gray-200 px-6 py-5">
-          <h2 className="text-lg font-semibold text-gray-900">Property Unit Image</h2>
+          <h2 className="text-base font-semibold text-gray-900">Property Unit Image</h2>
           <button
             type="button"
             aria-label="Close"
@@ -37,7 +37,7 @@ export default function ImagePreviewModal({
             <XIcon className="h-5 w-5" />
           </button>
         </div>
-        <div className="flex-1 overflow-auto p-5">
+        <div className="flex-1 min-h-0 overflow-auto p-5">
           <div className="flex min-h-[300px] items-center justify-center rounded-lg border border-gray-200 bg-gray-50">
             {imageUrl ? (
               <img src={imageUrl} alt={imageAlt} className="max-h-full w-full object-contain" />

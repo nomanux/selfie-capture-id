@@ -13,6 +13,12 @@
  */
 
 import unitFloorplanB3Png from "./unit-floorplan-b3.png";
+import dmciLogoPng from "./dmci-logo.png";
+import acaciaEstatesLogoPng from "./acacia-estates-logo.png";
+import aristaPlaceLogoPng from "./arista-place-logo.png";
+import valeronTowerLogoPng from "./valeron-tower-logo.png";
+import noImageAvailablePng from "./no-image-available.png";
+import noImageAvailableGraphicSvg from "./no-image-available-graphic.svg";
 
 const FIGMA_ASSET_BASE = "https://www.figma.com/api/mcp/asset";
 
@@ -22,10 +28,26 @@ const FIGMA_ASSET_BASE = "https://www.figma.com/api/mcp/asset";
 // (not a remote Figma URL) so it never expires.
 export const unitFloorplanB3Url = unitFloorplanB3Png;
 
-// Header logo (shield symbol + "Sales" tag + "DMCI HOMES" wordmark)
-export const logoSymbolUrl = `${FIGMA_ASSET_BASE}/ed578424-0fb6-4807-bc38-a31bc2df91f2`;
-export const logoSalesUrl = `${FIGMA_ASSET_BASE}/58e97090-407c-4f98-b85d-6d461afcb5bb`;
-export const logoTextUrl = `${FIGMA_ASSET_BASE}/3a77d004-fddc-4fde-adc7-33b697048369`;
+// Header logo (shield symbol + "Sales" tag + "DMCI HOMES" wordmark, combined
+// into one image). Supplied directly by the user, bundled locally so it
+// never expires — the old three-part Figma CDN export (logoSymbolUrl /
+// logoSalesUrl / logoTextUrl) broke after ~7 days once those temporary URLs
+// expired.
+export const dmciLogoUrl = dmciLogoPng;
+
+// Property List grid-view card logos (Acacia Estates, Arista Place, The
+// Valeron Tower) + the "No Image Available" placeholder graphic. Supplied
+// directly by the user, bundled locally so they never expire — replaces the
+// earlier temporary Figma CDN pull.
+export const acaciaEstatesLogoUrl = acaciaEstatesLogoPng;
+export const aristaPlaceLogoUrl = aristaPlaceLogoPng;
+export const valeronTowerLogoUrl = valeronTowerLogoPng;
+export const noImageAvailableUrl = noImageAvailablePng;
+
+// "No Image Available" graphic (house icon + diagonal line + wordmark, all
+// one vector) used on the Unit Availability Details "Property Unit Image"
+// panel. Supplied directly by the user as inline SVG — node 173424:198691.
+export const noImageAvailableGraphicUrl = noImageAvailableGraphicSvg;
 
 // Take selfie / Upload Photo toggle icons
 export const takeSelfieIconUrl = `${FIGMA_ASSET_BASE}/e2453afa-388a-465a-9988-cde9196fda9b`;

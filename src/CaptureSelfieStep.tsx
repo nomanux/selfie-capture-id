@@ -1,9 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import "./CaptureSelfieStep.css";
 import {
-  logoSymbolUrl,
-  logoSalesUrl,
-  logoTextUrl,
+  dmciLogoUrl,
   idCardImageUrl,
   badgeXIconUrl,
   badgeCheckIconUrl,
@@ -437,11 +435,7 @@ export default function CaptureSelfieStep() {
       <header className="cs-header">
         <div className="cs-header__inner">
           <div className="cs-logo">
-            <img className="cs-logo__symbol" src={logoSymbolUrl} alt="DMCI Homes shield logo" />
-            <div className="cs-logo__text-col">
-              <img className="cs-logo__sales" src={logoSalesUrl} alt="Sales" />
-              <img className="cs-logo__wordmark" src={logoTextUrl} alt="DMCI Homes" />
-            </div>
+            <img className="cs-logo__image" src={dmciLogoUrl} alt="DMCI Homes Sales" />
           </div>
         </div>
       </header>

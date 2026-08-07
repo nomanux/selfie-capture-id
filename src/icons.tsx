@@ -256,6 +256,22 @@ export function FileDownIcon({ className }: IconProps) {
   );
 }
 
+/**
+ * FileIcon — plain document glyph (folded corner + two content lines), used
+ * by the "Download PDF" button. Untitled UI "file-05", provided as an exact
+ * 16x16 SVG (not the shared 24x24 lucideProps), so it keeps its own viewBox
+ * and stroke width here — the stroke-to-viewBox ratio matches lucideProps
+ * (1.33333/16 = 2/24), so it renders at the same visual weight as every
+ * other icon at a given size.
+ */
+export function FileIcon({ className }: IconProps) {
+  return (
+    <svg className={className} viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth={1.33333} strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+      <path d="M9.33268 1.51172V4.26541C9.33268 4.63878 9.33268 4.82546 9.40534 4.96807C9.46926 5.09351 9.57125 5.1955 9.69669 5.25942C9.8393 5.33208 10.026 5.33208 10.3993 5.33208H13.153M9.33268 11.332H5.33268M10.666 8.66536H5.33268M13.3327 6.65751V11.4654C13.3327 12.5855 13.3327 13.1455 13.1147 13.5733C12.9229 13.9497 12.617 14.2556 12.2407 14.4474C11.8128 14.6654 11.2528 14.6654 10.1327 14.6654H5.86602C4.74591 14.6654 4.18586 14.6654 3.75803 14.4474C3.38171 14.2556 3.07575 13.9497 2.884 13.5733C2.66602 13.1455 2.66602 12.5855 2.66602 11.4654V4.53203C2.66602 3.41193 2.66602 2.85187 2.884 2.42405C3.07575 2.04773 3.38171 1.74176 3.75803 1.55002C4.18586 1.33203 4.74591 1.33203 5.86602 1.33203H8.0072C8.49638 1.33203 8.74097 1.33203 8.97115 1.38729C9.17522 1.43628 9.37031 1.51709 9.54925 1.62675C9.75109 1.75043 9.92404 1.92339 10.2699 2.26929L12.3954 4.39477C12.7413 4.74068 12.9143 4.91363 13.038 5.11546C13.1476 5.29441 13.2284 5.48949 13.2774 5.69357C13.3327 5.92374 13.3327 6.16833 13.3327 6.65751Z" />
+    </svg>
+  );
+}
+
 export function GridIcon({ className }: IconProps) {
   return (
     <svg className={className} {...lucideProps}>
@@ -369,6 +385,16 @@ export function CheckIcon({ className }: IconProps) {
   return (
     <svg className={className} {...lucideProps}>
       <polyline points="20 6 9 17 4 12" />
+    </svg>
+  );
+}
+
+export function MoreHorizontalIcon({ className }: IconProps) {
+  return (
+    <svg className={className} {...lucideProps}>
+      <circle cx="12" cy="12" r="1" />
+      <circle cx="19" cy="12" r="1" />
+      <circle cx="5" cy="12" r="1" />
     </svg>
   );
 }

@@ -57,7 +57,7 @@ export default function EntitySelectionModal({
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex shrink-0 items-center justify-between border-b border-gray-200 px-5 py-4 sm:px-6 sm:py-5">
-          <h2 className="text-lg font-semibold text-gray-900">Entity selection</h2>
+          <h2 className="text-base font-semibold text-gray-900">Entity selection</h2>
           <button
             type="button"
             aria-label="Close"

@@ -1,9 +1,11 @@
 import { useState, type ReactNode } from "react";
 import "./tailwind.css";
 import "./Dashboard.css";
-import { logoSymbolUrl, logoSalesUrl, logoTextUrl } from "./assets/figmaAssets";
+import { dmciLogoUrl } from "./assets/figmaAssets";
 import { useNavigation } from "./NavigationContext";
-import EntitySelectionModal, { type SelectedEntity } from "./EntitySelectionModal";
+import EntitySelectionModal, {
+  type SelectedEntity,
+} from "./EntitySelectionModal";
 import {
   LayoutDashboardIcon,
   Building2Icon,
@@ -32,7 +34,13 @@ import {
  * 173418:205335, 173418:206077/206944/206320/206142/206498).
  */
 
-export type NavKey = "dashboard" | "properties" | "commissions" | "computation" | "clients" | "lottery";
+export type NavKey =
+  | "dashboard"
+  | "properties"
+  | "commissions"
+  | "computation"
+  | "clients"
+  | "lottery";
 
 interface NavLeaf {
   key: NavKey;
@@ -74,7 +82,9 @@ function NavItem({
       onClick={onClick}
       className={
         "flex h-10 w-full items-center gap-2 rounded-md px-2 py-1.5 text-left text-sm font-semibold transition-colors " +
-        (active ? "bg-gray-50 text-primary-500" : "text-gray-500 hover:bg-gray-50")
+        (active
+          ? "bg-gray-50 text-primary-500"
+          : "text-gray-500 hover:bg-gray-50")
       }
     >
       <Icon className="h-4 w-4 shrink-0" />
@@ -111,7 +121,11 @@ function NavDropdown({
       >
         <Icon className="h-4 w-4 shrink-0" />
         <span className="flex-1">{label}</span>
-        {open ? <ChevronUpIcon className="h-4 w-4 shrink-0" /> : <ChevronDownIcon className="h-4 w-4 shrink-0" />}
+        {open ? (
+          <ChevronUpIcon className="h-4 w-4 shrink-0" />
+        ) : (
+          <ChevronDownIcon className="h-4 w-4 shrink-0" />
+        )}
       </button>
       {open && items.length > 0 && (
         <div className="flex flex-col items-start pb-1">
@@ -155,7 +169,12 @@ export interface LayoutProps {
   children: ReactNode;
 }
 
-export default function Layout({ active, activeSubItem, breadcrumb, children }: LayoutProps) {
+export default function Layout({
+  active,
+  activeSubItem,
+  breadcrumb,
+  children,
+}: LayoutProps) {
   const { navigate } = useNavigation();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [entityModalOpen, setEntityModalOpen] = useState(false);
@@ -173,15 +192,26 @@ export default function Layout({ active, activeSubItem, breadcrumb, children }: 
   };
 
   const navItems: (NavLeaf | NavBranch)[] = [
-    { key: "dashboard", label: "Dashboard", icon: LayoutDashboardIcon, onClick: () => go({ screen: "dashboard" }) },
+    {
+      key: "dashboard",
+      label: "Dashboard",
+      icon: LayoutDashboardIcon,
+      onClick: () => go({ screen: "dashboard" }),
+    },
     {
       key: "properties",
       label: "Properties",
       icon: Building2Icon,
       items: [
         { label: "Projects", onClick: () => go({ screen: "properties" }) },
-        { label: "Unit Availability", onClick: () => go({ screen: "unit-availability" }) },
-        { label: "Unit Holding", onClick: () => go({ screen: "unit-holding" }) },
+        {
+          label: "Unit Availability",
+          onClick: () => go({ screen: "unit-availability" }),
+        },
+        {
+          label: "Unit Holding",
+          onClick: () => go({ screen: "unit-holding" }),
+        },
       ],
     },
     {
@@ -189,25 +219,52 @@ export default function Layout({ active, activeSubItem, breadcrumb, children }: 
       label: "Commissions",
       icon: WalletIcon,
       items: [
-        { label: "Advance Commission", onClick: () => go({ screen: "advance-commission" }) },
-        { label: "Regular Commission", onClick: () => go({ screen: "regular-commission" }) },
-        { label: "For Compliance", onClick: () => go({ screen: "compliance" }) },
+        {
+          label: "Advance Commission",
+          onClick: () => go({ screen: "advance-commission" }),
+        },
+        {
+          label: "Regular Commission",
+          onClick: () => go({ screen: "regular-commission" }),
+        },
+        {
+          label: "For Compliance",
+          onClick: () => go({ screen: "compliance" }),
+        },
       ],
     },
-    { key: "computation", label: "Computation Sheet", icon: FileTextIcon },
-    { key: "clients", label: "Clients", icon: UsersIcon, onClick: () => go({ screen: "clients" }) },
+    {
+      key: "computation",
+      label: "Computation Sheet",
+      icon: FileTextIcon,
+      onClick: () => go({ screen: "computation-sheet" }),
+    },
+    {
+      key: "clients",
+      label: "Clients",
+      icon: UsersIcon,
+      onClick: () => go({ screen: "clients" }),
+    },
     {
       key: "lottery",
       label: "Lottery Event",
       icon: TicketIcon,
       items: [
-        { label: "Registration", onClick: () => go({ screen: "lottery-registration" }) },
-        { label: "Lottery", onClick: () => go({ screen: "lottery-unit-picker" }) },
+        {
+          label: "Registration",
+          onClick: () => go({ screen: "lottery-registration" }),
+        },
+        {
+          label: "Lottery",
+          onClick: () => go({ screen: "lottery-unit-picker" }),
+        },
       ],
     },
   ];
 
-  const crumbs: BreadcrumbItem[] = breadcrumb.map((c) => (typeof c === "string" ? { label: c } : c));
+  const crumbs: BreadcrumbItem[] = breadcrumb.map((c) =>
+    typeof c === "string" ? { label: c } : c,
+  );
 
   return (
     <div className="db-page">
@@ -235,14 +292,14 @@ export default function Layout({ active, activeSubItem, breadcrumb, children }: 
               <button
                 type="button"
                 onClick={() => go({ screen: "dashboard" })}
-                className="flex cursor-pointer items-end gap-1.5 self-start"
+                className="flex cursor-pointer items-center self-start"
                 aria-label="Go to dashboard"
               >
-                <img className="h-8 w-[23px]" src={logoSymbolUrl} alt="DMCI Homes shield logo" />
-                <div className="flex w-[145px] flex-col items-end gap-[3px]">
-                  <img className="h-[9px]" src={logoSalesUrl} alt="Sales" />
-                  <img className="h-5 w-[145px]" src={logoTextUrl} alt="DMCI Homes" />
-                </div>
+                <img
+                  className="h-8 w-auto"
+                  src={dmciLogoUrl}
+                  alt="DMCI Homes Sales"
+                />
               </button>
               <button
                 type="button"
@@ -263,11 +320,19 @@ export default function Layout({ active, activeSubItem, breadcrumb, children }: 
                     label={item.label}
                     items={item.items}
                     active={active === item.key}
-                    activeSubItem={active === item.key ? activeSubItem : undefined}
+                    activeSubItem={
+                      active === item.key ? activeSubItem : undefined
+                    }
                   />
                 ) : (
-                  <NavItem key={item.key} icon={item.icon} label={item.label} active={active === item.key} onClick={item.onClick} />
-                )
+                  <NavItem
+                    key={item.key}
+                    icon={item.icon}
+                    label={item.label}
+                    active={active === item.key}
+                    onClick={item.onClick}
+                  />
+                ),
               )}
             </nav>
           </div>
@@ -279,7 +344,9 @@ export default function Layout({ active, activeSubItem, breadcrumb, children }: 
                   OR
                 </div>
                 <div className="flex flex-col text-sm leading-5">
-                  <span className="font-semibold text-gray-900">Super Admin</span>
+                  <span className="font-semibold text-gray-900">
+                    Super Admin
+                  </span>
                   <span className="text-gray-600">Admin</span>
                 </div>
               </div>
@@ -308,12 +375,25 @@ export default function Layout({ active, activeSubItem, breadcrumb, children }: 
             >
               <MenuIcon className="h-5 w-5" />
             </button>
-            <nav aria-label="Breadcrumb" className="flex min-w-0 items-center gap-2 overflow-hidden text-sm">
+            <nav
+              aria-label="Breadcrumb"
+              className="flex min-w-0 items-center gap-2 overflow-hidden text-sm"
+            >
               {crumbs.map((crumb, index) => {
                 const isLast = index === crumbs.length - 1;
                 return (
-                  <span key={index} className={"items-center gap-2 " + (isLast ? "flex min-w-0 shrink" : "hidden shrink-0 sm:flex")}>
-                    {index > 0 && <ChevronRightIcon className="h-4 w-4 shrink-0 text-gray-400" />}
+                  <span
+                    key={index}
+                    className={
+                      "items-center gap-2 " +
+                      (isLast
+                        ? "flex min-w-0 shrink"
+                        : "hidden shrink-0 sm:flex")
+                    }
+                  >
+                    {index > 0 && (
+                      <ChevronRightIcon className="h-4 w-4 shrink-0 text-gray-400" />
+                    )}
                     {crumb.onClick && !isLast ? (
                       <button
                         type="button"
@@ -323,7 +403,14 @@ export default function Layout({ active, activeSubItem, breadcrumb, children }: 
                         {crumb.label}
                       </button>
                     ) : (
-                      <span className={"truncate rounded-md px-1 " + (isLast ? "font-semibold text-primary-500" : "font-medium text-gray-500")}>
+                      <span
+                        className={
+                          "truncate rounded-md px-1 " +
+                          (isLast
+                            ? "font-semibold text-primary-500"
+                            : "font-medium text-gray-500")
+                        }
+                      >
                         {crumb.label}
                       </span>
                     )}
@@ -336,10 +423,14 @@ export default function Layout({ active, activeSubItem, breadcrumb, children }: 
           <button
             type="button"
             onClick={() => setEntityModalOpen(true)}
-            className="flex shrink-0 cursor-pointer items-center gap-2 rounded-full border border-primary-50 bg-white py-1 pl-1 pr-3 hover:bg-gray-50"
+            className="flex shrink-0 cursor-pointer items-center gap-2 rounded-full border border-primary-50 bg-white py-1 pl-1 px-1 hover:bg-gray-50"
           >
-            <span className="shrink-0 rounded-full bg-blue-50 px-2.5 py-1 text-xs font-bold text-primary-500">{selectedEntity.code}</span>
-            <span className="max-w-[120px] truncate text-sm font-medium text-gray-700 sm:max-w-none">{selectedEntity.name}</span>
+            <span className="shrink-0 rounded-full bg-blue-50 px-2.5 py-1 text-xs font-bold text-primary-500">
+              {selectedEntity.code}
+            </span>
+            <span className="hidden truncate text-sm font-medium text-gray-700 sm:block">
+              {selectedEntity.name}
+            </span>
           </button>
         </header>
 
@@ -358,7 +449,13 @@ export default function Layout({ active, activeSubItem, breadcrumb, children }: 
   );
 }
 
-export function PageBackHeading({ title, onBack }: { title: string; onBack?: () => void }) {
+export function PageBackHeading({
+  title,
+  onBack,
+}: {
+  title: string;
+  onBack?: () => void;
+}) {
   const { back } = useNavigation();
   return (
     <div className="flex items-center gap-3">
@@ -370,7 +467,7 @@ export function PageBackHeading({ title, onBack }: { title: string; onBack?: () 
       >
         <ChevronLeftIcon className="h-5 w-5" />
       </button>
-      <h1 className="text-xl font-semibold text-gray-900">{title}</h1>
+      <h1 className="text-lg font-semibold text-gray-900">{title}</h1>
     </div>
   );
 }

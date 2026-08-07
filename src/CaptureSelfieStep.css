@@ -41,32 +41,12 @@ body,
 
 .cs-logo {
   display: flex;
-  align-items: flex-end;
-  gap: 6px;
+  align-items: center;
 }
 
-.cs-logo__symbol {
-  width: 23px;
+.cs-logo__image {
   height: 32px;
-  display: block;
-}
-
-.cs-logo__text-col {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 3px;
-  width: 145px;
-}
-
-.cs-logo__sales {
-  height: 9px;
-  display: block;
-}
-
-.cs-logo__wordmark {
-  width: 145px;
-  height: 20px;
+  width: auto;
   display: block;
 }
 

@@ -4,8 +4,9 @@ import FilterBar, { type FilterField } from "./FilterBar";
 import Pagination from "./Pagination";
 import Checkbox from "./Checkbox";
 import { DownloadPdfButton, LinkBadge, StatusPill, TableCardHeader } from "./StatusBadge";
-import { GridIcon, ImageIcon as HouseImageIcon, ListIcon } from "./icons";
+import { GridIcon, ListIcon } from "./icons";
 import { useNavigation, type Screen } from "./NavigationContext";
+import { acaciaEstatesLogoUrl, aristaPlaceLogoUrl, valeronTowerLogoUrl, noImageAvailableUrl } from "./assets/figmaAssets";
 
 /**
  * PropertiesListView — "Property > List" screen, with the List/Grid toggle.
@@ -52,16 +53,20 @@ const PROJECTS: ProjectRow[] = [
 
 interface GridCard {
   name: string;
-  hasImage: boolean;
+  logoUrl?: string;
   available: [number, number, number];
   sold: [number, number, number];
 }
 
 const GRID_CARDS: GridCard[] = [
-  { name: "Arista Place", hasImage: true, available: [1302, 1230, 1123], sold: [523, 523, 523] },
-  { name: "Acacia Estates", hasImage: true, available: [1302, 1230, 1123], sold: [523, 523, 523] },
-  { name: "The Valeron Tower", hasImage: true, available: [1302, 1230, 1123], sold: [523, 523, 523] },
-  { name: "Alta Vista De Boracay", hasImage: false, available: [1302, 1230, 1123], sold: [523, 523, 523] },
+  { name: "Arista Place", logoUrl: aristaPlaceLogoUrl, available: [1302, 1230, 1123], sold: [523, 523, 523] },
+  { name: "Acacia Estates", logoUrl: acaciaEstatesLogoUrl, available: [1302, 1230, 1123], sold: [523, 523, 523] },
+  { name: "The Valeron Tower", logoUrl: valeronTowerLogoUrl, available: [1302, 1230, 1123], sold: [523, 523, 523] },
+  { name: "Alta Vista De Boracay", available: [1302, 1230, 1123], sold: [523, 523, 523] },
+  { name: "Arista Place", logoUrl: aristaPlaceLogoUrl, available: [1302, 1230, 1123], sold: [523, 523, 523] },
+  { name: "Arista Place", logoUrl: aristaPlaceLogoUrl, available: [1302, 1230, 1123], sold: [523, 523, 523] },
+  { name: "Acacia Estates", logoUrl: acaciaEstatesLogoUrl, available: [1302, 1230, 1123], sold: [523, 523, 523] },
+  { name: "Arista Place", logoUrl: aristaPlaceLogoUrl, available: [1302, 1230, 1123], sold: [523, 523, 523] },
 ];
 
 function ViewToggle({ view, onChange }: { view: "list" | "grid"; onChange: (view: "list" | "grid") => void }) {
@@ -103,30 +108,30 @@ function TableView({ view, onViewChange }: { view: "list" | "grid"; onViewChange
           </>
         }
       />
-      <div className="flex-1 overflow-auto [scrollbar-gutter:stable]">
+      <div className="flex-1 min-h-0 overflow-auto [scrollbar-gutter:stable]">
       <table className="w-full min-w-[960px] border-collapse text-sm">
-        <thead>
-          <tr className="border-b border-gray-200 bg-white text-left text-gray-700">
-            <th className="w-10 px-5 py-3">
+        <thead className="sticky top-0 z-10 bg-gray-50 [&_th]:text-xs [&_th]:font-semibold">
+          <tr className="shadow-[inset_0_-1px_0_0_#e5e7eb] bg-gray-50 text-left text-gray-500">
+            <th className="w-10 px-4 py-2">
               <Checkbox size="sm" />
             </th>
-            <th className="px-2 py-3 font-semibold">Code</th>
-            <th className="px-2 py-3 font-semibold">Project</th>
-            <th className="px-2 py-3 font-semibold">Type</th>
-            <th className="px-2 py-3 font-semibold">Status</th>
-            <th className="px-2 py-3 font-semibold">Building</th>
-            <th className="px-2 py-3 font-semibold">Units</th>
-            <th className="px-2 py-3 font-semibold">Links</th>
+            <th className="px-2 py-2 font-semibold">Code</th>
+            <th className="px-2 py-2 font-semibold">Project</th>
+            <th className="px-2 py-2 font-semibold">Type</th>
+            <th className="px-2 py-2 font-semibold">Status</th>
+            <th className="px-2 py-2 font-semibold">Building</th>
+            <th className="px-2 py-2 font-semibold">Units</th>
+            <th className="px-2 py-2 font-semibold">Links</th>
           </tr>
         </thead>
         <tbody>
           {PROJECTS.map((row) => (
-            <tr key={row.code} className="border-b border-gray-100 text-gray-700 hover:bg-gray-50">
-              <td className="px-5 py-3">
+            <tr key={row.code} className="border-b border-gray-100 text-gray-600 hover:bg-gray-50">
+              <td className="px-4 py-2">
                 <Checkbox size="sm" />
               </td>
-              <td className="px-2 py-3 font-semibold text-gray-900">{row.code}</td>
-              <td className="px-2 py-3">
+              <td className="px-2 py-2 font-semibold text-gray-900">{row.code}</td>
+              <td className="px-2 py-2">
                 <button
                   type="button"
                   onClick={() => navigate({ screen: "project-details", project: row.project })}
@@ -135,13 +140,13 @@ function TableView({ view, onViewChange }: { view: "list" | "grid"; onViewChange
                   {row.project}
                 </button>
               </td>
-              <td className="px-2 py-3">{row.type}</td>
-              <td className="px-2 py-3">
+              <td className="px-2 py-2">{row.type}</td>
+              <td className="px-2 py-2">
                 <StatusPill status={row.status} />
               </td>
-              <td className="px-2 py-3">{row.building}</td>
-              <td className="px-2 py-3">{row.units}</td>
-              <td className="px-2 py-3">
+              <td className="px-2 py-2">{row.building}</td>
+              <td className="px-2 py-2">{row.units}</td>
+              <td className="px-2 py-2">
                 <div className="flex flex-wrap gap-1.5">
                   {row.links.map((link) => {
                     const screen = LINK_SCREENS[link];
@@ -171,57 +176,47 @@ function GridView({ view, onViewChange }: { view: "list" | "grid"; onViewChange:
   return (
     <div className="flex h-full w-full flex-col overflow-hidden rounded-xl border border-gray-200 bg-white shadow-[0_1px_2px_rgba(10,13,18,0.05)]">
       <TableCardHeader title="Property List" rightSlot={<ViewToggle view={view} onChange={onViewChange} />} />
-      <div className="grid flex-1 grid-cols-1 gap-5 overflow-auto p-6 [scrollbar-gutter:stable] sm:grid-cols-2 lg:grid-cols-4">
-        {GRID_CARDS.map((card) => (
-          <div key={card.name} className="overflow-hidden rounded-xl border border-gray-200">
-            <div className="flex h-32 items-center justify-center bg-gray-50 p-4">
-              {card.hasImage ? (
-                <span className="text-center text-sm font-bold uppercase tracking-wide text-gray-600">{card.name}</span>
+      <div className="grid flex-1 min-h-0 auto-rows-min grid-cols-[repeat(auto-fill,minmax(256px,1fr))] items-start gap-5 overflow-auto p-6 [scrollbar-gutter:stable]">
+        {GRID_CARDS.map((card, index) => (
+          <button
+            key={card.name + index}
+            type="button"
+            onClick={() => navigate({ screen: "project-details", project: card.name })}
+            className="group flex origin-center transform-gpu cursor-pointer flex-col rounded-xl border border-gray-200 bg-white text-left backface-hidden transition-transform duration-200 ease-out will-change-transform hover:z-10 hover:scale-[1.02] hover:shadow-lg"
+          >
+            <div className="flex h-32 shrink-0 items-center justify-center overflow-hidden rounded-t-xl bg-gray-50 p-4">
+              {card.logoUrl ? (
+                <img src={card.logoUrl} alt={card.name} className="max-h-full max-w-full object-contain" />
               ) : (
-                <div className="flex flex-col items-center gap-2 text-gray-300">
-                  <HouseImageIcon className="h-9 w-9" />
-                  <span className="text-xs font-medium">No Image Available</span>
-                </div>
+                <img src={noImageAvailableUrl} alt="No image available" className="max-h-full max-w-full object-contain" />
               )}
             </div>
             <div className="flex flex-col gap-3 p-4">
-              <button
-                type="button"
-                onClick={() => navigate({ screen: "project-details", project: card.name })}
-                className="cursor-pointer text-left text-base font-semibold text-primary-500 hover:underline"
-              >
-                {card.name}
-              </button>
-              <table className="w-full border-collapse text-xs">
-                <thead>
-                  <tr className="text-gray-400">
-                    <th className="pb-1 text-left font-medium" />
-                    <th className="pb-1 text-center font-medium">CU</th>
-                    <th className="pb-1 text-center font-medium">PS</th>
-                    <th className="pb-1 text-center font-medium">SA</th>
-                  </tr>
-                </thead>
-                <tbody className="text-gray-700">
-                  <tr>
-                    <td className="py-1 font-semibold text-primary-500">Available</td>
-                    {card.available.map((value, i) => (
-                      <td key={i} className="py-1 text-center">
-                        {value}
-                      </td>
-                    ))}
-                  </tr>
-                  <tr>
-                    <td className="py-1 font-semibold text-primary-500">Sold</td>
-                    {card.sold.map((value, i) => (
-                      <td key={i} className="py-1 text-center">
-                        {value}
-                      </td>
-                    ))}
-                  </tr>
-                </tbody>
-              </table>
+              <span className="text-base font-semibold text-primary-500 group-hover:underline">{card.name}</span>
+              <div className="grid grid-cols-[1fr_repeat(3,minmax(40px,auto))] items-center gap-x-3 gap-y-1.5">
+                <span />
+                {["CU", "PS", "SA"].map((label) => (
+                  <span key={label} className="justify-self-center rounded-[5px] bg-gray-50 px-3 py-0.5 text-xs font-semibold text-gray-600">
+                    {label}
+                  </span>
+                ))}
+
+                <span className="text-xs font-semibold text-primary-600">Available</span>
+                {card.available.map((value, i) => (
+                  <span key={i} className="text-center text-sm text-gray-900">
+                    {value}
+                  </span>
+                ))}
+
+                <span className="text-xs font-semibold text-primary-600">Sold</span>
+                {card.sold.map((value, i) => (
+                  <span key={i} className="text-center text-sm text-gray-900">
+                    {value}
+                  </span>
+                ))}
+              </div>
             </div>
-          </div>
+          </button>
         ))}
       </div>
       <Pagination total={85} />
@@ -230,7 +225,7 @@ function GridView({ view, onViewChange }: { view: "list" | "grid"; onViewChange:
 }
 
 export default function PropertiesListView() {
-  const [view, setView] = useState<"list" | "grid">("list");
+  const [view, setView] = useState<"list" | "grid">("grid");
   const { navigate } = useNavigation();
 
   return (
@@ -245,16 +240,16 @@ export default function PropertiesListView() {
       orgBadge
     >
       <div className="flex h-full w-full flex-col">
-        <div className="flex shrink-0 flex-col gap-5 px-6 pt-4">
+        <div className="flex shrink-0 flex-col gap-4 px-5 pt-3">
           <div className="flex flex-col gap-1">
-            <h1 className="text-xl font-semibold text-gray-900">Projects</h1>
+            <h1 className="text-lg font-semibold text-gray-900">Projects</h1>
             <p className="text-sm text-gray-600">12 Projects available</p>
           </div>
 
           <FilterBar fields={FILTERS} showLabels={false} actionsColumn />
         </div>
 
-        <div className="flex min-h-0 flex-1 flex-col px-6 pb-4 pt-5">
+        <div className="flex min-h-0 flex-1 flex-col px-5 pb-3 pt-4">
           {view === "list" ? <TableView view={view} onViewChange={setView} /> : <GridView view={view} onViewChange={setView} />}
         </div>
       </div>

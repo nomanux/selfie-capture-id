@@ -1,12 +1,12 @@
-import { createContext, useCallback, useContext, useMemo, useState, type ReactNode } from "react";
+import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
 
 /**
- * NavigationContext — a tiny in-memory router so the DMCI Homes Sales
- * CRF/RA screens can actually link to each other (sidebar, breadcrumbs,
- * project rows/cards, the Tower/Floor/Unit/Parking Slot/Service Area tabs)
- * without adding react-router as a dependency. Holds a simple history
- * stack so every screen's back button/breadcrumb behaves correctly
- * regardless of how the user arrived there.
+ * NavigationContext — a tiny router so the DMCI Homes Sales CRF/RA screens
+ * can actually link to each other (sidebar, breadcrumbs, project rows/cards,
+ * the Tower/Floor/Unit/Parking Slot/Service Area tabs) without adding
+ * react-router as a dependency. Every screen gets its own real, unique URL
+ * (synced via the History API), so the address bar always reflects the
+ * current screen and the browser Back/Forward buttons work.
  */
 
 export type Screen =
@@ -22,6 +22,7 @@ export type Screen =
   | "unit-availability-details"
   | "unit-holding"
   | "unit-holding-details"
+  | "computation-sheet"
   | "clients"
   | "advance-commission"
   | "advance-commission-details"
@@ -49,22 +50,110 @@ interface NavigationContextValue {
 
 const DEFAULT_ROUTE: Route = { screen: "dashboard" };
 
+// One unique, human-readable path per screen. Optional context (project,
+// itemId) rides along as a query string so a full URL is always enough to
+// reconstruct the exact route (deep-link/refresh/share all just work).
+const SCREEN_PATHS: Record<Screen, string> = {
+  dashboard: "/dashboard",
+  properties: "/properties",
+  "project-details": "/properties/details",
+  tower: "/properties/tower",
+  floor: "/properties/floor",
+  unit: "/properties/unit",
+  "parking-slot": "/properties/parking-slot",
+  "service-area": "/properties/service-area",
+  "unit-availability": "/unit-availability",
+  "unit-availability-details": "/unit-availability/details",
+  "unit-holding": "/unit-holding",
+  "unit-holding-details": "/unit-holding/details",
+  "computation-sheet": "/computation-sheet",
+  clients: "/clients",
+  "advance-commission": "/commission/advance",
+  "advance-commission-details": "/commission/advance/details",
+  "regular-commission": "/commission/regular",
+  "regular-commission-details": "/commission/regular/details",
+  compliance: "/commission/compliance",
+  "compliance-details": "/commission/compliance/details",
+  "lottery-registration": "/lottery/registration",
+  "lottery-unit-picker": "/lottery/unit-picker",
+};
+
+const PATH_TO_SCREEN: Record<string, Screen> = Object.fromEntries(
+  Object.entries(SCREEN_PATHS).map(([screen, path]) => [path, screen])
+) as Record<string, Screen>;
+
+function routeToUrl(route: Route): string {
+  const path = SCREEN_PATHS[route.screen] ?? SCREEN_PATHS.dashboard;
+  const params = new URLSearchParams();
+  if (route.project) params.set("project", route.project);
+  if (route.itemId) params.set("itemId", route.itemId);
+  const query = params.toString();
+  return query ? `${path}?${query}` : path;
+}
+
+function urlToRoute(pathname: string, search: string): Route {
+  const screen = PATH_TO_SCREEN[pathname] ?? DEFAULT_ROUTE.screen;
+  const params = new URLSearchParams(search);
+  const route: Route = { screen };
+  const project = params.get("project");
+  if (project) route.project = project;
+  const itemId = params.get("itemId");
+  if (itemId) route.itemId = itemId;
+  return route;
+}
+
+function readRouteFromLocation(): Route {
+  if (typeof window === "undefined") return DEFAULT_ROUTE;
+  return urlToRoute(window.location.pathname, window.location.search);
+}
+
+interface HistoryState {
+  depth: number;
+}
+
 const NavigationContext = createContext<NavigationContextValue | null>(null);
 
-export function NavigationProvider({ children, initialRoute = DEFAULT_ROUTE }: { children: ReactNode; initialRoute?: Route }) {
-  const [stack, setStack] = useState<Route[]>([initialRoute]);
+export function NavigationProvider({ children, initialRoute }: { children: ReactNode; initialRoute?: Route }) {
+  const [route, setRoute] = useState<Route>(() => initialRoute ?? readRouteFromLocation());
+  const [depth, setDepth] = useState(0);
 
-  const navigate = useCallback((route: Route) => {
-    setStack((prev) => [...prev, route]);
+  // Stamp the starting history entry with depth 0, and normalize the URL to
+  // whatever route we actually resolved (covers "/" or an unknown path
+  // falling back to the dashboard).
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    window.history.replaceState({ depth: 0 } satisfies HistoryState, "", routeToUrl(route));
+    // Only run once on mount — this is deliberately not tied to `route`.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Keep in sync with the browser's own Back/Forward buttons.
+  useEffect(() => {
+    function onPopState(event: PopStateEvent) {
+      const state = event.state as HistoryState | null;
+      setRoute(readRouteFromLocation());
+      setDepth(state?.depth ?? 0);
+    }
+    window.addEventListener("popstate", onPopState);
+    return () => window.removeEventListener("popstate", onPopState);
+  }, []);
+
+  const navigate = useCallback((next: Route) => {
+    setRoute(next);
+    setDepth((current) => {
+      const nextDepth = current + 1;
+      window.history.pushState({ depth: nextDepth } satisfies HistoryState, "", routeToUrl(next));
+      return nextDepth;
+    });
   }, []);
 
   const back = useCallback(() => {
-    setStack((prev) => (prev.length > 1 ? prev.slice(0, -1) : prev));
-  }, []);
+    if (depth > 0) window.history.back();
+  }, [depth]);
 
   const value = useMemo<NavigationContextValue>(
-    () => ({ route: stack[stack.length - 1], navigate, back, canGoBack: stack.length > 1 }),
-    [stack, navigate, back]
+    () => ({ route, navigate, back, canGoBack: depth > 0 }),
+    [route, navigate, back, depth]
   );
 
   return <NavigationContext.Provider value={value}>{children}</NavigationContext.Provider>;

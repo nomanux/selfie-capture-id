@@ -95,10 +95,10 @@ export default function LotteryUnitPicker() {
       orgBadge
     >
       <div className="flex h-full w-full flex-col">
-      <div className="flex flex-1 flex-col gap-5 overflow-y-auto px-6 py-4 [scrollbar-gutter:stable]">
+      <div className="flex flex-1 flex-col gap-4 overflow-y-auto px-5 py-3 [scrollbar-gutter:stable]">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="flex flex-col gap-1">
-            <h1 className="text-xl font-semibold text-gray-900">
+            <h1 className="text-lg font-semibold text-gray-900">
               Property Unit List
             </h1>
             <p className="text-sm text-gray-600">200 lists available</p>
@@ -149,7 +149,7 @@ export default function LotteryUnitPicker() {
         <div className="flex w-full flex-1 flex-col rounded-xl border border-gray-200 bg-white shadow-[0_1px_2px_rgba(10,13,18,0.05)]">
           <div className="flex flex-wrap items-center justify-between gap-3 border-b border-gray-100 px-6 py-4">
             <div className="flex flex-col gap-1">
-              <h2 className="text-lg font-semibold text-gray-900">
+              <h2 className="text-base font-semibold text-gray-900">
                 Allegra Garden Palace - Amina
               </h2>
               <p className="text-sm font-medium text-error-600">

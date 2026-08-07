@@ -24,7 +24,7 @@ import type { ButtonHTMLAttributes } from "react";
  * reference page. Ask if you want those unified too.
  */
 
-export type ButtonVariant = "primary" | "secondary" | "tertiary";
+export type ButtonVariant = "primary" | "secondary" | "secondary-color" | "tertiary";
 export type ButtonSize = "xs" | "sm" | "md" | "lg" | "xl";
 
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
@@ -54,6 +54,7 @@ export const ICON_BUTTON_SIZE_CLASSES: Record<ButtonSize, string> = {
 export const BUTTON_VARIANT_CLASSES: Record<ButtonVariant, string> = {
   primary: "btn-primary",
   secondary: "btn-secondary",
+  "secondary-color": "btn-secondary-color",
   tertiary: "btn-tertiary",
 };
 

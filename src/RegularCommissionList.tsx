@@ -56,9 +56,9 @@ export default function RegularCommissionList() {
       ]}
     >
       <div className="flex h-full w-full flex-col">
-        <div className="flex shrink-0 flex-col gap-5 px-6 pt-4">
+        <div className="flex shrink-0 flex-col gap-4 px-5 pt-3">
           <div className="flex flex-col gap-1">
-            <h1 className="text-xl font-semibold text-gray-900">Regular Commission</h1>
+            <h1 className="text-lg font-semibold text-gray-900">Regular Commission</h1>
             <p className="text-sm text-gray-600">30 records found</p>
           </div>
 
@@ -83,44 +83,44 @@ export default function RegularCommissionList() {
           </div>
         </div>
 
-        <div className="flex min-h-0 flex-1 flex-col px-6 pb-4 pt-5">
+        <div className="flex min-h-0 flex-1 flex-col px-5 pb-3 pt-4">
         <div className="flex w-full flex-1 flex-col overflow-hidden rounded-xl border border-gray-200 bg-white shadow-[0_1px_2px_rgba(10,13,18,0.05)]">
           <div className="flex flex-wrap items-center justify-between gap-3 pr-6 pt-2">
             <RecordTabs tabs={["My commission", "Teams Commission"]} active={tab} onChange={setTab} />
             <DownloadPdfButton />
           </div>
-          <div className="flex-1 overflow-auto [scrollbar-gutter:stable]">
+          <div className="flex-1 min-h-0 overflow-auto [scrollbar-gutter:stable]">
           <table className="w-full min-w-[1040px] border-collapse text-sm">
-            <thead>
-              <tr className="border-b border-gray-200 bg-white text-left text-gray-700">
-                <th className="w-10 px-5 py-3">
+            <thead className="sticky top-0 z-10 bg-gray-50 [&_th]:text-xs [&_th]:font-semibold">
+              <tr className="shadow-[inset_0_-1px_0_0_#e5e7eb] bg-gray-50 text-left text-gray-500">
+                <th className="w-10 px-4 py-2">
                   <Checkbox size="sm" />
                 </th>
-                <th className="px-2 py-3 font-semibold">Contract No.</th>
-                <th className="px-2 py-3 font-semibold">Building Unit</th>
-                <th className="px-2 py-3 font-semibold">Client Name</th>
-                <th className="px-2 py-3 font-semibold">Net TCP</th>
-                <th className="px-2 py-3 font-semibold">Primary Seller Name</th>
-                <th className="px-2 py-3 font-semibold">Seller Role</th>
-                <th className="px-2 py-3 font-semibold">Seller Group</th>
-                <th className="min-w-[88px] px-2 py-3 text-right font-semibold">Actions</th>
+                <th className="px-2 py-2 font-semibold">Contract No.</th>
+                <th className="px-2 py-2 font-semibold">Building Unit</th>
+                <th className="px-2 py-2 font-semibold">Client Name</th>
+                <th className="px-2 py-2 font-semibold">Net TCP</th>
+                <th className="px-2 py-2 font-semibold">Primary Seller Name</th>
+                <th className="px-2 py-2 font-semibold">Seller Role</th>
+                <th className="px-2 py-2 font-semibold">Seller Group</th>
+                <th className="w-[88px] px-2 py-2 text-center font-semibold">Actions</th>
               </tr>
             </thead>
             <tbody>
               {ROWS.map((row) => (
-                <tr key={row.contractNo} className="border-b border-gray-100 text-gray-700 hover:bg-gray-50">
-                  <td className="px-5 py-3">
+                <tr key={row.contractNo} className="border-b border-gray-100 text-gray-600 hover:bg-gray-50">
+                  <td className="px-4 py-2">
                     <Checkbox size="sm" />
                   </td>
-                  <td className="px-2 py-3 font-semibold text-gray-900">{row.contractNo}</td>
-                  <td className="px-2 py-3">{row.buildingUnit}</td>
-                  <td className="px-2 py-3 font-semibold text-gray-900">{row.clientName}</td>
-                  <td className="px-2 py-3">{row.netTcp}</td>
-                  <td className="px-2 py-3">{row.primarySellerName}</td>
-                  <td className="px-2 py-3">{row.sellerRole}</td>
-                  <td className="px-2 py-3">{row.sellerGroup}</td>
-                  <td className="px-2 py-3">
-                    <div className="flex items-center justify-end">
+                  <td className="px-2 py-2 font-semibold text-gray-900">{row.contractNo}</td>
+                  <td className="px-2 py-2">{row.buildingUnit}</td>
+                  <td className="px-2 py-2 font-semibold text-gray-900">{row.clientName}</td>
+                  <td className="px-2 py-2">{row.netTcp}</td>
+                  <td className="px-2 py-2">{row.primarySellerName}</td>
+                  <td className="px-2 py-2">{row.sellerRole}</td>
+                  <td className="px-2 py-2">{row.sellerGroup}</td>
+                  <td className="px-2 py-2">
+                    <div className="flex items-center justify-center">
                       <button
                         type="button"
                         aria-label={`View ${row.contractNo} details`}

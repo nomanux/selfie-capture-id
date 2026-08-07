@@ -15,7 +15,8 @@ import Checkbox from "./Checkbox";
  * The Button section renders the actual shared Button / IconButton
  * components from ./Button.tsx (not a copy of their styles) — reference:
  * Figma file NcMe5sSgPs65q3Ed2rV1Kv, node 9:9698 ("Button CTA" kitchen
- * sink). 4 style variants x 5 sizes (xs-xl). Editing Button.tsx changes
+ * sink) plus the "Secondary color" variant (node 9:10812/9:10911).
+ * 5 style variants x 5 sizes (xs-xl). Editing Button.tsx changes
  * both this page and every screen that imports it. "Default" is the real
  * resting state; hover the buttons to see the real :hover state — it isn't
  * faked here.
@@ -110,7 +111,7 @@ function Section({ title, description, children }: { title: string; description:
   return (
     <section className="flex flex-col gap-5 rounded-xl border border-gray-200 bg-white p-6 shadow-[0_1px_2px_rgba(10,13,18,0.05)]">
       <div className="flex flex-col gap-1">
-        <h2 className="text-lg font-semibold text-gray-900">{title}</h2>
+        <h2 className="text-base font-semibold text-gray-900">{title}</h2>
         <p className="text-sm text-gray-600">{description}</p>
       </div>
       {children}
@@ -141,6 +142,9 @@ export default function ComponentsPage() {
             </Swatch>
             <Swatch label="Secondary">
               <ButtonVariantTable variant="secondary" />
+            </Swatch>
+            <Swatch label="Secondary color">
+              <ButtonVariantTable variant="secondary-color" />
             </Swatch>
             <Swatch label="Tertiary">
               <ButtonVariantTable variant="tertiary" />
@@ -195,22 +199,37 @@ export default function ComponentsPage() {
         </Section>
 
         {/* Checkbox */}
-        <Section title="Checkbox" description="Table row selection checkbox, small and medium sizes, default/checked/disabled.">
-          <div className="flex flex-col gap-6 sm:flex-row sm:gap-10">
-            <Swatch label="Small (h-4)">
-              <div className="flex items-center gap-4">
-                <Checkbox size="sm" aria-label="Unchecked" />
-                <Checkbox size="sm" defaultChecked aria-label="Checked" />
-                <Checkbox size="sm" disabled aria-label="Disabled" />
-                <Checkbox size="sm" disabled defaultChecked aria-label="Disabled checked" />
+        <Section
+          title="Checkbox"
+          description="Table row selection checkbox — reference: Figma node 18:14072. Small and medium sizes x default/checked/indeterminate x default/disabled. These are real inputs, not faked swatches — hover, click, or tab to one to see the true :hover/:checked/:focus states."
+        >
+          <div className="flex flex-col gap-8 sm:flex-row sm:gap-12">
+            <Swatch label="Small (16px)">
+              <div className="flex flex-col gap-4">
+                <div className="flex items-center gap-4">
+                  <Checkbox size="sm" aria-label="Unchecked" />
+                  <Checkbox size="sm" defaultChecked aria-label="Checked" />
+                  <Checkbox size="sm" indeterminate aria-label="Indeterminate" />
+                </div>
+                <div className="flex items-center gap-4">
+                  <Checkbox size="sm" disabled aria-label="Disabled unchecked" />
+                  <Checkbox size="sm" disabled defaultChecked aria-label="Disabled checked" />
+                  <Checkbox size="sm" disabled indeterminate aria-label="Disabled indeterminate" />
+                </div>
               </div>
             </Swatch>
-            <Swatch label="Medium (h-5)">
-              <div className="flex items-center gap-4">
-                <Checkbox size="md" aria-label="Unchecked" />
-                <Checkbox size="md" defaultChecked aria-label="Checked" />
-                <Checkbox size="md" disabled aria-label="Disabled" />
-                <Checkbox size="md" disabled defaultChecked aria-label="Disabled checked" />
+            <Swatch label="Medium (20px)">
+              <div className="flex flex-col gap-4">
+                <div className="flex items-center gap-4">
+                  <Checkbox size="md" aria-label="Unchecked" />
+                  <Checkbox size="md" defaultChecked aria-label="Checked" />
+                  <Checkbox size="md" indeterminate aria-label="Indeterminate" />
+                </div>
+                <div className="flex items-center gap-4">
+                  <Checkbox size="md" disabled aria-label="Disabled unchecked" />
+                  <Checkbox size="md" disabled defaultChecked aria-label="Disabled checked" />
+                  <Checkbox size="md" disabled indeterminate aria-label="Disabled indeterminate" />
+                </div>
               </div>
             </Swatch>
           </div>

@@ -32,7 +32,7 @@ export default function ClientDetailsModal({ client, onClose }: { client: Client
     >
       <div className="flex max-h-[90vh] w-full max-w-2xl flex-col overflow-hidden rounded-xl bg-white shadow-xl" onClick={(e) => e.stopPropagation()}>
         <div className="flex items-center justify-between border-b border-gray-200 px-6 py-5">
-          <h2 className="text-lg font-semibold text-gray-900">View Client</h2>
+          <h2 className="text-base font-semibold text-gray-900">View Client</h2>
           <button
             type="button"
             aria-label="Close"

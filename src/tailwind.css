@@ -21,6 +21,19 @@
     @apply border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 disabled:border-gray-200 disabled:bg-white disabled:text-gray-300;
   }
 
+  /*
+   * Secondary color — a brand-blue-outlined button, distinct from the
+   * neutral-gray .btn-secondary above. Source: Figma file
+   * NcMe5sSgPs65q3Ed2rV1Kv, node 9:10812 (Default) / 9:10911 (Hover).
+   * Default border/text (#07389d / #052b78) are exact matches to
+   * primary-500/primary-700; hover bg (#d4e1fc) is an exact match to
+   * primary-50, hover border (#286bf5) has no exact token so primary-400 is
+   * used as the closest match.
+   */
+  .btn-secondary-color {
+    @apply border border-primary-500 bg-white text-primary-700 hover:border-primary-400 hover:bg-primary-50 disabled:border-gray-200 disabled:bg-white disabled:text-gray-300;
+  }
+
   .btn-tertiary {
     @apply bg-transparent text-primary-600 hover:bg-gray-50 hover:text-primary-700 disabled:bg-transparent disabled:text-gray-300;
   }
@@ -135,15 +148,57 @@
     @apply bg-primary-25 font-semibold text-primary-500 hover:bg-primary-25;
   }
 
+  /*
+   * Checkbox — fully custom-drawn (not the browser's native OS checkbox), so
+   * every screen matches Figma exactly: square swatch, brand-blue fill with
+   * a white check/dash when checked/indeterminate, and a real two-tone focus
+   * ring. Source: Figma file NcMe5sSgPs65q3Ed2rV1Kv, node 18:14072
+   * ("Checkbox" state matrix). "Default" below is the true resting state —
+   * hover/click/tab to a checkbox on the /component page to see the real
+   * :hover/:checked/:focus states, they aren't faked.
+   */
   .checkbox-field {
-    @apply cursor-pointer rounded border-gray-300 accent-primary-600 focus:outline-none focus:ring-1 focus:ring-primary-500 disabled:cursor-not-allowed disabled:opacity-50;
+    @apply relative m-0 shrink-0 cursor-pointer appearance-none border border-gray-300 bg-white bg-center bg-no-repeat transition-colors;
+    @apply focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white;
+    @apply disabled:cursor-not-allowed disabled:bg-gray-50;
+    background-size: 62% auto;
+  }
+
+  .checkbox-field:checked,
+  .checkbox-field:indeterminate {
+    @apply border-transparent bg-primary-600;
+  }
+
+  .checkbox-field:checked {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='8' viewBox='0 0 10 8' fill='none'%3E%3Cpath d='M8.8333 0.833496L3.3333 6.3335L0.8333 3.8335' stroke='white' stroke-width='1.6666' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  }
+
+  .checkbox-field:indeterminate {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round'%3E%3Cline x1='5' y1='12' x2='19' y2='12'/%3E%3C/svg%3E");
+  }
+
+  .checkbox-field:disabled:not(:checked):not(:indeterminate) {
+    @apply border-gray-300 bg-gray-50;
+  }
+
+  .checkbox-field:disabled:checked,
+  .checkbox-field:disabled:indeterminate {
+    @apply border-gray-300 bg-gray-100;
+  }
+
+  .checkbox-field:disabled:checked {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='8' viewBox='0 0 10 8' fill='none'%3E%3Cpath d='M8.8333 0.833496L3.3333 6.3335L0.8333 3.8335' stroke='%239ca3af' stroke-width='1.6666' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  }
+
+  .checkbox-field:disabled:indeterminate {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%239ca3af' stroke-width='2' stroke-linecap='round'%3E%3Cline x1='5' y1='12' x2='19' y2='12'/%3E%3C/svg%3E");
   }
 
   .checkbox-sm {
-    @apply h-4 w-4;
+    @apply h-4 w-4 rounded-sm;
   }
 
   .checkbox-md {
-    @apply h-5 w-5;
+    @apply h-5 w-5 rounded-md;
   }
 }

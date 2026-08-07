@@ -1,8 +1,9 @@
 import Layout, { PageBackHeading } from "./Layout";
 import KeyValueList from "./KeyValueList";
 import { DownloadPdfButton } from "./StatusBadge";
-import { ImageIcon, InfoIcon } from "./icons";
+import { InfoIcon } from "./icons";
 import { useNavigation } from "./NavigationContext";
+import { noImageAvailableGraphicUrl } from "./assets/figmaAssets";
 
 /**
  * UnitAvailabilityDetails — opened by clicking the eye ("View") icon in the
@@ -43,12 +44,12 @@ export default function UnitAvailabilityDetails() {
       ]}
       orgBadge
     >
-      <div className="flex w-full flex-col gap-5 px-6 py-4">
+      <div className="flex w-full flex-col gap-4 px-5 py-3">
         <PageBackHeading title="Details" onBack={() => navigate({ screen: "unit-availability" })} />
 
-        <section className="flex w-full flex-col gap-6 rounded-xl border border-gray-200 bg-white p-6 shadow-[0_1px_2px_rgba(10,13,18,0.05)]">
+        <section className="flex w-full flex-col gap-4 rounded-xl border border-gray-200 bg-white p-5 shadow-[0_1px_2px_rgba(10,13,18,0.05)]">
           <div className="flex flex-wrap items-center justify-between gap-3">
-            <h2 className="text-2xl font-semibold text-primary-500">{unitCode.toUpperCase()}</h2>
+            <h2 className="text-xl font-semibold text-primary-500">{unitCode.toUpperCase()}</h2>
             <DownloadPdfButton />
           </div>
 
@@ -56,9 +57,8 @@ export default function UnitAvailabilityDetails() {
             <div className="lg:w-[420px] lg:shrink-0">
               <KeyValueList rows={rows} />
             </div>
-            <div className="flex min-h-[380px] flex-1 flex-col items-center justify-center gap-3 rounded-xl border border-gray-200 bg-gray-50 text-gray-300">
-              <ImageIcon className="h-16 w-16" />
-              <span className="text-lg font-semibold uppercase tracking-wide text-gray-300">No Image Available</span>
+            <div className="flex min-h-[380px] flex-1 items-center justify-center rounded-xl border border-gray-300 bg-gray-50 p-5">
+              <img src={noImageAvailableGraphicUrl} alt="No image available" className="w-full max-w-[280px]" />
             </div>
           </div>
         </section>
