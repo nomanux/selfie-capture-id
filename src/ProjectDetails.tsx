@@ -60,7 +60,7 @@ export default function ProjectDetails() {
       ]}
       orgBadge
     >
-      <div className="flex w-full flex-col gap-5 px-6 py-6">
+      <div className="flex w-full flex-col gap-5 px-6 py-4">
         <PageBackHeading title="Project Details" onBack={() => navigate({ screen: "properties" })} />
 
         <section className="flex w-full flex-col gap-6 rounded-xl border border-gray-200 bg-white p-6 shadow-[0_1px_2px_rgba(10,13,18,0.05)]">

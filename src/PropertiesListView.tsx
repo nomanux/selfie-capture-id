@@ -93,7 +93,7 @@ function TableView({ view, onViewChange }: { view: "list" | "grid"; onViewChange
   const { navigate } = useNavigation();
 
   return (
-    <div className="w-full overflow-x-auto rounded-xl border border-gray-200 bg-white shadow-[0_1px_2px_rgba(10,13,18,0.05)]">
+    <div className="flex h-full w-full flex-col overflow-hidden rounded-xl border border-gray-200 bg-white shadow-[0_1px_2px_rgba(10,13,18,0.05)]">
       <TableCardHeader
         title="Property List"
         rightSlot={
@@ -103,6 +103,7 @@ function TableView({ view, onViewChange }: { view: "list" | "grid"; onViewChange
           </>
         }
       />
+      <div className="flex-1 overflow-auto [scrollbar-gutter:stable]">
       <table className="w-full min-w-[960px] border-collapse text-sm">
         <thead>
           <tr className="border-b border-gray-200 bg-white text-left text-gray-700">
@@ -158,6 +159,7 @@ function TableView({ view, onViewChange }: { view: "list" | "grid"; onViewChange
           ))}
         </tbody>
       </table>
+      </div>
       <Pagination total={85} />
     </div>
   );
@@ -167,9 +169,9 @@ function GridView({ view, onViewChange }: { view: "list" | "grid"; onViewChange:
   const { navigate } = useNavigation();
 
   return (
-    <div className="w-full rounded-xl border border-gray-200 bg-white shadow-[0_1px_2px_rgba(10,13,18,0.05)]">
+    <div className="flex h-full w-full flex-col overflow-hidden rounded-xl border border-gray-200 bg-white shadow-[0_1px_2px_rgba(10,13,18,0.05)]">
       <TableCardHeader title="Property List" rightSlot={<ViewToggle view={view} onChange={onViewChange} />} />
-      <div className="grid grid-cols-1 gap-5 p-6 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid flex-1 grid-cols-1 gap-5 overflow-auto p-6 [scrollbar-gutter:stable] sm:grid-cols-2 lg:grid-cols-4">
         {GRID_CARDS.map((card) => (
           <div key={card.name} className="overflow-hidden rounded-xl border border-gray-200">
             <div className="flex h-32 items-center justify-center bg-gray-50 p-4">
@@ -242,15 +244,19 @@ export default function PropertiesListView() {
       ]}
       orgBadge
     >
-      <div className="flex w-full flex-col gap-5 px-6 py-6">
-        <div className="flex flex-col gap-1">
-          <h1 className="text-xl font-semibold text-gray-900">Projects</h1>
-          <p className="text-sm text-gray-600">12 Projects available</p>
+      <div className="flex h-full w-full flex-col">
+        <div className="flex shrink-0 flex-col gap-5 px-6 pt-4">
+          <div className="flex flex-col gap-1">
+            <h1 className="text-xl font-semibold text-gray-900">Projects</h1>
+            <p className="text-sm text-gray-600">12 Projects available</p>
+          </div>
+
+          <FilterBar fields={FILTERS} showLabels={false} actionsColumn />
         </div>
 
-        <FilterBar fields={FILTERS} showLabels={false} actionsColumn />
-
-        {view === "list" ? <TableView view={view} onViewChange={setView} /> : <GridView view={view} onViewChange={setView} />}
+        <div className="flex min-h-0 flex-1 flex-col px-6 pb-4 pt-5">
+          {view === "list" ? <TableView view={view} onViewChange={setView} /> : <GridView view={view} onViewChange={setView} />}
+        </div>
       </div>
     </Layout>
   );

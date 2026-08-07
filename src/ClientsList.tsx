@@ -73,16 +73,20 @@ export default function ClientsList() {
       breadcrumb={[{ label: "Dashboard", onClick: () => navigate({ screen: "dashboard" }) }, { label: "Client" }]}
       orgBadge
     >
-      <div className="flex w-full flex-col gap-5 px-6 py-6">
-        <div className="flex flex-col gap-1">
-          <h1 className="text-xl font-semibold text-gray-900">Clients</h1>
-          <p className="text-sm text-gray-600">120 clients available</p>
+      <div className="flex h-full w-full flex-col">
+        <div className="flex shrink-0 flex-col gap-5 px-6 pt-4">
+          <div className="flex flex-col gap-1">
+            <h1 className="text-xl font-semibold text-gray-900">Clients</h1>
+            <p className="text-sm text-gray-600">120 clients available</p>
+          </div>
+
+          <FilterBar fields={FILTERS} />
         </div>
 
-        <FilterBar fields={FILTERS} />
-
-        <div className="w-full overflow-x-auto rounded-xl border border-gray-200 bg-white shadow-[0_1px_2px_rgba(10,13,18,0.05)]">
+        <div className="flex min-h-0 flex-1 flex-col px-6 pb-4 pt-5">
+        <div className="flex w-full flex-1 flex-col overflow-hidden rounded-xl border border-gray-200 bg-white shadow-[0_1px_2px_rgba(10,13,18,0.05)]">
           <TableCardHeader title="Client List" />
+          <div className="flex-1 overflow-auto [scrollbar-gutter:stable]">
           <table className="w-full min-w-[960px] border-collapse text-sm">
             <thead>
               <tr className="border-b border-gray-200 bg-gray-50 text-left text-gray-700">
@@ -92,7 +96,7 @@ export default function ClientsList() {
                 <th className="px-2 py-3 text-right font-semibold">Status</th>
                 <th className="px-2 py-3 font-semibold">Seller Name</th>
                 <th className="px-2 py-3 font-semibold">Sales Group</th>
-                <th className="px-2 py-3 text-right font-semibold">Actions</th>
+                <th className="min-w-[88px] px-2 py-3 text-right font-semibold">Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -122,7 +126,9 @@ export default function ClientsList() {
               ))}
             </tbody>
           </table>
+          </div>
           <Pagination total={85} />
+        </div>
         </div>
       </div>
 

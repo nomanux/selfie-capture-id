@@ -38,6 +38,12 @@ body,
   overflow-y: auto;
   overflow-x: hidden;
   background: #fafafa;
+  /* Most pages now manage their own internal scroll region (table body)
+     sized to exactly fill db-main via h-full, so db-main itself rarely
+     scrolls anymore. Reserving a scrollbar gutter here would just add dead
+     right-hand padding on those pages. Pages that still rely on db-main to
+     scroll should add [scrollbar-gutter:stable] on their own root element
+     if they need to avoid reflow. */
 }
 
 @media (max-width: 1023px) {

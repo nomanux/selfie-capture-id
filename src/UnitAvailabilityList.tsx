@@ -62,16 +62,20 @@ export default function UnitAvailabilityList() {
       ]}
       orgBadge
     >
-      <div className="flex w-full flex-col gap-5 px-6 py-6">
-        <div className="flex flex-col gap-1">
-          <h1 className="text-xl font-semibold text-gray-900">Unit Availability</h1>
-          <p className="text-sm text-gray-600">30 property units available</p>
+      <div className="flex h-full w-full flex-col">
+        <div className="flex shrink-0 flex-col gap-5 px-6 pt-4">
+          <div className="flex flex-col gap-1">
+            <h1 className="text-xl font-semibold text-gray-900">Unit Availability</h1>
+            <p className="text-sm text-gray-600">30 property units available</p>
+          </div>
+
+          <FilterBar fields={FILTERS} columns={6} />
         </div>
 
-        <FilterBar fields={FILTERS} columns={6} />
-
-        <div className="w-full overflow-x-auto rounded-xl border border-gray-200 bg-white shadow-[0_1px_2px_rgba(10,13,18,0.05)]">
+        <div className="flex min-h-0 flex-1 flex-col px-6 pb-4 pt-5">
+        <div className="flex w-full flex-1 flex-col overflow-hidden rounded-xl border border-gray-200 bg-white shadow-[0_1px_2px_rgba(10,13,18,0.05)]">
           <TableCardHeader title="Property List" rightSlot={<DownloadPdfButton />} />
+          <div className="flex-1 overflow-auto [scrollbar-gutter:stable]">
           <table className="w-full min-w-[1040px] border-collapse text-sm">
             <thead>
               <tr className="border-b border-gray-200 bg-white text-left text-gray-700">
@@ -85,7 +89,7 @@ export default function UnitAvailabilityList() {
                 <th className="px-2 py-3 font-semibold">Category</th>
                 <th className="px-2 py-3 font-semibold">Property Unit</th>
                 <th className="px-2 py-3 font-semibold">Property Notes</th>
-                <th className="px-2 py-3 text-right font-semibold">Actions</th>
+                <th className="min-w-[104px] px-2 py-3 text-right font-semibold">Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -134,7 +138,9 @@ export default function UnitAvailabilityList() {
               ))}
             </tbody>
           </table>
+          </div>
           <Pagination total={85} />
+        </div>
         </div>
       </div>
 

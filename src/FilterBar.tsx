@@ -146,7 +146,7 @@ export default function FilterBar({
               <RotateCcwIcon className="h-4 w-4" />
               Reset
             </Button>
-            <Button variant="primary" size="sm">
+            <Button variant="primary" size="sm" className="min-w-[120px]">
               <SearchIcon className="h-4 w-4" />
               Search
             </Button>
@@ -180,7 +180,7 @@ export default function FilterBar({
               <RotateCcwIcon className="h-4 w-4" />
               Reset
             </Button>
-            <Button variant="primary" size="sm">
+            <Button variant="primary" size="sm" className="min-w-[120px]">
               <SearchIcon className="h-4 w-4" />
               Search
             </Button>

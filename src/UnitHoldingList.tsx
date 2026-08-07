@@ -57,25 +57,29 @@ export default function UnitHoldingList() {
       ]}
       orgBadge
     >
-      <div className="flex w-full flex-col gap-5 px-6 py-6">
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <div className="flex flex-col gap-1">
-            <h1 className="text-xl font-semibold text-gray-900">Unit Holding</h1>
-            <p className="text-sm text-gray-600">30 unit holdings available</p>
+      <div className="flex h-full w-full flex-col">
+        <div className="flex shrink-0 flex-col gap-5 px-6 pt-4">
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <div className="flex flex-col gap-1">
+              <h1 className="text-xl font-semibold text-gray-900">Unit Holding</h1>
+              <p className="text-sm text-gray-600">30 unit holdings available</p>
+            </div>
+            <button
+              type="button"
+              className="flex h-10 cursor-pointer items-center gap-1.5 rounded-md bg-primary-600 px-4 text-sm font-semibold text-white hover:bg-primary-700"
+            >
+              <PlusIcon className="h-4 w-4" />
+              New Unit Holding
+            </button>
           </div>
-          <button
-            type="button"
-            className="flex h-10 cursor-pointer items-center gap-1.5 rounded-md bg-primary-600 px-4 text-sm font-semibold text-white hover:bg-primary-700"
-          >
-            <PlusIcon className="h-4 w-4" />
-            New Unit Holding
-          </button>
+
+          <FilterBar fields={FILTERS} />
         </div>
 
-        <FilterBar fields={FILTERS} />
-
-        <div className="w-full overflow-x-auto rounded-xl border border-gray-200 bg-white shadow-[0_1px_2px_rgba(10,13,18,0.05)]">
+        <div className="flex min-h-0 flex-1 flex-col px-6 pb-4 pt-5">
+        <div className="flex w-full flex-1 flex-col overflow-hidden rounded-xl border border-gray-200 bg-white shadow-[0_1px_2px_rgba(10,13,18,0.05)]">
           <TableCardHeader title="Unit Holding List" rightSlot={<DownloadPdfButton />} />
+          <div className="flex-1 overflow-auto [scrollbar-gutter:stable]">
           <table className="w-full min-w-[1040px] border-collapse text-sm">
             <thead>
               <tr className="border-b border-gray-200 bg-white text-left text-gray-700">
@@ -89,7 +93,7 @@ export default function UnitHoldingList() {
                 <th className="px-2 py-3 font-semibold">Project</th>
                 <th className="px-2 py-3 font-semibold">Building Unit</th>
                 <th className="px-2 py-3 font-semibold">Expiration Date</th>
-                <th className="px-2 py-3 text-right font-semibold">Actions</th>
+                <th className="min-w-[88px] px-2 py-3 text-right font-semibold">Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -123,7 +127,9 @@ export default function UnitHoldingList() {
               ))}
             </tbody>
           </table>
+          </div>
           <Pagination total={85} />
+        </div>
         </div>
       </div>
     </Layout>

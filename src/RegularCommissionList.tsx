@@ -55,37 +55,41 @@ export default function RegularCommissionList() {
         { label: "Regular Commission" },
       ]}
     >
-      <div className="flex w-full flex-col gap-5 px-6 py-6">
-        <div className="flex flex-col gap-1">
-          <h1 className="text-xl font-semibold text-gray-900">Regular Commission</h1>
-          <p className="text-sm text-gray-600">30 records found</p>
-        </div>
+      <div className="flex h-full w-full flex-col">
+        <div className="flex shrink-0 flex-col gap-5 px-6 pt-4">
+          <div className="flex flex-col gap-1">
+            <h1 className="text-xl font-semibold text-gray-900">Regular Commission</h1>
+            <p className="text-sm text-gray-600">30 records found</p>
+          </div>
 
-        <FilterBar fields={FILTERS} />
+          <FilterBar fields={FILTERS} />
 
-        <p className="text-xs text-gray-500">
-          <strong className="font-semibold">Note:</strong> All reservations prior to July 1, 2016 and released in IFCA
-          (previous system) will not be displayed in commission ledger.
-        </p>
+          <p className="text-xs text-gray-500">
+            <strong className="font-semibold">Note:</strong> All reservations prior to July 1, 2016 and released in IFCA
+            (previous system) will not be displayed in commission ledger.
+          </p>
 
-        <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-gray-200 bg-white px-5 py-4 shadow-[0_1px_2px_rgba(10,13,18,0.05)]">
-          <span className="text-sm text-gray-700">
-            View Seller: <strong className="font-semibold text-gray-900">E000000000000000008729345</strong>
-          </span>
-          <div className="flex gap-2">
-            {["Deduction", "Posted VAT", "Debit Advice"].map((label) => (
-              <span key={label} className="rounded-md border border-primary-50 bg-blue-50 px-3 py-1.5 text-xs font-semibold text-primary-500">
-                {label}
-              </span>
-            ))}
+          <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-gray-200 bg-white px-5 py-4 shadow-[0_1px_2px_rgba(10,13,18,0.05)]">
+            <span className="text-sm text-gray-700">
+              View Seller: <strong className="font-semibold text-gray-900">E000000000000000008729345</strong>
+            </span>
+            <div className="flex gap-2">
+              {["Deduction", "Posted VAT", "Debit Advice"].map((label) => (
+                <span key={label} className="rounded-md border border-primary-50 bg-blue-50 px-3 py-1.5 text-xs font-semibold text-primary-500">
+                  {label}
+                </span>
+              ))}
+            </div>
           </div>
         </div>
 
-        <div className="w-full overflow-x-auto rounded-xl border border-gray-200 bg-white shadow-[0_1px_2px_rgba(10,13,18,0.05)]">
+        <div className="flex min-h-0 flex-1 flex-col px-6 pb-4 pt-5">
+        <div className="flex w-full flex-1 flex-col overflow-hidden rounded-xl border border-gray-200 bg-white shadow-[0_1px_2px_rgba(10,13,18,0.05)]">
           <div className="flex flex-wrap items-center justify-between gap-3 pr-6 pt-2">
             <RecordTabs tabs={["My commission", "Teams Commission"]} active={tab} onChange={setTab} />
             <DownloadPdfButton />
           </div>
+          <div className="flex-1 overflow-auto [scrollbar-gutter:stable]">
           <table className="w-full min-w-[1040px] border-collapse text-sm">
             <thead>
               <tr className="border-b border-gray-200 bg-white text-left text-gray-700">
@@ -99,7 +103,7 @@ export default function RegularCommissionList() {
                 <th className="px-2 py-3 font-semibold">Primary Seller Name</th>
                 <th className="px-2 py-3 font-semibold">Seller Role</th>
                 <th className="px-2 py-3 font-semibold">Seller Group</th>
-                <th className="px-2 py-3 text-right font-semibold">Actions</th>
+                <th className="min-w-[88px] px-2 py-3 text-right font-semibold">Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -131,7 +135,9 @@ export default function RegularCommissionList() {
               ))}
             </tbody>
           </table>
+          </div>
           <Pagination total={85} />
+        </div>
         </div>
       </div>
     </Layout>
