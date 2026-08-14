@@ -102,15 +102,15 @@ export default function ClientsList() {
             <tbody>
               {ROWS.map((row) => (
                 <tr key={row.crfNumber} className="border-b border-gray-100 text-gray-600 hover:bg-gray-50">
-                  <td className="px-4 py-2 font-semibold text-gray-900">{row.crfNumber}</td>
-                  <td className="px-2 py-2">{row.accountNo}</td>
-                  <td className="px-2 py-2">{row.clientName}</td>
-                  <td className="px-2 py-2 text-right">
+                  <td className="px-4 py-1 font-semibold text-gray-900">{row.crfNumber}</td>
+                  <td className="px-2 py-1">{row.accountNo}</td>
+                  <td className="px-2 py-1">{row.clientName}</td>
+                  <td className="px-2 py-1 text-right">
                     <StatusPill status={row.status} />
                   </td>
-                  <td className="px-2 py-2">{row.sellerName}</td>
-                  <td className="px-2 py-2">{row.salesGroup}</td>
-                  <td className="px-2 py-2">
+                  <td className="px-2 py-1">{row.sellerName}</td>
+                  <td className="px-2 py-1">{row.salesGroup}</td>
+                  <td className="px-2 py-1">
                     <div className="flex items-center justify-center">
                       <button
                         type="button"

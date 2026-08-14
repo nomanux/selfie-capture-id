@@ -1,5 +1,6 @@
 import Layout from "./Layout";
 import Input from "./Input";
+import DatePicker from "./DatePicker";
 import Select, { type SelectOption } from "./Select";
 import Button from "./Button";
 import { LinkIcon, MoreHorizontalIcon, PlusIcon } from "./icons";
@@ -35,7 +36,7 @@ function TextField({ label, placeholder, type = "text", required }: { label: str
   return (
     <div className="flex flex-col gap-1.5">
       <FieldLabel required={required}>{label}</FieldLabel>
-      <Input size="sm" type={type} placeholder={placeholder} />
+      {type === "date" ? <DatePicker size="sm" aria-label={label} /> : <Input size="sm" type={type} placeholder={placeholder} />}
     </div>
   );
 }

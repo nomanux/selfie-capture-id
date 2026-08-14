@@ -86,12 +86,12 @@ export default function RegularCommissionDetails() {
               <tbody>
                 {MILESTONES.map((row) => (
                   <tr key={row.milestone} className="border-t border-gray-100 text-gray-600">
-                    <td className="px-5 py-3">{row.milestone}</td>
-                    <td className="px-5 py-3">{row.netTcp}</td>
-                    <td className="px-5 py-3">{row.rate}</td>
-                    <td className="px-5 py-3">{row.grossCommission}</td>
-                    <td className="px-5 py-3">{row.percentage}</td>
-                    <td className="px-5 py-3">{row.commissionAmount}</td>
+                    <td className="px-5 py-1">{row.milestone}</td>
+                    <td className="px-5 py-1">{row.netTcp}</td>
+                    <td className="px-5 py-1">{row.rate}</td>
+                    <td className="px-5 py-1">{row.grossCommission}</td>
+                    <td className="px-5 py-1">{row.percentage}</td>
+                    <td className="px-5 py-1">{row.commissionAmount}</td>
                   </tr>
                 ))}
               </tbody>

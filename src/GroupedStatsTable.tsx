@@ -82,7 +82,7 @@ export default function GroupedStatsTable({ title, filters, leadingColumns, grou
               {rows.map((row, rowIndex) => (
                 <tr key={rowIndex} className="border-b border-gray-100 text-gray-600 hover:bg-gray-50">
                   {row.leading.map((value, i) => (
-                    <td key={i} className={"px-3 py-2 " + (i === 0 ? "font-semibold text-gray-900" : "")}>
+                    <td key={i} className={"px-3 py-1 " + (i === 0 ? "font-medium text-gray-900" : "")}>
                       {value}
                     </td>
                   ))}
@@ -91,9 +91,9 @@ export default function GroupedStatsTable({ title, filters, leadingColumns, grou
                       <td
                         key={groupIndex + "-" + subIndex}
                         className={
-                          "px-3 py-2 text-center " +
+                          "px-3 py-1 text-center " +
                           (subIndex === 0 ? "border-l border-gray-100 " : "") +
-                          (subIndex === 1 ? "font-semibold text-primary-500" : "text-gray-700")
+                          (subIndex === 1 ? "font-semibold text-primary-500" : "text-gray-600")
                         }
                       >
                         {value}

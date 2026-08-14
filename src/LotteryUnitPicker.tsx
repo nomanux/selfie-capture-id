@@ -1,9 +1,10 @@
 import { useMemo, useState } from "react";
 import Layout from "./Layout";
-import { ChevronDownIcon, RotateCcwIcon, SearchIcon, XIcon } from "./icons";
+import { RotateCcwIcon, SearchIcon, XIcon } from "./icons";
 import { useNavigation } from "./NavigationContext";
 import { useCountdown } from "./useCountdown";
 import Button from "./Button";
+import Select from "./Select";
 
 /**
  * LotteryUnitPicker — "Lottery Event > Lottery" screen: pick an available
@@ -65,6 +66,14 @@ function range(start: number, end: number) {
   return Array.from({ length: end - start + 1 }, (_, i) => start + i);
 }
 
+// Static single-option lists so the filter bar's dropdowns show the same
+// pre-selected values the old (non-interactive) placeholder divs displayed —
+// swap in a real entity/project/building list once there's a backend to
+// source one from.
+const ENTITY_OPTIONS = [{ value: "dpdi", label: "DMCI Project Developers Insc." }];
+const PROJECT_OPTIONS = [{ value: "agp-amina", label: "Allegra Garden Palace - Amina" }];
+const BUILDING_OPTIONS = [{ value: "amina", label: "Amina" }];
+
 export default function LotteryUnitPicker() {
   const { navigate } = useNavigation();
   const nowServingCountdown = useCountdown(4 * 3600 + 9 * 60 + 13);
@@ -119,26 +128,17 @@ export default function LotteryUnitPicker() {
         <div className="flex flex-wrap items-end gap-4 rounded-xl border border-gray-200 bg-white p-5 shadow-[0_1px_2px_rgba(10,13,18,0.05)]">
           <div className="flex min-w-[220px] flex-1 flex-col gap-1.5">
             <label className="text-sm font-medium text-gray-700">Entity</label>
-            <div className="flex h-9 items-center justify-between rounded-md border border-gray-300 px-3 text-sm text-gray-900">
-              DMCI Project Developers Insc.
-              <ChevronDownIcon className="h-4 w-4 text-gray-500" />
-            </div>
+            <Select size="sm" options={ENTITY_OPTIONS} defaultValue="dpdi" />
           </div>
           <div className="flex min-w-[220px] flex-1 flex-col gap-1.5">
             <label className="text-sm font-medium text-gray-700">Project</label>
-            <div className="flex h-9 items-center justify-between rounded-md border border-gray-300 px-3 text-sm text-gray-900">
-              Allegra Garden Palace - Amina
-              <ChevronDownIcon className="h-4 w-4 text-gray-500" />
-            </div>
+            <Select size="sm" options={PROJECT_OPTIONS} defaultValue="agp-amina" />
           </div>
           <div className="flex min-w-[160px] flex-1 flex-col gap-1.5">
             <label className="text-sm font-medium text-gray-700">
               Building
             </label>
-            <div className="flex h-9 items-center justify-between rounded-md border border-gray-300 px-3 text-sm text-gray-900">
-              Amina
-              <ChevronDownIcon className="h-4 w-4 text-gray-500" />
-            </div>
+            <Select size="sm" options={BUILDING_OPTIONS} defaultValue="amina" />
           </div>
           <Button variant="primary" size="sm">
             <SearchIcon className="h-4 w-4" />

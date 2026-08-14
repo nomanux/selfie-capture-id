@@ -3,6 +3,8 @@ import Button, { IconButton, type ButtonSize, type ButtonVariant } from "./Butto
 import Select from "./Select";
 import Input from "./Input";
 import Checkbox from "./Checkbox";
+import DatePicker from "./DatePicker";
+import { StatusPill, Badge } from "./StatusBadge";
 
 /**
  * ComponentsPage — standalone style-guide screen listing the shared form
@@ -55,9 +57,9 @@ function ButtonVariantTable({ variant }: { variant: ButtonVariant }) {
         <tbody>
           {[false, true].map((isDisabled) => (
             <tr key={String(isDisabled)}>
-              <td className="px-2 py-2 text-sm font-medium text-gray-700">{isDisabled ? "Disabled" : "Default"}</td>
+              <td className="px-2 py-1 text-sm font-medium text-gray-700">{isDisabled ? "Disabled" : "Default"}</td>
               {BUTTON_SIZES.map(({ size, iconClasses }) => (
-                <td key={size} className="px-3 py-2">
+                <td key={size} className="px-3 py-1">
                   <Button variant={variant} size={size} disabled={isDisabled}>
                     <SearchIcon className={iconClasses} />
                     Button CTA
@@ -82,9 +84,9 @@ function IconOnlyButtonTable() {
         <tbody>
           {[false, true].map((isDisabled) => (
             <tr key={String(isDisabled)}>
-              <td className="px-2 py-2 text-sm font-medium text-gray-700">{isDisabled ? "Disabled" : "Default"}</td>
+              <td className="px-2 py-1 text-sm font-medium text-gray-700">{isDisabled ? "Disabled" : "Default"}</td>
               {BUTTON_SIZES.map(({ size, iconClasses }) => (
-                <td key={size} className="px-3 py-2">
+                <td key={size} className="px-3 py-1">
                   <IconButton size={size} aria-label="Icon action" disabled={isDisabled}>
                     <SearchIcon className={iconClasses} />
                   </IconButton>
@@ -168,13 +170,16 @@ export default function ComponentsPage() {
         </Section>
 
         {/* Date picker */}
-        <Section title="Date picker" description="Native date input, small and medium heights.">
+        <Section
+          title="Date picker"
+          description="Custom calendar dropdown — chevron month nav, Month/Year quick-jump selects, and a 7-day grid with muted leading/trailing days. Open one to see it, small and medium heights."
+        >
           <div className="flex flex-col gap-6 sm:flex-row sm:gap-10">
             <Swatch label="Small (h-8)">
-              <Input size="sm" type="date" aria-label="Date" className="w-48" />
+              <DatePicker size="sm" aria-label="Date" className="w-48" />
             </Swatch>
-            <Swatch label="Medium (h-10)">
-              <Input size="md" type="date" aria-label="Date" className="w-48" />
+            <Swatch label="Medium (h-10) — pre-selected">
+              <DatePicker size="md" aria-label="Date" defaultValue="2026-08-11" className="w-48" />
             </Swatch>
           </div>
         </Section>
@@ -193,6 +198,75 @@ export default function ComponentsPage() {
             <Swatch label="Medium (h-10) — pre-selected">
               <div className="w-56">
                 <Select size="md" options={DUMMY_OPTIONS} placeholder="Select one" defaultValue="4" />
+              </div>
+            </Swatch>
+          </div>
+        </Section>
+
+        {/* Badge */}
+        <Section
+          title="Badge"
+          description="Status pill (colored by state, reference: Figma 'Badge / Pill color' node 9:12758/9:12770/9:12824) and the Tower/Floor/Unit-style link badge used in table Links columns."
+        >
+          <div className="flex flex-col gap-6">
+            <Swatch label="Status pill — brand">
+              <div className="flex flex-wrap gap-2">
+                <StatusPill status="Available" />
+                <StatusPill status="Under Review" />
+                <StatusPill status="Confirmed" />
+              </div>
+            </Swatch>
+            <Swatch label="Status pill — success">
+              <div className="flex flex-wrap gap-2">
+                <StatusPill status="Sold" />
+                <StatusPill status="Ready for Occupancy" />
+                <StatusPill status="Approved" />
+                <StatusPill status="Completed" />
+                <StatusPill status="Active" />
+                <StatusPill status="Pass" />
+              </div>
+            </Swatch>
+            <Swatch label="Status pill — warning">
+              <div className="flex flex-wrap gap-2">
+                <StatusPill status="On Hold" />
+                <StatusPill status="Ongoing Construction" />
+                <StatusPill status="Pending Approval" />
+                <StatusPill status="On Queue" />
+              </div>
+            </Swatch>
+            <Swatch label="Status pill — error">
+              <div className="flex flex-wrap gap-2">
+                <StatusPill status="Cancelled" />
+                <StatusPill status="Expired" />
+                <StatusPill status="Not Qualified" />
+              </div>
+            </Swatch>
+            <Swatch label="Status pill — gray">
+              <div className="flex flex-wrap gap-2">
+                <StatusPill status="Postponed" />
+                <StatusPill status="Closed" />
+              </div>
+            </Swatch>
+            <Swatch label="Badge color — Brand (sm/md)">
+              <div className="flex flex-wrap items-center gap-2">
+                <Badge label="Label" color="brand" size="sm" />
+                <Badge label="Label" color="brand" size="md" />
+              </div>
+            </Swatch>
+            <Swatch label="Badge color — Brand, link variant (used for Tower/Floor/Unit table links)">
+              <div className="flex flex-wrap items-center gap-2">
+                <Badge label="Tower" color="brand" size="sm" icon="leading" />
+                <Badge label="Floor" color="brand" size="sm" icon="leading" />
+                <Badge label="Unit" color="brand" size="sm" icon="leading" />
+                <Badge label="House & Lot" color="brand" size="sm" icon="leading" />
+                <Badge label="Lot Only" color="brand" size="sm" icon="leading" />
+              </div>
+              <div className="flex flex-wrap items-center gap-2">
+                <Badge label="Label" color="brand" size="md" icon="leading" />
+                <Badge label="Label" color="brand" size="sm" icon="trailing" />
+                <Badge label="Label" color="brand" size="md" icon="trailing" />
+                <Badge label="Label" color="brand" size="sm" icon="only" />
+                <Badge label="Label" color="brand" size="md" icon="only" />
               </div>
             </Swatch>
           </div>

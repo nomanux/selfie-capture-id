@@ -1,4 +1,5 @@
 import { CheckSquareIcon, XIcon } from "./icons";
+import Button from "./Button";
 
 /**
  * ClientDetailsModal — "View Client" modal opened by clicking the eye
@@ -95,13 +96,9 @@ export default function ClientDetailsModal({ client, onClose }: { client: Client
         </div>
 
         <div className="flex justify-end border-t border-gray-200 px-6 py-4">
-          <button
-            type="button"
-            onClick={onClose}
-            className="flex h-10 cursor-pointer items-center rounded-md border border-gray-300 bg-white px-4 text-sm font-semibold text-gray-700 hover:bg-gray-50"
-          >
+          <Button variant="secondary" size="md" onClick={onClose}>
             Close
-          </button>
+          </Button>
         </div>
       </div>
     </div>

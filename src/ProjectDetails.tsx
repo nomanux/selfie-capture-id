@@ -1,6 +1,9 @@
 import Layout, { PageBackHeading } from "./Layout";
-import { LinkIcon, ChevronLeftIcon, ChevronRightIcon } from "./icons";
+import { ChevronLeftIcon, ChevronRightIcon } from "./icons";
+import { Badge } from "./StatusBadge";
 import { useNavigation, type Screen } from "./NavigationContext";
+import PropertyCard, { type PropertyCardData } from "./PropertyCard";
+import { acaciaEstatesLogoUrl, aristaPlaceLogoUrl, valeronTowerLogoUrl } from "./assets/figmaAssets";
 
 /**
  * ProjectDetails — a single project's overview screen, reached from the
@@ -43,7 +46,13 @@ const OVERVIEW_ROWS: OverviewRow[] = [
   { code: "Service Area", screen: "service-area", total: 10, sold: 874, available: 874, onHold: 874 },
 ];
 
-const RECENTLY_VIEWED = ["Acacia Estates", "Arista Place", "The Valeron Tower", "Alta Vista De Boracay"];
+const RECENTLY_VIEWED: PropertyCardData[] = [
+  { name: "Acacia Estates", logoUrl: acaciaEstatesLogoUrl, available: [1302, 1230, 1123], sold: [523, 523, 523] },
+  { name: "Arista Place", logoUrl: aristaPlaceLogoUrl, available: [1302, 1230, 1123], sold: [523, 523, 523] },
+  { name: "The Valeron Tower", logoUrl: valeronTowerLogoUrl, available: [1302, 1230, 1123], sold: [523, 523, 523] },
+  { name: "Alta Vista De Boracay", available: [1302, 1230, 1123], sold: [523, 523, 523] },
+  { name: "Arista Place", logoUrl: aristaPlaceLogoUrl, available: [1302, 1230, 1123], sold: [523, 523, 523] },
+];
 
 export default function ProjectDetails() {
   const { route, navigate } = useNavigation();
@@ -68,14 +77,8 @@ export default function ProjectDetails() {
             <h2 className="text-xl font-semibold text-primary-500">{project}</h2>
             <div className="flex flex-wrap gap-1.5">
               {RESOURCE_TABS.map((tab) => (
-                <button
-                  key={tab.label}
-                  type="button"
-                  onClick={() => navigate({ screen: tab.screen, project })}
-                  className="inline-flex cursor-pointer items-center gap-1 rounded-md border border-primary-50 bg-blue-50 px-2 py-1 text-xs font-semibold text-primary-500 hover:bg-blue-100"
-                >
-                  <LinkIcon className="h-3 w-3" />
-                  {tab.label}
+                <button key={tab.label} type="button" onClick={() => navigate({ screen: tab.screen, project })} className="cursor-pointer">
+                  <Badge label={tab.label} color="brand" size="sm" icon="leading" />
                 </button>
               ))}
             </div>
@@ -97,33 +100,33 @@ export default function ProjectDetails() {
 
           <div className="flex flex-col gap-3">
             <h3 className="text-base font-semibold text-gray-900">Overview</h3>
-            <div className="overflow-x-auto rounded-lg border border-gray-200">
+            <div className="overflow-x-auto rounded-xl border border-gray-200 shadow-[0px_1px_2px_0px_rgba(10,13,18,0.05)]">
               <table className="w-full min-w-[640px] border-collapse text-sm">
                 <thead>
-                  <tr className="bg-gray-50 text-left text-gray-500">
-                    <th className="px-5 py-3 font-medium">Code</th>
-                    <th className="px-5 py-3 text-right font-medium">Total</th>
-                    <th className="px-5 py-3 text-right font-medium">Sold</th>
-                    <th className="px-5 py-3 text-right font-medium">Available</th>
-                    <th className="px-5 py-3 text-right font-medium">On Hold</th>
+                  <tr className="bg-gray-50 text-left text-[#717680]">
+                    <th className="border-b border-[#e9eaeb] px-5 py-2 text-xs font-semibold">Code</th>
+                    <th className="border-b border-[#e9eaeb] px-5 py-2 text-center text-xs font-semibold">Total</th>
+                    <th className="border-b border-[#e9eaeb] px-5 py-2 text-center text-xs font-semibold">Sold</th>
+                    <th className="border-b border-[#e9eaeb] px-5 py-2 text-center text-xs font-semibold">Available</th>
+                    <th className="border-b border-[#e9eaeb] px-5 py-2 text-center text-xs font-semibold">On Hold</th>
                   </tr>
                 </thead>
                 <tbody>
                   {OVERVIEW_ROWS.map((row) => (
-                    <tr key={row.code} className="border-t border-gray-100">
-                      <td className="px-5 py-3">
+                    <tr key={row.code}>
+                      <td className="h-[54px] border-b border-[#e5e7eb] px-5 py-1">
                         <button
                           type="button"
                           onClick={() => navigate({ screen: row.screen, project })}
-                          className="cursor-pointer font-semibold text-primary-500 underline"
+                          className="cursor-pointer text-sm font-semibold text-[#06318a] hover:underline"
                         >
                           {row.code}
                         </button>
                       </td>
-                      <td className="px-5 py-3 text-right text-gray-600">{row.total}</td>
-                      <td className="px-5 py-3 text-right text-gray-600">{row.sold}</td>
-                      <td className="px-5 py-3 text-right text-gray-600">{row.available}</td>
-                      <td className="px-5 py-3 text-right text-gray-600">{row.onHold}</td>
+                      <td className="h-[54px] border-b border-[#e5e7eb] px-5 py-1 text-center text-sm text-gray-900">{row.total}</td>
+                      <td className="h-[54px] border-b border-[#e5e7eb] px-5 py-1 text-center text-sm text-gray-900">{row.sold}</td>
+                      <td className="h-[54px] border-b border-[#e5e7eb] px-5 py-1 text-center text-sm text-gray-900">{row.available}</td>
+                      <td className="h-[54px] border-b border-[#e5e7eb] px-5 py-1 text-center text-sm text-gray-900">{row.onHold}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -144,16 +147,9 @@ export default function ProjectDetails() {
               </button>
             </div>
           </div>
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {RECENTLY_VIEWED.map((name) => (
-              <button
-                key={name}
-                type="button"
-                onClick={() => navigate({ screen: "project-details", project: name })}
-                className="flex h-24 cursor-pointer items-center justify-center rounded-lg bg-gray-50 px-4 hover:bg-blue-50"
-              >
-                <span className="text-center text-sm font-bold uppercase tracking-wide text-gray-400">{name}</span>
-              </button>
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5">
+            {RECENTLY_VIEWED.map((card, index) => (
+              <PropertyCard key={card.name + index} card={card} onClick={() => navigate({ screen: "project-details", project: card.name })} />
             ))}
           </div>
         </section>

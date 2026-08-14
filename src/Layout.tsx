@@ -1,4 +1,4 @@
-import { useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import "./tailwind.css";
 import "./Dashboard.css";
 import { dmciLogoUrl } from "./assets/figmaAssets";
@@ -70,25 +70,29 @@ function NavItem({
   label,
   active,
   onClick,
+  collapsed,
 }: {
   icon: (props: IconProps) => React.JSX.Element;
   label: string;
   active?: boolean;
   onClick?: () => void;
+  collapsed?: boolean;
 }) {
   return (
     <button
       type="button"
       onClick={onClick}
+      title={collapsed ? label : undefined}
       className={
         "flex h-10 w-full items-center gap-2 rounded-md px-2 py-1.5 text-left text-sm font-semibold transition-colors " +
+        (collapsed ? "lg:justify-center lg:px-0 " : "") +
         (active
           ? "bg-gray-50 text-primary-500"
           : "text-gray-500 hover:bg-gray-50")
       }
     >
       <Icon className="h-4 w-4 shrink-0" />
-      {label}
+      <span className={collapsed ? "lg:hidden" : ""}>{label}</span>
     </button>
   );
 }
@@ -100,6 +104,7 @@ function NavDropdown({
   active,
   activeSubItem,
   defaultOpen,
+  collapsed,
 }: {
   icon: (props: IconProps) => React.JSX.Element;
   label: string;
@@ -107,28 +112,47 @@ function NavDropdown({
   active?: boolean;
   activeSubItem?: string;
   defaultOpen?: boolean;
+  collapsed?: boolean;
 }) {
   const [open, setOpen] = useState(!!defaultOpen || !!active);
+  const [flyoutOpen, setFlyoutOpen] = useState(false);
+
   return (
-    <div className="w-full">
+    <div
+      className="relative w-full"
+      onMouseEnter={() => collapsed && setFlyoutOpen(true)}
+      onMouseLeave={() => setFlyoutOpen(false)}
+    >
       <button
         type="button"
-        onClick={() => setOpen((v) => !v)}
+        onClick={() => !collapsed && setOpen((v) => !v)}
+        title={collapsed ? label : undefined}
         className={
           "flex h-10 w-full cursor-pointer items-center gap-2 rounded-md px-2 py-1.5 text-left text-sm font-semibold transition-colors " +
+          (collapsed ? "lg:justify-center lg:px-0 " : "") +
           (active ? "text-primary-500" : "text-gray-500 hover:bg-gray-50")
         }
       >
         <Icon className="h-4 w-4 shrink-0" />
-        <span className="flex-1">{label}</span>
-        {open ? (
-          <ChevronUpIcon className="h-4 w-4 shrink-0" />
-        ) : (
-          <ChevronDownIcon className="h-4 w-4 shrink-0" />
-        )}
+        <span className={"flex-1 " + (collapsed ? "lg:hidden" : "")}>
+          {label}
+        </span>
+        <span className={collapsed ? "lg:hidden" : ""}>
+          {open ? (
+            <ChevronUpIcon className="h-4 w-4 shrink-0" />
+          ) : (
+            <ChevronDownIcon className="h-4 w-4 shrink-0" />
+          )}
+        </span>
       </button>
+
+      {/* Inline accordion — expanded sidebar (and always on mobile). */}
       {open && items.length > 0 && (
-        <div className="flex flex-col items-start pb-1">
+        <div
+          className={
+            "flex flex-col items-start pb-1 " + (collapsed ? "lg:hidden" : "")
+          }
+        >
           {items.map((item) => (
             <button
               key={item.label}
@@ -146,6 +170,34 @@ function NavDropdown({
               {item.label}
             </button>
           ))}
+        </div>
+      )}
+
+      {/* Flyout — icon rail (collapsed, lg) only, shown on hover. */}
+      {collapsed && flyoutOpen && items.length > 0 && (
+        <div className="absolute left-full top-0 z-50 ml-2 hidden w-56 rounded-xl border border-gray-200 bg-white p-2 shadow-lg lg:block">
+          <div className="px-2 pb-1 pt-1 text-xs font-semibold uppercase tracking-wide text-gray-400">
+            {label}
+          </div>
+          <div className="flex flex-col items-start">
+            {items.map((item) => (
+              <button
+                key={item.label}
+                type="button"
+                onClick={item.onClick}
+                disabled={!item.onClick}
+                className={
+                  "w-full rounded-md px-2 py-1.5 text-left text-[13px] hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-transparent " +
+                  (item.onClick ? "cursor-pointer " : "") +
+                  (item.label === activeSubItem
+                    ? "bg-gray-50 font-semibold text-primary-500"
+                    : "font-medium text-gray-700")
+                }
+              >
+                {item.label}
+              </button>
+            ))}
+          </div>
         </div>
       )}
     </div>
@@ -175,8 +227,12 @@ export default function Layout({
   breadcrumb,
   children,
 }: LayoutProps) {
-  const { navigate } = useNavigation();
+  const { navigate, route: currentRoute } = useNavigation();
+  const mainRef = useRef<HTMLElement>(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  // Desktop-only: collapses the static sidebar to an icon-only rail. Mobile
+  // keeps its own off-canvas drawer (sidebarOpen) untouched.
+  const [collapsed, setCollapsed] = useState(false);
   const [entityModalOpen, setEntityModalOpen] = useState(false);
   const [selectedEntity, setSelectedEntity] = useState<SelectedEntity>({
     code: "DPDI",
@@ -190,6 +246,27 @@ export default function Layout({
     navigate(route);
     setSidebarOpen(false);
   };
+
+  // The topbar hamburger drives two different behaviours depending on
+  // viewport: below lg it opens/closes the off-canvas drawer, at lg and up
+  // it collapses the static sidebar to an icon-only rail.
+  const toggleSidebar = () => {
+    if (typeof window !== "undefined" && window.matchMedia("(min-width: 1024px)").matches) {
+      setCollapsed((v) => !v);
+    } else {
+      setSidebarOpen((v) => !v);
+    }
+  };
+
+  // Every navigation (sidebar, breadcrumb, in-page links/cards) re-renders
+  // this same Layout with new children rather than remounting the page, so
+  // the scroll container keeps whatever scroll position it had. Without
+  // this, clicking a link/card while scrolled down (e.g. a "Recently
+  // Viewed" card at the bottom of Project Details) looks like it did
+  // nothing, since the updated breadcrumb/title land off-screen above.
+  useEffect(() => {
+    mainRef.current?.scrollTo({ top: 0 });
+  }, [currentRoute.screen, currentRoute.project, currentRoute.itemId]);
 
   const navItems: (NavLeaf | NavBranch)[] = [
     {
@@ -282,13 +359,20 @@ export default function Layout({
           in-flow column from lg upward. */}
       <aside
         className={
-          "fixed inset-y-0 left-0 z-40 w-64 shrink-0 -translate-x-full transition-transform duration-200 ease-in-out lg:static lg:z-auto lg:w-60 lg:translate-x-0 " +
+          "fixed inset-y-0 left-0 z-40 w-64 shrink-0 -translate-x-full transition-all duration-200 ease-in-out lg:static lg:z-auto lg:translate-x-0 " +
+          (collapsed ? "lg:w-[76px]" : "lg:w-60") +
+          " " +
           (sidebarOpen ? "translate-x-0" : "")
         }
       >
-        <div className="flex h-full w-full flex-col justify-between border-r border-gray-200 bg-white">
-          <div className="flex flex-1 flex-col gap-5 overflow-y-auto pt-5">
-            <div className="flex items-center justify-between gap-2 px-4">
+        <div className="flex h-full w-full flex-col justify-between overflow-visible border-r border-gray-200 bg-white">
+          <div className="flex flex-1 flex-col gap-5 overflow-y-auto overflow-x-visible pt-5">
+            <div
+              className={
+                "flex items-center justify-between gap-2 px-4 " +
+                (collapsed ? "lg:justify-center lg:px-3" : "")
+              }
+            >
               <button
                 type="button"
                 onClick={() => go({ screen: "dashboard" })}
@@ -296,10 +380,15 @@ export default function Layout({
                 aria-label="Go to dashboard"
               >
                 <img
-                  className="h-8 w-auto"
+                  className={"h-8 w-auto " + (collapsed ? "lg:hidden" : "")}
                   src={dmciLogoUrl}
                   alt="DMCI Homes Sales"
                 />
+                {collapsed && (
+                  <span className="hidden h-8 w-8 shrink-0 items-center justify-center rounded-md bg-primary-500 text-sm font-bold text-white lg:flex">
+                    D
+                  </span>
+                )}
               </button>
               <button
                 type="button"
@@ -311,7 +400,12 @@ export default function Layout({
               </button>
             </div>
 
-            <nav className="flex flex-1 flex-col items-start gap-1 px-4">
+            <nav
+              className={
+                "flex flex-1 flex-col items-start gap-1 px-4 " +
+                (collapsed ? "lg:px-2" : "")
+              }
+            >
               {navItems.map((item) =>
                 isBranch(item) ? (
                   <NavDropdown
@@ -323,6 +417,7 @@ export default function Layout({
                     activeSubItem={
                       active === item.key ? activeSubItem : undefined
                     }
+                    collapsed={collapsed}
                   />
                 ) : (
                   <NavItem
@@ -331,19 +426,39 @@ export default function Layout({
                     label={item.label}
                     active={active === item.key}
                     onClick={item.onClick}
+                    collapsed={collapsed}
                   />
                 ),
               )}
             </nav>
           </div>
 
-          <div className="flex flex-col gap-4 px-4 pb-4">
-            <div className="relative flex items-start gap-4 rounded-xl border border-gray-200 bg-white p-3 shadow-[0_1px_1px_rgba(10,13,18,0.05)]">
-              <div className="flex flex-1 items-center gap-2">
+          <div
+            className={
+              "flex flex-col gap-4 px-4 pb-4 " + (collapsed ? "lg:px-2" : "")
+            }
+          >
+            <div
+              className={
+                "relative flex items-start gap-4 rounded-xl border border-gray-200 bg-white p-3 shadow-[0_1px_1px_rgba(10,13,18,0.05)] " +
+                (collapsed ? "lg:justify-center lg:p-2" : "")
+              }
+            >
+              <div
+                className={
+                  "flex flex-1 items-center gap-2 " +
+                  (collapsed ? "lg:flex-none lg:justify-center" : "")
+                }
+              >
                 <div className="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-full border-[0.75px] border-black/10 bg-gray-100 text-sm font-semibold text-primary-600">
                   OR
                 </div>
-                <div className="flex flex-col text-sm leading-5">
+                <div
+                  className={
+                    "flex flex-col text-sm leading-5 " +
+                    (collapsed ? "lg:hidden" : "")
+                  }
+                >
                   <span className="font-semibold text-gray-900">
                     Super Admin
                   </span>
@@ -353,7 +468,10 @@ export default function Layout({
               <button
                 type="button"
                 aria-label="Account menu"
-                className="absolute right-[5px] top-[5px] flex h-8 w-8 cursor-pointer items-center justify-center rounded-md text-gray-500 hover:bg-gray-50"
+                className={
+                  "absolute right-[5px] top-[5px] flex h-8 w-8 cursor-pointer items-center justify-center rounded-md text-gray-500 hover:bg-gray-50 " +
+                  (collapsed ? "lg:hidden" : "")
+                }
               >
                 <ChevronsUpDownIcon className="h-5 w-5" />
               </button>
@@ -370,7 +488,8 @@ export default function Layout({
             <button
               type="button"
               aria-label="Toggle navigation"
-              onClick={() => setSidebarOpen((v) => !v)}
+              aria-pressed={collapsed}
+              onClick={toggleSidebar}
               className="flex h-10 w-10 shrink-0 cursor-pointer items-center justify-center rounded-md text-gray-500 hover:bg-gray-50"
             >
               <MenuIcon className="h-5 w-5" />
@@ -435,7 +554,7 @@ export default function Layout({
         </header>
 
         {/* Scrollable content */}
-        <main className="db-main">{children}</main>
+        <main ref={mainRef} className="db-main">{children}</main>
       </div>
 
       {entityModalOpen && (

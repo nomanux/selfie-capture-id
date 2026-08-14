@@ -106,7 +106,7 @@ export default function EntitySelectionModal({
                           (isSelected ? "bg-blue-50" : "")
                         }
                       >
-                        <td className="px-4 py-3">
+                        <td className="px-4 py-1">
                           <span className="flex items-center gap-2 font-semibold text-gray-900">
                             {isSelected ? (
                               <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-primary-500 text-white">
@@ -118,7 +118,7 @@ export default function EntitySelectionModal({
                             {entity.code}
                           </span>
                         </td>
-                        <td className="px-4 py-3">{entity.name}</td>
+                        <td className="px-4 py-1">{entity.name}</td>
                       </tr>
                     );
                   })}

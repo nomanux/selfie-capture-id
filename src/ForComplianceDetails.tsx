@@ -85,26 +85,26 @@ export default function ForComplianceDetails() {
               <tbody>
                 {MILESTONES.map((row, index) => (
                   <tr key={index} className="border-t border-gray-100 text-gray-600">
-                    <td className="px-4 py-3">
+                    <td className="px-4 py-1">
                       <StatusPill status={row.primarySellerName} />
                     </td>
-                    <td className="px-4 py-3">
+                    <td className="px-4 py-1">
                       <StatusPill status={row.commissionPayoutPlan} />
                     </td>
-                    <td className="px-4 py-3">
+                    <td className="px-4 py-1">
                       <StatusPill status={row.salesRepresentative} />
                     </td>
-                    <td className="px-4 py-3">
+                    <td className="px-4 py-1">
                       <StatusPill status={row.commissionDocumentCompliance} />
                     </td>
-                    <td className="px-4 py-3">
+                    <td className="px-4 py-1">
                       <StatusPill status={row.paymentPercentage} />
                     </td>
-                    <td className="px-4 py-3">{row.paymentPercentageRemarks}</td>
-                    <td className="px-4 py-3">{row.milestone}</td>
-                    <td className="px-4 py-3">{row.pdcAllocation}</td>
-                    <td className="px-4 py-3">{row.douCompliance}</td>
-                    <td className="px-4 py-3">{row.salesGroupName}</td>
+                    <td className="px-4 py-1">{row.paymentPercentageRemarks}</td>
+                    <td className="px-4 py-1">{row.milestone}</td>
+                    <td className="px-4 py-1">{row.pdcAllocation}</td>
+                    <td className="px-4 py-1">{row.douCompliance}</td>
+                    <td className="px-4 py-1">{row.salesGroupName}</td>
                   </tr>
                 ))}
               </tbody>

@@ -41,11 +41,61 @@ export function StatusPill({ status }: { status: string }) {
   );
 }
 
-export function LinkBadge({ label }: { label: string }) {
+// "Badge color" component set (file NcMe5sSgPs65q3Ed2rV1Kv):
+// Brand, no icon = node 9:12762 (sm) / 9:13642 (md) — bg brand-50 #d4e1fc, border brand-100 #98b9ff, text brand-700 #052b78, rounded-sm (6px).
+// Brand, icon leading = node 9:13000 (sm) — same fill/text, border darkens to #6293f8 when an icon is present, gap-1, pl-1 pr-1.5 py-0.5.
+export type BadgeColor = "brand";
+export type BadgeSize = "sm" | "md";
+export type BadgeIcon = "none" | "leading" | "trailing" | "only";
+
+const BADGE_COLOR_STYLES: Record<BadgeColor, string> = {
+  brand: "bg-[#d4e1fc] text-[#052b78]",
+};
+
+const BADGE_BORDER_STYLES: Record<BadgeColor, { plain: string; icon: string }> = {
+  brand: { plain: "border-[#98b9ff]", icon: "border-[#6293f8]" },
+};
+
+const BADGE_TEXT_STYLES: Record<BadgeSize, string> = {
+  sm: "text-xs leading-[18px]",
+  md: "text-sm leading-5",
+};
+
+const BADGE_PADDING_STYLES: Record<BadgeSize, Record<BadgeIcon, string>> = {
+  sm: { none: "px-1.5 py-0.5", leading: "gap-1 py-0.5 pl-1 pr-1.5", trailing: "gap-1 py-0.5 pl-1.5 pr-1", only: "p-1" },
+  md: { none: "px-2 py-0.5", leading: "gap-1 py-0.5 pl-1.5 pr-2", trailing: "gap-1 py-0.5 pl-2 pr-1.5", only: "p-1.5" },
+};
+
+export function Badge({
+  label,
+  color = "brand",
+  size = "sm",
+  icon = "none",
+}: {
+  label: string;
+  color?: BadgeColor;
+  size?: BadgeSize;
+  icon?: BadgeIcon;
+}) {
+  const iconEl = icon !== "none" ? <LinkIcon className="h-3 w-3 shrink-0" /> : null;
+  const border = icon === "none" ? BADGE_BORDER_STYLES[color].plain : BADGE_BORDER_STYLES[color].icon;
   return (
-    <span className="inline-flex items-center gap-1 rounded-md border border-primary-50 bg-blue-50 px-2.5 py-1 text-xs font-semibold text-primary-500">
-      <LinkIcon className="h-3.5 w-3.5" />
-      {label}
+    <span
+      className={
+        "inline-flex items-center justify-center whitespace-nowrap rounded-md border font-medium transition-colors hover:bg-white " +
+        BADGE_COLOR_STYLES[color] +
+        " " +
+        border +
+        " " +
+        BADGE_TEXT_STYLES[size] +
+        " " +
+        BADGE_PADDING_STYLES[size][icon]
+      }
+    >
+      {icon === "leading" && iconEl}
+      {icon !== "only" && label}
+      {icon === "trailing" && iconEl}
+      {icon === "only" && iconEl}
     </span>
   );
 }

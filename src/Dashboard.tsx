@@ -183,7 +183,7 @@ export default function Dashboard() {
           <div className="relative w-full overflow-x-auto rounded-lg border border-primary-50">
             <table className="w-full border-collapse text-xs sm:text-sm">
               <thead>
-                <tr className="bg-blue-50">
+                <tr className="bg-gray-50">
                   <th className="px-2 py-2 text-left font-semibold text-gray-900 sm:px-5 sm:py-3">Position</th>
                   {TREND_SERIES.map((series) => (
                     <th key={series.key} className="px-1 py-2 text-center font-semibold text-gray-900 sm:px-5 sm:py-3">
@@ -196,21 +196,21 @@ export default function Dashboard() {
               <tbody>
                 {HOLDING_ROWS.map((row, index) => (
                   <tr key={index} className="border-b border-blue-50">
-                    <td className="px-2 py-2 font-medium text-gray-600 sm:px-5 sm:py-3">{row.position}</td>
-                    <td className="px-1 py-2 text-center text-gray-600 sm:px-5 sm:py-3">{row.active}</td>
-                    <td className="px-1 py-2 text-center text-gray-600 sm:px-5 sm:py-3">{row.expired}</td>
-                    <td className="px-1 py-2 text-center text-gray-600 sm:px-5 sm:py-3">{row.closed}</td>
-                    <td className="px-1 py-2 text-center text-gray-600 sm:px-5 sm:py-3">{row.cancelled}</td>
+                    <td className="px-2 py-1 font-medium text-gray-600 sm:px-5 sm:py-3">{row.position}</td>
+                    <td className="px-1 py-1 text-center text-gray-600 sm:px-5 sm:py-3">{row.active}</td>
+                    <td className="px-1 py-1 text-center text-gray-600 sm:px-5 sm:py-3">{row.expired}</td>
+                    <td className="px-1 py-1 text-center text-gray-600 sm:px-5 sm:py-3">{row.closed}</td>
+                    <td className="px-1 py-1 text-center text-gray-600 sm:px-5 sm:py-3">{row.cancelled}</td>
                   </tr>
                 ))}
               </tbody>
               <tfoot>
                 <tr className="border-t border-primary-50">
-                  <td className="px-2 py-2 text-sm font-semibold text-gray-900 sm:px-5 sm:py-3">Total</td>
-                  <td className="px-1 py-2 text-center text-sm font-semibold text-gray-900 sm:px-5 sm:py-3">##</td>
-                  <td className="px-1 py-2 text-center text-sm font-semibold text-gray-900 sm:px-5 sm:py-3">##</td>
-                  <td className="px-1 py-2 text-center text-sm font-semibold text-gray-900 sm:px-5 sm:py-3">##</td>
-                  <td className="px-1 py-2 text-center text-sm font-semibold text-gray-900 sm:px-5 sm:py-3">##</td>
+                  <td className="px-2 py-1 text-sm font-semibold text-gray-900 sm:px-5 sm:py-3">Total</td>
+                  <td className="px-1 py-1 text-center text-sm font-semibold text-gray-900 sm:px-5 sm:py-3">##</td>
+                  <td className="px-1 py-1 text-center text-sm font-semibold text-gray-900 sm:px-5 sm:py-3">##</td>
+                  <td className="px-1 py-1 text-center text-sm font-semibold text-gray-900 sm:px-5 sm:py-3">##</td>
+                  <td className="px-1 py-1 text-center text-sm font-semibold text-gray-900 sm:px-5 sm:py-3">##</td>
                 </tr>
               </tfoot>
             </table>
