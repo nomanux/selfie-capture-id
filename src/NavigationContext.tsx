@@ -10,6 +10,7 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useState, t
  */
 
 export type Screen =
+  | "login"
   | "dashboard"
   | "properties"
   | "project-details"
@@ -48,12 +49,13 @@ interface NavigationContextValue {
   canGoBack: boolean;
 }
 
-const DEFAULT_ROUTE: Route = { screen: "dashboard" };
+const DEFAULT_ROUTE: Route = { screen: "login" };
 
 // One unique, human-readable path per screen. Optional context (project,
 // itemId) rides along as a query string so a full URL is always enough to
 // reconstruct the exact route (deep-link/refresh/share all just work).
 const SCREEN_PATHS: Record<Screen, string> = {
+  login: "/login",
   dashboard: "/dashboard",
   properties: "/properties",
   "project-details": "/properties/details",
@@ -83,7 +85,7 @@ const PATH_TO_SCREEN: Record<string, Screen> = Object.fromEntries(
 ) as Record<string, Screen>;
 
 function routeToUrl(route: Route): string {
-  const path = SCREEN_PATHS[route.screen] ?? SCREEN_PATHS.dashboard;
+  const path = SCREEN_PATHS[route.screen] ?? SCREEN_PATHS.login;
   const params = new URLSearchParams();
   if (route.project) params.set("project", route.project);
   if (route.itemId) params.set("itemId", route.itemId);
@@ -119,7 +121,7 @@ export function NavigationProvider({ children, initialRoute }: { children: React
 
   // Stamp the starting history entry with depth 0, and normalize the URL to
   // whatever route we actually resolved (covers "/" or an unknown path
-  // falling back to the dashboard).
+  // falling back to the login screen).
   useEffect(() => {
     if (typeof window === "undefined") return;
     window.history.replaceState({ depth: 0 } satisfies HistoryState, "", routeToUrl(route));

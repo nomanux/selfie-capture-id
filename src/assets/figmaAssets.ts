@@ -13,7 +13,7 @@
  */
 
 import unitFloorplanB3Png from "./unit-floorplan-b3.png";
-import dmciLogoPng from "./dmci-logo.png";
+import dmciLogoSvg from "./dmci-logo.svg";
 import acaciaEstatesLogoPng from "./acacia-estates-logo.png";
 import aristaPlaceLogoPng from "./arista-place-logo.png";
 import valeronTowerLogoPng from "./valeron-tower-logo.png";
@@ -33,7 +33,7 @@ export const unitFloorplanB3Url = unitFloorplanB3Png;
 // never expires — the old three-part Figma CDN export (logoSymbolUrl /
 // logoSalesUrl / logoTextUrl) broke after ~7 days once those temporary URLs
 // expired.
-export const dmciLogoUrl = dmciLogoPng;
+export const dmciLogoUrl = dmciLogoSvg;
 
 // Property List grid-view card logos (Acacia Estates, Arista Place, The
 // Valeron Tower) + the "No Image Available" placeholder graphic. Supplied

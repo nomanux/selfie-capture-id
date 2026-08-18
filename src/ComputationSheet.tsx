@@ -3,6 +3,7 @@ import Input from "./Input";
 import DatePicker from "./DatePicker";
 import Select, { type SelectOption } from "./Select";
 import Button from "./Button";
+import IconButton from "./IconButton";
 import { LinkIcon, MoreHorizontalIcon, PlusIcon } from "./icons";
 import { useNavigation } from "./NavigationContext";
 
@@ -59,19 +60,6 @@ function DropdownField({ label, required }: { label: string; required?: boolean 
   );
 }
 
-/** Small outlined square icon button used next to Unit No. / Promo Discount — a different Untitled-UI primitive than the filled-circle CTA IconButton in Button.tsx. */
-function SquareIconButton({ "aria-label": ariaLabel, children }: { "aria-label": string; children: React.ReactNode }) {
-  return (
-    <button
-      type="button"
-      aria-label={ariaLabel}
-      className="flex h-8 w-9 shrink-0 cursor-pointer items-center justify-center rounded-md border border-primary-500 bg-white text-primary-600 shadow-[0_1px_2px_rgba(10,13,18,0.05)] hover:bg-primary-25"
-    >
-      {children}
-    </button>
-  );
-}
-
 export default function ComputationSheet() {
   const { navigate } = useNavigation();
 
@@ -118,9 +106,9 @@ export default function ComputationSheet() {
                     <FieldLabel>Unit No.</FieldLabel>
                     <div className="flex gap-2">
                       <Input size="sm" defaultValue="AGP-00A-C-28003" readOnly className="flex-1 cursor-default bg-gray-50" />
-                      <SquareIconButton aria-label="Unit No. options">
+                      <IconButton aria-label="Unit No. options">
                         <MoreHorizontalIcon className="h-4 w-4" />
-                      </SquareIconButton>
+                      </IconButton>
                     </div>
                   </div>
                   <DropdownField label="Building" />
@@ -151,9 +139,9 @@ export default function ComputationSheet() {
                     <div className="flex-1">
                       <TextField label="Promo Discount" placeholder="0.00" />
                     </div>
-                    <SquareIconButton aria-label="Promo Discount options">
+                    <IconButton aria-label="Promo Discount options">
                       <MoreHorizontalIcon className="h-4 w-4" />
-                    </SquareIconButton>
+                    </IconButton>
                   </div>
                   <DropdownField label="Payment Term" />
                 </div>

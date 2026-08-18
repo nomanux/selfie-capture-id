@@ -52,6 +52,48 @@ const FLOORS: FloorGroup[] = [
     unitEnd: 513,
     available: [502, 505, 509, 513],
   },
+  {
+    towerCode: "VLT-05C",
+    floorNumber: "06",
+    unitStart: 601,
+    unitEnd: 631,
+    available: [602, 608, 615, 622, 628, 631],
+  },
+  {
+    towerCode: "VLT-05C",
+    floorNumber: "07",
+    unitStart: 701,
+    unitEnd: 729,
+    available: [702, 710, 717, 725, 729],
+  },
+  {
+    towerCode: "BLU-02D",
+    floorNumber: "08",
+    unitStart: 801,
+    unitEnd: 825,
+    available: [802, 809, 816, 820, 825],
+  },
+  {
+    towerCode: "BLU-02D",
+    floorNumber: "09",
+    unitStart: 901,
+    unitEnd: 933,
+    available: [902, 911, 920, 928, 933],
+  },
+  {
+    towerCode: "BLU-02D",
+    floorNumber: "10",
+    unitStart: 1001,
+    unitEnd: 1031,
+    available: [1002, 1007, 1015, 1023, 1031],
+  },
+  {
+    towerCode: "CRY-03E",
+    floorNumber: "11",
+    unitStart: 1101,
+    unitEnd: 1127,
+    available: [1102, 1110, 1118, 1125, 1127],
+  },
 ];
 
 type AvailabilityFilter = "all" | "available" | "unavailable";
@@ -78,11 +120,7 @@ export default function LotteryUnitPicker() {
   const { navigate } = useNavigation();
   const nowServingCountdown = useCountdown(4 * 3600 + 9 * 60 + 13);
   const [filter, setFilter] = useState<AvailabilityFilter>("all");
-  const [selected, setSelected] = useState<SelectedUnit | null>({
-    towerCode: "AGP-00A",
-    floorNumber: "02",
-    unit: 231,
-  });
+  const [selected, setSelected] = useState<SelectedUnit | null>(null);
 
   const totalAvailable = useMemo(
     () => FLOORS.reduce((sum, f) => sum + f.available.length, 0),
@@ -104,7 +142,7 @@ export default function LotteryUnitPicker() {
       orgBadge
     >
       <div className="flex h-full w-full flex-col">
-      <div className="flex flex-1 flex-col gap-4 overflow-y-auto px-5 py-3 [scrollbar-gutter:stable]">
+      <div className="flex flex-1 flex-col gap-4 overflow-y-auto px-5 py-3 pb-20 [scrollbar-gutter:stable]">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="flex flex-col gap-1">
             <h1 className="text-lg font-semibold text-gray-900">
@@ -243,14 +281,18 @@ export default function LotteryUnitPicker() {
                           key={unit}
                           type="button"
                           disabled={!isAvailable}
-                          onClick={() =>
-                            isAvailable &&
-                            setSelected({
-                              towerCode: floor.towerCode,
-                              floorNumber: floor.floorNumber,
-                              unit,
-                            })
-                          }
+                          onClick={() => {
+                            if (!isAvailable) return;
+                            if (isSelected) {
+                              setSelected(null);
+                            } else {
+                              setSelected({
+                                towerCode: floor.towerCode,
+                                floorNumber: floor.floorNumber,
+                                unit,
+                              });
+                            }
+                          }}
                           className={
                             "min-w-[68px] rounded-md border px-3 py-2 text-sm font-semibold " +
                             (isSelected
@@ -271,40 +313,34 @@ export default function LotteryUnitPicker() {
           </div>
         </div>
       </div>
-      </div>
 
-      <div className="flex min-h-[68px] shrink-0 items-center justify-between border-t border-gray-200 bg-white px-6 py-4 shadow-[0_-1px_2px_rgba(10,13,18,0.05)]">
-        {selected ? (
-          <>
-            <div className="flex items-center gap-3">
-              <span className="text-sm text-gray-500">Selected Unit:</span>
-              <span className="flex items-center gap-2 rounded-md bg-gray-50 px-3 py-1.5 text-sm font-medium text-gray-900">
-                {selected.towerCode}-{selected.floorNumber}
-                <span className="text-gray-300">•</span>
-                Unit {selected.unit}
-                <button
-                  type="button"
-                  aria-label="Clear selected unit"
-                  onClick={() => setSelected(null)}
-                  className="cursor-pointer text-gray-400 hover:text-gray-700"
-                >
-                  <XIcon className="h-4 w-4" />
-                </button>
-              </span>
-            </div>
-            <Button
-              variant="primary"
-              size="md"
-              onClick={() => navigate({ screen: "unit-holding" })}
-            >
-              Proceed to Unit Holding
-            </Button>
-          </>
-        ) : (
-          <span className="text-sm text-gray-400">
-            Select a unit to continue
-          </span>
-        )}
+      {selected && (
+        <div className="sticky bottom-0 flex min-h-[68px] shrink-0 items-center justify-between border-t border-gray-200 bg-white px-6 py-4 shadow-[0_-1px_2px_rgba(10,13,18,0.05)]">
+          <div className="flex items-center gap-3">
+            <span className="text-sm text-gray-500">Selected Unit:</span>
+            <span className="flex items-center gap-2 rounded-md bg-gray-50 px-3 py-1.5 text-sm font-medium text-gray-900">
+              {selected.towerCode}-{selected.floorNumber}
+              <span className="text-gray-300">•</span>
+              Unit {selected.unit}
+              <button
+                type="button"
+                aria-label="Clear selected unit"
+                onClick={() => setSelected(null)}
+                className="cursor-pointer text-gray-400 hover:text-gray-700"
+              >
+                <XIcon className="h-4 w-4" />
+              </button>
+            </span>
+          </div>
+          <Button
+            variant="primary"
+            size="md"
+            onClick={() => navigate({ screen: "unit-holding" })}
+          >
+            Proceed to Unit Holding
+          </Button>
+        </div>
+      )}
       </div>
     </Layout>
   );

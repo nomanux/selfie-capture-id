@@ -81,6 +81,30 @@
   .btn-icon-xl {
     @apply h-12 w-12;
   }
+
+  .btn-icon-secondary-base {
+    @apply inline-flex shrink-0 cursor-pointer items-center justify-center rounded-md border border-primary-500 bg-white text-primary-700 transition-colors shadow-[0_1px_2px_rgba(10,13,18,0.05)] hover:bg-primary-50 hover:text-primary-500 hover:border-primary-400 disabled:cursor-not-allowed disabled:border-gray-200 disabled:bg-white disabled:text-gray-300;
+  }
+
+  .btn-icon-secondary-xs {
+    @apply h-7 w-7;
+  }
+
+  .btn-icon-secondary-sm {
+    @apply h-8 w-8;
+  }
+
+  .btn-icon-secondary-md {
+    @apply h-10 w-10;
+  }
+
+  .btn-icon-secondary-lg {
+    @apply h-11 w-11;
+  }
+
+  .btn-icon-secondary-xl {
+    @apply h-12 w-12;
+  }
 }
 
 /*

@@ -1,4 +1,5 @@
 import { NavigationProvider, useNavigation } from "./NavigationContext";
+import Login from "./Login";
 import Dashboard from "./Dashboard";
 import PropertiesListView from "./PropertiesListView";
 import ProjectDetails from "./ProjectDetails";
@@ -26,6 +27,8 @@ function Screens() {
   const { route } = useNavigation();
 
   switch (route.screen) {
+    case "login":
+      return <Login />;
     case "dashboard":
       return <Dashboard />;
     case "properties":
@@ -71,7 +74,7 @@ function Screens() {
     case "computation-sheet":
       return <ComputationSheet />;
     default:
-      return <Dashboard />;
+      return <Login />;
   }
 }
 

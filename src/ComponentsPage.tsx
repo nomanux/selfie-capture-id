@@ -1,5 +1,6 @@
-import { SearchIcon } from "./icons";
+import { SearchIcon, MoreHorizontalIcon } from "./icons";
 import Button, { IconButton, type ButtonSize, type ButtonVariant } from "./Button";
+import SecondaryIconButton from "./IconButton";
 import Select from "./Select";
 import Input from "./Input";
 import Checkbox from "./Checkbox";
@@ -100,6 +101,32 @@ function IconOnlyButtonTable() {
   );
 }
 
+function SecondaryIconButtonTable() {
+  return (
+    <div className="overflow-x-auto">
+      <table className="border-collapse text-sm">
+        <thead>
+          <SizeHeaderRow />
+        </thead>
+        <tbody>
+          {[false, true].map((isDisabled) => (
+            <tr key={String(isDisabled)}>
+              <td className="px-2 py-1 text-sm font-medium text-gray-700">{isDisabled ? "Disabled" : "Default"}</td>
+              {BUTTON_SIZES.map(({ size, iconClasses }) => (
+                <td key={size} className="px-3 py-1">
+                  <SecondaryIconButton size={size} aria-label="Secondary action" disabled={isDisabled}>
+                    <MoreHorizontalIcon className={iconClasses} />
+                  </SecondaryIconButton>
+                </td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
 function Swatch({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div className="flex flex-col gap-2">
@@ -153,6 +180,9 @@ export default function ComponentsPage() {
             </Swatch>
             <Swatch label="Icon-only">
               <IconOnlyButtonTable />
+            </Swatch>
+            <Swatch label="Secondary icon (for form fields)">
+              <SecondaryIconButtonTable />
             </Swatch>
           </div>
         </Section>

@@ -51,7 +51,7 @@ interface NavLeaf {
 
 interface NavSubItem {
   label: string;
-  onClick?: () => void;
+  onClick?: (e?: React.MouseEvent) => void;
 }
 
 interface NavBranch {
@@ -75,13 +75,13 @@ function NavItem({
   icon: (props: IconProps) => React.JSX.Element;
   label: string;
   active?: boolean;
-  onClick?: () => void;
+  onClick?: (e?: React.MouseEvent) => void;
   collapsed?: boolean;
 }) {
   return (
     <button
       type="button"
-      onClick={onClick}
+      onClick={(e) => onClick?.(e)}
       title={collapsed ? label : undefined}
       className={
         "flex h-10 w-full items-center gap-2 rounded-md px-2 py-1.5 text-left text-sm font-semibold transition-colors " +
@@ -157,7 +157,7 @@ function NavDropdown({
             <button
               key={item.label}
               type="button"
-              onClick={item.onClick}
+              onClick={(e) => item.onClick?.(e)}
               disabled={!item.onClick}
               className={
                 "w-full rounded-md py-1.5 pl-8 pr-2 text-left text-[13px] hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-transparent " +
@@ -184,7 +184,7 @@ function NavDropdown({
               <button
                 key={item.label}
                 type="button"
-                onClick={item.onClick}
+                onClick={(e) => item.onClick?.(e)}
                 disabled={!item.onClick}
                 className={
                   "w-full rounded-md px-2 py-1.5 text-left text-[13px] hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-transparent " +
@@ -239,12 +239,53 @@ export default function Layout({
     name: "DMCI Project Developers Insc.",
   });
 
+  // Helper to convert route to URL for new tab support
+  const routeToUrl = (route: Parameters<typeof navigate>[0]): string => {
+    const screenPaths: Record<string, string> = {
+      dashboard: "/dashboard",
+      properties: "/properties",
+      "project-details": "/properties/details",
+      tower: "/properties/tower",
+      floor: "/properties/floor",
+      unit: "/properties/unit",
+      "parking-slot": "/properties/parking-slot",
+      "service-area": "/properties/service-area",
+      "unit-availability": "/unit-availability",
+      "unit-availability-details": "/unit-availability/details",
+      "unit-holding": "/unit-holding",
+      "unit-holding-details": "/unit-holding/details",
+      "computation-sheet": "/computation-sheet",
+      clients: "/clients",
+      "advance-commission": "/commission/advance",
+      "advance-commission-details": "/commission/advance/details",
+      "regular-commission": "/commission/regular",
+      "regular-commission-details": "/commission/regular/details",
+      compliance: "/commission/compliance",
+      "compliance-details": "/commission/compliance/details",
+      "lottery-registration": "/lottery/registration",
+      "lottery-unit-picker": "/lottery/unit-picker",
+    };
+    const path = screenPaths[route.screen] ?? "/dashboard";
+    const params = new URLSearchParams();
+    if (route.project) params.set("project", route.project);
+    if (route.itemId) params.set("itemId", route.itemId);
+    const query = params.toString();
+    return query ? `${path}?${query}` : path;
+  };
+
   // Wraps navigate() so tapping any nav destination also closes the mobile
-  // drawer. Dropdown expand/collapse (NavDropdown's own onClick) is untouched
+  // drawer. Also supports Ctrl+click to open in new tab.
+  // Dropdown expand/collapse (NavDropdown's own onClick) is untouched
   // so opening "Properties" on a phone doesn't immediately hide its sub-items.
-  const go = (route: Parameters<typeof navigate>[0]) => {
-    navigate(route);
-    setSidebarOpen(false);
+  const go = (route: Parameters<typeof navigate>[0], event?: React.MouseEvent) => {
+    if (event && (event.ctrlKey || event.metaKey)) {
+      // Ctrl/Cmd+click: open in new tab
+      window.open(routeToUrl(route), "_blank");
+    } else {
+      // Normal click: navigate in current tab
+      navigate(route);
+      setSidebarOpen(false);
+    }
   };
 
   // The topbar hamburger drives two different behaviours depending on
@@ -273,21 +314,21 @@ export default function Layout({
       key: "dashboard",
       label: "Dashboard",
       icon: LayoutDashboardIcon,
-      onClick: () => go({ screen: "dashboard" }),
+      onClick: (e?: React.MouseEvent) => go({ screen: "dashboard" }, e),
     },
     {
       key: "properties",
       label: "Properties",
       icon: Building2Icon,
       items: [
-        { label: "Projects", onClick: () => go({ screen: "properties" }) },
+        { label: "Projects", onClick: (e?: React.MouseEvent) => go({ screen: "properties" }, e) },
         {
           label: "Unit Availability",
-          onClick: () => go({ screen: "unit-availability" }),
+          onClick: (e?: React.MouseEvent) => go({ screen: "unit-availability" }, e),
         },
         {
           label: "Unit Holding",
-          onClick: () => go({ screen: "unit-holding" }),
+          onClick: (e?: React.MouseEvent) => go({ screen: "unit-holding" }, e),
         },
       ],
     },
@@ -298,15 +339,15 @@ export default function Layout({
       items: [
         {
           label: "Advance Commission",
-          onClick: () => go({ screen: "advance-commission" }),
+          onClick: (e?: React.MouseEvent) => go({ screen: "advance-commission" }, e),
         },
         {
           label: "Regular Commission",
-          onClick: () => go({ screen: "regular-commission" }),
+          onClick: (e?: React.MouseEvent) => go({ screen: "regular-commission" }, e),
         },
         {
           label: "For Compliance",
-          onClick: () => go({ screen: "compliance" }),
+          onClick: (e?: React.MouseEvent) => go({ screen: "compliance" }, e),
         },
       ],
     },
@@ -314,13 +355,13 @@ export default function Layout({
       key: "computation",
       label: "Computation Sheet",
       icon: FileTextIcon,
-      onClick: () => go({ screen: "computation-sheet" }),
+      onClick: (e?: React.MouseEvent) => go({ screen: "computation-sheet" }, e),
     },
     {
       key: "clients",
       label: "Clients",
       icon: UsersIcon,
-      onClick: () => go({ screen: "clients" }),
+      onClick: (e?: React.MouseEvent) => go({ screen: "clients" }, e),
     },
     {
       key: "lottery",
@@ -329,11 +370,11 @@ export default function Layout({
       items: [
         {
           label: "Registration",
-          onClick: () => go({ screen: "lottery-registration" }),
+          onClick: (e?: React.MouseEvent) => go({ screen: "lottery-registration" }, e),
         },
         {
           label: "Lottery",
-          onClick: () => go({ screen: "lottery-unit-picker" }),
+          onClick: (e?: React.MouseEvent) => go({ screen: "lottery-unit-picker" }, e),
         },
       ],
     },
@@ -375,7 +416,7 @@ export default function Layout({
             >
               <button
                 type="button"
-                onClick={() => go({ screen: "dashboard" })}
+                onClick={(e) => go({ screen: "dashboard" }, e)}
                 className="flex cursor-pointer items-center self-start"
                 aria-label="Go to dashboard"
               >

@@ -14,40 +14,60 @@ export interface PropertyCardData {
   sold: [number, number, number];
 }
 
-export default function PropertyCard({ card, onClick }: { card: PropertyCardData; onClick?: () => void }) {
+export default function PropertyCard({
+  card,
+  onClick,
+}: {
+  card: PropertyCardData;
+  onClick?: () => void;
+}) {
   return (
     <button
       type="button"
       onClick={onClick}
-      className="group flex origin-center transform-gpu cursor-pointer flex-col rounded-xl border border-gray-200 bg-white text-left backface-hidden transition-transform duration-200 ease-out will-change-transform hover:z-10 hover:scale-[1.02] hover:shadow-lg"
+      className="group flex cursor-pointer flex-col rounded-xl border border-gray-200 bg-white text-left transition-shadow duration-200 ease-out hover:shadow-lg"
+      style={{ WebkitFontSmoothing: "antialiased" }}
     >
       <div className="flex h-32 shrink-0 items-center justify-center overflow-hidden rounded-t-xl bg-gray-50 p-4">
         {card.logoUrl ? (
-          <img src={card.logoUrl} alt={card.name} className="max-h-full max-w-full object-contain" />
+          <img
+            src={card.logoUrl}
+            alt={card.name}
+            className="max-h-full max-w-full object-contain"
+          />
         ) : (
-          <img src={noImageAvailableUrl} alt="No image available" className="max-h-full max-w-full object-contain" />
+          <img
+            src={noImageAvailableUrl}
+            alt="No image available"
+            className="max-h-full max-w-full object-contain"
+          />
         )}
       </div>
       <div className="flex flex-col gap-3 p-4">
-        <span className="text-base font-semibold text-primary-500 group-hover:underline">{card.name}</span>
+        <span className="text-base font-semibold text-primary-500">
+          {card.name}
+        </span>
         <div className="grid grid-cols-[1fr_repeat(3,minmax(40px,auto))] items-center gap-x-3 gap-y-1.5">
           <span />
           {["CU", "PS", "SA"].map((label) => (
-            <span key={label} className="justify-self-center rounded-[5px] bg-gray-50 px-3 py-0.5 text-xs font-semibold text-gray-600">
+            <span
+              key={label}
+              className="justify-self-center rounded-[5px] bg-gray-50 px-3 py-0.5 text-xs font-semibold text-gray-600"
+            >
               {label}
             </span>
           ))}
 
-          <span className="text-xs font-semibold text-primary-600">Available</span>
+          <span className="text-xs font-semibold text-gray-700">Available</span>
           {card.available.map((value, i) => (
-            <span key={i} className="text-center text-sm text-gray-900">
+            <span key={i} className="text-center text-sm text-gray-700">
               {value}
             </span>
           ))}
 
-          <span className="text-xs font-semibold text-primary-600">Sold</span>
+          <span className="text-xs font-semibold text-gray-700">Sold</span>
           {card.sold.map((value, i) => (
-            <span key={i} className="text-center text-sm text-gray-900">
+            <span key={i} className="text-center text-sm text-gray-700">
               {value}
             </span>
           ))}
