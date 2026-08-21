@@ -10,7 +10,7 @@
  */
 @layer components {
   .btn-base {
-    @apply inline-flex cursor-pointer items-center justify-center rounded-md font-semibold transition-colors disabled:cursor-not-allowed;
+    @apply inline-flex cursor-pointer items-center justify-center rounded-lg font-semibold transition-colors disabled:cursor-not-allowed;
   }
 
   .btn-primary {

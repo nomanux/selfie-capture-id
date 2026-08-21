@@ -5,6 +5,7 @@ import Input from "./Input";
 import Checkbox from "./Checkbox";
 import { EyeIcon } from "./icons";
 import dmciLogo from "./assets/dmci-logo.svg";
+import opcoopcIcon from "./assets/opcoops.png";
 import carousel3Cvz1 from "./assets/carousel3-Cvz1Bo5L.jpg";
 import carousel4 from "./assets/carousel4-CeaP0fpH.jpg";
 import carousel3Cvz2 from "./assets/carousel3-Cvz1Bo5L (1).jpg";
@@ -101,7 +102,7 @@ export default function Login() {
                   htmlFor="email"
                   className="block text-sm font-medium text-gray-700"
                 >
-                  Email<span className="ml-0.5 text-blue-600">*</span>
+                  Email<span className="ml-0.5 text-brand-600">*</span>
                 </label>
                 <Input
                   id="email"
@@ -121,7 +122,7 @@ export default function Login() {
                     htmlFor="password"
                     className="block text-sm font-medium text-gray-700"
                   >
-                    Password<span className="ml-0.5 text-blue-600">*</span>
+                    Password<span className="ml-0.5 text-brand-600">*</span>
                   </label>
                   <div className="relative flex items-center">
                     <Input
@@ -138,7 +139,9 @@ export default function Login() {
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
                       className="absolute right-3 text-gray-400 hover:text-gray-600"
-                      aria-label={showPassword ? "Hide password" : "Show password"}
+                      aria-label={
+                        showPassword ? "Hide password" : "Show password"
+                      }
                     >
                       <EyeIcon className="h-4 w-4" />
                     </button>
@@ -158,7 +161,7 @@ export default function Login() {
                   </label>
                   <button
                     type="button"
-                    className="text-sm font-medium text-blue-600 hover:text-blue-700"
+                    className="text-sm font-medium text-brand-600 hover:text-blue-700"
                   >
                     Forgot Password?
                   </button>
@@ -197,6 +200,21 @@ export default function Login() {
                 </svg>
                 Microsoft
               </button>
+            </div>
+
+            {/* Official NPC Registered System Badge */}
+            <div className="flex flex-col items-center justify-center">
+              <div className="flex items-center gap-3">
+                <img src={opcoopcIcon} alt="NPC Logo" className="h-14 w-auto" />
+                <div className="w-px h-7 bg-blue-100" />
+                <div className="flex flex-col text-center">
+                  <p className="text-sm font-semibold text-brand-600">
+                    Official NPC
+                    <br />
+                    Registered System
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
         </div>

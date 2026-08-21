@@ -32,7 +32,8 @@ export type Screen =
   | "compliance"
   | "compliance-details"
   | "lottery-registration"
-  | "lottery-unit-picker";
+  | "lottery-unit-picker"
+  | "payment-method";
 
 export interface Route {
   screen: Screen;
@@ -78,6 +79,7 @@ const SCREEN_PATHS: Record<Screen, string> = {
   "compliance-details": "/commission/compliance/details",
   "lottery-registration": "/lottery/registration",
   "lottery-unit-picker": "/lottery/unit-picker",
+  "payment-method": "/payment-method",
 };
 
 const PATH_TO_SCREEN: Record<string, Screen> = Object.fromEntries(

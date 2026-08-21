@@ -22,6 +22,7 @@ import ForComplianceDetails from "./ForComplianceDetails";
 import LotteryRegistrationList from "./LotteryRegistrationList";
 import LotteryUnitPicker from "./LotteryUnitPicker";
 import ComputationSheet from "./ComputationSheet";
+import ReservationPayment from "./ReservationPayment";
 
 function Screens() {
   const { route } = useNavigation();
@@ -73,6 +74,8 @@ function Screens() {
       return <LotteryUnitPicker />;
     case "computation-sheet":
       return <ComputationSheet />;
+    case "payment-method":
+      return <ReservationPayment />;
     default:
       return <Login />;
   }
