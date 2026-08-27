@@ -23,6 +23,8 @@ import LotteryRegistrationList from "./LotteryRegistrationList";
 import LotteryUnitPicker from "./LotteryUnitPicker";
 import ComputationSheet from "./ComputationSheet";
 import ReservationPayment from "./ReservationPayment";
+import RAForm from "./RAForm";
+import CaptureSelfieStep from "./CaptureSelfieStep";
 
 function Screens() {
   const { route } = useNavigation();
@@ -76,6 +78,10 @@ function Screens() {
       return <ComputationSheet />;
     case "payment-method":
       return <ReservationPayment />;
+    case "ra-form":
+      return <RAForm />;
+    case "capture-selfie-step":
+      return <CaptureSelfieStep />;
     default:
       return <Login />;
   }

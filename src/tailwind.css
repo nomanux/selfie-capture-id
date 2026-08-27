@@ -252,6 +252,10 @@
    * hover/click/tab to a checkbox on the /component page to see the real
    * :hover/:checked/:focus states, they aren't faked.
    */
+  .border-secondary {
+    @apply border-gray-200;
+  }
+
   .checkbox-field {
     @apply relative m-0 shrink-0 cursor-pointer appearance-none border border-gray-300 bg-white bg-center bg-no-repeat transition-colors;
     @apply focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white;

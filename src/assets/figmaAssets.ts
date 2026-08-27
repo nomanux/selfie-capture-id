@@ -19,6 +19,10 @@ import aristaPlaceLogoPng from "./arista-place-logo.png";
 import valeronTowerLogoPng from "./valeron-tower-logo.png";
 import noImageAvailablePng from "./no-image-available.png";
 import noImageAvailableGraphicSvg from "./no-image-available-graphic.svg";
+import thumbnailPhoto1Png from "./1.png";
+import thumbnailPhoto2Png from "./2.png";
+import thumbnailPhoto3Png from "./3.png";
+import idCardImagePng from "./right.png";
 
 const FIGMA_ASSET_BASE = "https://www.figma.com/api/mcp/asset";
 
@@ -57,15 +61,15 @@ export const uploadIconUrl = `${FIGMA_ASSET_BASE}/17acb4da-c3f7-455e-b205-9044ad
 export const selfiePreviewPhotoUrl = `${FIGMA_ASSET_BASE}/21e1a6b1-a80d-42b5-a225-4eb0e6d960b7`;
 export const captureIconUrl = `${FIGMA_ASSET_BASE}/ab55786c-3812-4630-bf3e-b9291993b802`;
 
-// Right column: uploaded government ID (UMID) photo
-export const idCardImageUrl = `${FIGMA_ASSET_BASE}/8fc4121f-80cc-47bf-a411-ca346631dac2`;
+// Right column: uploaded government ID (UMID) photo - now using local image
+export const idCardImageUrl = idCardImagePng;
 
 // Thumbnail status badges
 export const badgeXIconUrl = `${FIGMA_ASSET_BASE}/0629e1c3-f80d-4a34-a1ae-d335eea527cd`;
 export const badgeCheckIconUrl = `${FIGMA_ASSET_BASE}/a661bd34-26e4-4ba5-84a9-74be8a634d43`;
 
-// Previous selfie-attempt thumbnails (1-3 failed/red, 4 accepted/green)
-export const thumbnailPhoto1Url = `${FIGMA_ASSET_BASE}/4fb7e6fa-b870-4695-8d48-13e98f159ca1`;
-export const thumbnailPhoto2Url = `${FIGMA_ASSET_BASE}/89046d66-6204-423e-8d5e-bba95c73c55d`;
-export const thumbnailPhoto3Url = `${FIGMA_ASSET_BASE}/f2ff4112-79d2-4c47-bc47-ed8714f0f8f9`;
-export const thumbnailPhoto4Url = `${FIGMA_ASSET_BASE}/8c5a6e4b-d698-4f98-8067-8aa129bcd1ba`;
+// Previous selfie-attempt thumbnails (1-3 failed/red, 4 accepted/green) - now using local images
+export const thumbnailPhoto1Url = thumbnailPhoto1Png;
+export const thumbnailPhoto2Url = thumbnailPhoto2Png;
+export const thumbnailPhoto3Url = thumbnailPhoto3Png;
+export const thumbnailPhoto4Url = thumbnailPhoto3Png; // Using 3.png as fallback for 4th thumbnail (accepted)

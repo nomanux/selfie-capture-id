@@ -1,0 +1,48 @@
+<svg viewBox="0 0 404 259" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="idGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1e40af;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1e3a8a;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="photoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#f0f4f8;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#d0dce6;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Main card background -->
+  <rect width="404" height="259" rx="8" fill="url(#idGrad)"/>
+  
+  <!-- Security hologram area (top right) -->
+  <circle cx="360" cy="30" r="20" fill="rgba(255,255,255,0.1)" opacity="0.5"/>
+  <path d="M 350 25 L 360 30 L 350 35 M 370 25 L 360 30 L 370 35" stroke="rgba(255,255,255,0.4)" stroke-width="1.5" fill="none"/>
+  
+  <!-- Photo placeholder area -->
+  <rect x="20" y="30" width="100" height="130" rx="4" fill="url(#photoGrad)"/>
+  <circle cx="70" cy="70" r="20" fill="#cbd5e1" opacity="0.6"/>
+  <path d="M 50 100 Q 70 95 90 100" stroke="#94a3b8" stroke-width="2" fill="none"/>
+  
+  <!-- Text area -->
+  <g fill="white" opacity="0.9">
+    <!-- Name -->
+    <text x="140" y="50" font-family="Inter, sans-serif" font-size="14" font-weight="700">JUAN DELA CRUZ</text>
+    
+    <!-- ID Number -->
+    <rect x="140" y="65" width="240" height="20" rx="3" fill="rgba(255,255,255,0.15)"/>
+    <text x="150" y="80" font-family="monospace" font-size="12" font-weight="600" opacity="0.8">ID: 123-456-789-00</text>
+    
+    <!-- Details -->
+    <text x="140" y="105" font-family="Inter, sans-serif" font-size="10" opacity="0.75">Date of Birth: 01/15/1990</text>
+    <text x="140" y="125" font-family="Inter, sans-serif" font-size="10" opacity="0.75">Address: Sample Address City, PH 1234</text>
+    <text x="140" y="145" font-family="Inter, sans-serif" font-size="10" opacity="0.75">Valid Until: 01/15/2030</text>
+    
+    <!-- Footer security text -->
+    <text x="20" y="220" font-family="Inter, sans-serif" font-size="9" opacity="0.6" font-style="italic">Republic of the Philippines</text>
+    <rect x="20" y="228" width="364" height="1" fill="rgba(255,255,255,0.3)"/>
+    <text x="20" y="250" font-family="monospace" font-size="8" opacity="0.5" letter-spacing="2">GOVERNMENT ISSUED ID</text>
+  </g>
+  
+  <!-- Decorative elements -->
+  <circle cx="30" cy="240" r="3" fill="rgba(255,255,255,0.4)"/>
+  <circle cx="360" cy="240" r="3" fill="rgba(255,255,255,0.4)"/>
+</svg>

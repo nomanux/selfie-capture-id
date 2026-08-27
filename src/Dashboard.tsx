@@ -1,5 +1,6 @@
 import Layout from "./Layout";
 import { BuildingIcon, CarIcon, InfoIcon, BanknoteIcon, AlertCircleIcon, CheckCircleIcon, type IconProps } from "./icons";
+import { useNavigation } from "./NavigationContext";
 
 /**
  * Dashboard — DMCI Homes Sales CRF/RA admin dashboard.
@@ -100,6 +101,8 @@ function SectionAccentHeading({ children }: { children: React.ReactNode }) {
 // --- Page ----------------------------------------------------------------
 
 export default function Dashboard() {
+  const { navigate } = useNavigation();
+
   return (
     <Layout active="dashboard" breadcrumb={["Dashboard"]}>
       <div className="flex w-full flex-col gap-4 px-4 py-4 sm:gap-5 sm:px-5 sm:py-5">
@@ -109,6 +112,22 @@ export default function Dashboard() {
           <p className="text-sm text-gray-600 sm:text-base">
             Comprehensive overview of Customer Registration Form and Reservation Agreement metrics
           </p>
+        </div>
+
+        {/* Quick Access Buttons */}
+        <div className="flex gap-3">
+          <button
+            onClick={() => navigate({ screen: "ra-form" })}
+            className="px-4 py-2 bg-primary-500 text-white rounded-lg font-semibold hover:bg-primary-600 transition-colors"
+          >
+            RA Form (8-Step)
+          </button>
+          <button
+            onClick={() => navigate({ screen: "capture-selfie-step" })}
+            className="px-4 py-2 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700 transition-colors"
+          >
+            Selfie Capture
+          </button>
         </div>
 
         {/* Unit Holding Summary card */}
