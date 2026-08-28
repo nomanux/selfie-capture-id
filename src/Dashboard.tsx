@@ -128,6 +128,12 @@ export default function Dashboard() {
           >
             Selfie Capture
           </button>
+          <button
+            onClick={() => navigate({ screen: "capture-selfie-track" })}
+            className="px-4 py-2 bg-orange-600 text-white rounded-lg font-semibold hover:bg-orange-700 transition-colors"
+          >
+            Selfie Capture 2
+          </button>
         </div>
 
         {/* Unit Holding Summary card */}

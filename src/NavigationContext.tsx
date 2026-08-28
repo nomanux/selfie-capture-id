@@ -35,7 +35,8 @@ export type Screen =
   | "lottery-unit-picker"
   | "payment-method"
   | "ra-form"
-  | "capture-selfie-step";
+  | "capture-selfie-step"
+  | "capture-selfie-track";
 
 export interface Route {
   screen: Screen;
@@ -84,6 +85,7 @@ const SCREEN_PATHS: Record<Screen, string> = {
   "payment-method": "/payment-method",
   "ra-form": "/ra-form",
   "capture-selfie-step": "/capture-selfie-step",
+  "capture-selfie-track": "/capture-selfie-track",
 };
 
 const PATH_TO_SCREEN: Record<string, Screen> = Object.fromEntries(
