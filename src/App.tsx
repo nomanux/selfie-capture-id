@@ -25,6 +25,7 @@ import ComputationSheet from "./ComputationSheet";
 import ReservationPayment from "./ReservationPayment";
 import RAForm from "./RAForm";
 import CaptureSelfieStep from "./CaptureSelfieStep";
+import CaptureSelfieTrack from "./CaptureSelfieTrack";
 
 function Screens() {
   const { route } = useNavigation();
@@ -82,6 +83,8 @@ function Screens() {
       return <RAForm />;
     case "capture-selfie-step":
       return <CaptureSelfieStep />;
+    case "capture-selfie-track":
+      return <CaptureSelfieTrack />;
     default:
       return <Login />;
   }
@@ -89,8 +92,18 @@ function Screens() {
 
 /** App — wires every DMCI Homes Sales CRF/RA screen together behind a lightweight in-memory router. */
 export default function App() {
+  const getInitialRoute = () => {
+    if (typeof window !== "undefined") {
+      const path = window.location.pathname;
+      if (path === "/capture-selfie-track") {
+        return { screen: "capture-selfie-track" as const };
+      }
+    }
+    return undefined;
+  };
+
   return (
-    <NavigationProvider>
+    <NavigationProvider initialRoute={getInitialRoute()}>
       <Screens />
     </NavigationProvider>
   );

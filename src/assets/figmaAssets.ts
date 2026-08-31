@@ -22,7 +22,8 @@ import noImageAvailableGraphicSvg from "./no-image-available-graphic.svg";
 import thumbnailPhoto1Png from "./1.png";
 import thumbnailPhoto2Png from "./2.png";
 import thumbnailPhoto3Png from "./3.png";
-import idCardImagePng from "./right.png";
+import thumbnailPhoto4Png from "./right.png";
+import idCardImagePng from "./dummyid.png";
 
 const FIGMA_ASSET_BASE = "https://www.figma.com/api/mcp/asset";
 
@@ -72,4 +73,4 @@ export const badgeCheckIconUrl = `${FIGMA_ASSET_BASE}/a661bd34-26e4-4ba5-84a9-74
 export const thumbnailPhoto1Url = thumbnailPhoto1Png;
 export const thumbnailPhoto2Url = thumbnailPhoto2Png;
 export const thumbnailPhoto3Url = thumbnailPhoto3Png;
-export const thumbnailPhoto4Url = thumbnailPhoto3Png; // Using 3.png as fallback for 4th thumbnail (accepted)
+export const thumbnailPhoto4Url = thumbnailPhoto4Png;
