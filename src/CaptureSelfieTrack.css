@@ -303,6 +303,7 @@ body,
   min-width: 0;
   outline: 1.4px solid;
   outline-offset: -1.4px;
+  width: 100%;
 }
 
 .cs-thumbnail--rejected {

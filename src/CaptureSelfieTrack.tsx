@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import "./CaptureSelfieTrack.css";
+import Button from "./Button";
 import {
   dmciLogoUrl,
   idCardImageUrl,
@@ -25,9 +25,27 @@ const lucideProps = {
 
 function CameraIcon({ className }: IconProps) {
   return (
-    <svg className={className} {...lucideProps}>
-      <path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z" />
-      <circle cx="12" cy="13" r="3" />
+    <svg
+      className={className}
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      width="24"
+      height="24"
+      color="currentColor"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+    >
+      <path
+        d="M12.6974 3.5H11.303C10.5884 3.5 10.2311 3.5 9.91067 3.612C9.71499 3.68039 9.53113 3.77879 9.36568 3.90367C9.09474 4.10816 8.89655 4.40544 8.50018 5L8.50017 5.00001C8.29717 5.30453 7.99794 5.75337 7.87867 5.87871C7.58314 6.18927 7.19563 6.39666 6.77329 6.47029C6.60284 6.5 6.41985 6.5 6.05387 6.5C5.07379 6.5 4.58376 6.5 4.18307 6.61342C3.18074 6.89716 2.39734 7.68055 2.1136 8.68289C2.00018 9.08357 2.00018 9.57361 2.00018 10.5537V14.5C2.00018 17.3284 2.00018 18.7426 2.87886 19.6213C3.75754 20.5 5.17176 20.5 8.00018 20.5H16.0002C18.8286 20.5 20.2428 20.5 21.1215 19.6213C22.0002 18.7426 22.0002 17.3284 22.0002 14.5V10.5537C22.0002 9.57361 22.0002 9.08357 21.8868 8.68289C21.603 7.68055 20.8196 6.89716 19.8173 6.61342C19.4166 6.5 18.9266 6.5 17.9465 6.5C17.5805 6.5 17.3975 6.5 17.2271 6.47029C16.8047 6.39666 16.4172 6.18927 16.1217 5.87871C16.0024 5.75336 15.7032 5.30451 15.5002 5C15.1038 4.40544 14.9056 4.10816 14.6347 3.90367C14.4692 3.77879 14.2854 3.68039 14.0897 3.612C13.7693 3.5 13.412 3.5 12.6974 3.5Z"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M16.0002 13C16.0002 15.2091 14.2093 17 12.0002 17C9.79104 17 8.00018 15.2091 8.00018 13C8.00018 10.7909 9.79104 9 12.0002 9C14.2093 9 16.0002 10.7909 16.0002 13Z"
+        strokeLinejoin="round"
+      />
+      <path d="M19.1252 9.5H19.0002M19.2502 9.5C19.2502 9.63807 19.1383 9.75 19.0002 9.75C18.8621 9.75 18.7502 9.63807 18.7502 9.5C18.7502 9.36193 18.8621 9.25 19.0002 9.25C19.1383 9.25 19.2502 9.36193 19.2502 9.5Z" />
     </svg>
   );
 }
@@ -216,8 +234,10 @@ declare global {
   }
 }
 
-const FACE_API_SCRIPT_URL = "https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js";
-const FACE_API_MODEL_URL = "https://justadudewhohacks.github.io/face-api.js/models";
+const FACE_API_SCRIPT_URL =
+  "https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js";
+const FACE_API_MODEL_URL =
+  "https://justadudewhohacks.github.io/face-api.js/models";
 
 let faceApiReadyPromise: Promise<void> | null = null;
 
@@ -230,16 +250,23 @@ function loadFaceApi(): Promise<void> {
         reject(new Error("face-api.js did not load"));
         return;
       }
-      faceapi.nets.tinyFaceDetector.loadFromUri(FACE_API_MODEL_URL).then(resolve).catch(reject);
+      faceapi.nets.tinyFaceDetector
+        .loadFromUri(FACE_API_MODEL_URL)
+        .then(resolve)
+        .catch(reject);
     };
     if (window.faceapi) {
       afterScript();
       return;
     }
-    const existing = document.querySelector<HTMLScriptElement>(`script[src="${FACE_API_SCRIPT_URL}"]`);
+    const existing = document.querySelector<HTMLScriptElement>(
+      `script[src="${FACE_API_SCRIPT_URL}"]`,
+    );
     if (existing) {
       existing.addEventListener("load", afterScript);
-      existing.addEventListener("error", () => reject(new Error("face-api.js failed to load")));
+      existing.addEventListener("error", () =>
+        reject(new Error("face-api.js failed to load")),
+      );
       return;
     }
     const script = document.createElement("script");
@@ -252,13 +279,19 @@ function loadFaceApi(): Promise<void> {
   return faceApiReadyPromise;
 }
 
-function detectCardLikelyHeld(video: HTMLVideoElement, canvas: HTMLCanvasElement | null): boolean {
-  if (!canvas || video.videoWidth === 0 || video.videoHeight === 0) return false;
+function detectCardLikelyHeld(
+  video: HTMLVideoElement,
+  canvas: HTMLCanvasElement | null,
+): boolean {
+  if (!canvas || video.videoWidth === 0 || video.videoHeight === 0)
+    return false;
   const w = 96;
   const h = 54;
   canvas.width = w;
   canvas.height = h;
-  const ctx = canvas.getContext("2d", { willReadFrequently: true } as CanvasRenderingContext2DSettings);
+  const ctx = canvas.getContext("2d", {
+    willReadFrequently: true,
+  } as CanvasRenderingContext2DSettings);
   if (!ctx) return false;
   ctx.drawImage(video, 0, 0, w, h);
   const { data } = ctx.getImageData(0, 0, w, h);
@@ -273,7 +306,8 @@ function detectCardLikelyHeld(video: HTMLVideoElement, canvas: HTMLCanvasElement
   for (let y = startY; y < h - 1; y++) {
     for (let x = 1; x < w - 1; x++) {
       const lum = lumAt(x, y);
-      edgeSum += Math.abs(lum - lumAt(x + 1, y)) + Math.abs(lum - lumAt(x, y + 1));
+      edgeSum +=
+        Math.abs(lum - lumAt(x + 1, y)) + Math.abs(lum - lumAt(x, y + 1));
       sampleCount++;
     }
   }
@@ -311,7 +345,9 @@ export default function CaptureSelfieTrack() {
     setCameraError(null);
 
     if (!navigator.mediaDevices?.getUserMedia) {
-      setCameraError("This browser can't access the camera. Try uploading a photo instead.");
+      setCameraError(
+        "This browser can't access the camera. Try uploading a photo instead.",
+      );
       return;
     }
 
@@ -329,7 +365,9 @@ export default function CaptureSelfieTrack() {
       })
       .catch(() => {
         if (!cancelled) {
-          setCameraError("Camera access was blocked. Allow camera permission in your browser, then try again.");
+          setCameraError(
+            "Camera access was blocked. Allow camera permission in your browser, then try again.",
+          );
         }
       });
 
@@ -364,7 +402,10 @@ export default function CaptureSelfieTrack() {
             const faceapi = window.faceapi;
             const result = await faceapi.detectSingleFace(
               video,
-              new faceapi.TinyFaceDetectorOptions({ inputSize: 224, scoreThreshold: 0.5 })
+              new faceapi.TinyFaceDetectorOptions({
+                inputSize: 224,
+                scoreThreshold: 0.5,
+              }),
             );
             if (!cancelled) setFaceDetected(!!result);
           } catch {
@@ -400,7 +441,8 @@ export default function CaptureSelfieTrack() {
   };
 
   useEffect(() => {
-    const canCapture = captureMode === "selfie" && !capturedImage && !cameraError;
+    const canCapture =
+      captureMode === "selfie" && !capturedImage && !cameraError;
     if (!canCapture) return;
 
     const onKeyDown = (event: KeyboardEvent) => {
@@ -449,37 +491,10 @@ export default function CaptureSelfieTrack() {
     reader.readAsDataURL(file);
   };
 
-  const showLiveVideoCompact = captureMode === "selfie" && !capturedImage && !cameraError && !isExpanded;
-  const showLiveVideoExpanded = captureMode === "selfie" && !capturedImage && !cameraError && isExpanded;
-  const detectionBadges = (
-    <div className="flex flex-wrap justify-center gap-2">
-      <span
-        className={
-          "inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs transition-colors duration-300 " +
-          (faceDetected ? "border-success-500/40 bg-success-25" : "border-warning-500/40 bg-warning-100")
-        }
-      >
-        <span className="font-medium text-gray-700">Face:</span>
-        <span className={"flex items-center gap-1 font-semibold " + (faceDetected ? "text-success-500" : "text-warning-800")}>
-          {faceDetected ? <CircleCheckIcon className="h-3.5 w-3.5 text-success-500" /> : <CircleAlertIcon className="h-3.5 w-3.5 animate-pulse text-warning-500" />}
-          {faceDetected ? "Detected" : "Not Detected"}
-        </span>
-      </span>
-      <span
-        className={
-          "inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs transition-colors duration-300 " +
-          (idHeld ? "border-success-500/40 bg-success-25" : "border-warning-500/40 bg-warning-100")
-        }
-      >
-        <span className="font-medium text-gray-700">ID Card:</span>
-        <span className={"flex items-center gap-1 font-semibold " + (idHeld ? "text-success-500" : "text-warning-800")}>
-          {idHeld ? <CircleCheckIcon className="h-3.5 w-3.5 text-success-500" /> : <CircleAlertIcon className="h-3.5 w-3.5 animate-pulse text-warning-500" />}
-          {idHeld ? "Held" : "Not Held"}
-        </span>
-      </span>
-    </div>
-  );
-
+  const showLiveVideoCompact =
+    captureMode === "selfie" && !capturedImage && !cameraError && !isExpanded;
+  const showLiveVideoExpanded =
+    captureMode === "selfie" && !capturedImage && !cameraError && isExpanded;
   const steps = [
     { id: 1, name: "Buyer & Property", status: "completed" as const },
     { id: 2, name: "Representative Details", status: "completed" as const },
@@ -492,300 +507,522 @@ export default function CaptureSelfieTrack() {
   ];
 
   return (
-    <div className="cs-page">
-      <header className="cs-header">
-        <div className="cs-header__inner">
-          <div className="cs-logo">
-            <img className="cs-logo__image" src={dmciLogoUrl} alt="DMCI Homes Sales" />
+    <div className="flex flex-col h-screen w-full bg-gray-50 font-sans overflow-hidden">
+      <header className="bg-white border-b border-gray-200 flex justify-center px-16">
+        <div className="w-full max-w-[1280px] h-[72px] flex items-center justify-between px-8">
+          <div className="flex items-center">
+            <img
+              className="h-8 w-auto"
+              src={dmciLogoUrl}
+              alt="DMCI Homes Sales"
+            />
           </div>
         </div>
       </header>
 
-      <div className="cs-layout-with-stepper">
-        <aside className="cs-stepper-wrapper">
-          <div className="cs-stepper">
-            <div className="cs-stepper__header">
-              <p className="cs-stepper__step-label">Step {CURRENT_STEP} of {TOTAL_STEPS}</p>
-            </div>
-            <div className="cs-stepper__list">
-              {steps.map((step, index) => (
-                <div key={step.id} className="cs-stepper__item">
-                  <div className="cs-stepper__step-row">
-                    <div className={`cs-stepper__circle cs-stepper__circle--${step.status}`}>
-                      {step.status === "completed" && <CheckmarkIcon className="h-4 w-4" />}
-                      {step.status === "current" && <div className="rounded-full bg-blue-600" style={{ width: '8.57px', height: '8.57px' }} />}
-                    </div>
-                    <p className={`cs-stepper__name cs-stepper__name--${step.status}`}>{step.name}</p>
-                  </div>
-                  {index < steps.length - 1 && <div className={`cs-stepper__connector cs-stepper__connector--${steps[index + 1].status}`} />}
-                </div>
-              ))}
-            </div>
-          </div>
-        </aside>
-
-        <main className="cs-main pb-24">
-          <section className="cs-card">
-          <div className="cs-card__heading">
-            <h1 className="cs-card__title">Capture Live Selfie with ID</h1>
-            <p className="cs-card__subtitle">
-              Take a live selfie holding your ID. Make sure your face and ID are clear.
-            </p>
-          </div>
-
-          <div className="cs-card__body">
-            <div className="cs-columns">
-              <div className="cs-col-left">
-                <div className="cs-tabs" role="tablist" aria-label="Selfie input method">
-                  <button
-                    type="button"
-                    role="tab"
-                    aria-selected={captureMode === "selfie"}
-                    className={`cs-tab ${captureMode === "selfie" ? "cs-tab--active" : ""}`}
-                    onClick={() => handleModeChange("selfie")}
-                  >
-                    <CameraIcon className="h-5 w-5 flex-shrink-0" />
-                    <span>Take Selfie</span>
-                  </button>
-                  <button
-                    type="button"
-                    role="tab"
-                    aria-selected={captureMode === "upload"}
-                    className={`cs-tab ${captureMode === "upload" ? "cs-tab--active" : ""}`}
-                    onClick={() => handleModeChange("upload")}
-                  >
-                    <UploadIcon className="h-5 w-5 flex-shrink-0" />
-                    <span>Upload Photo</span>
-                  </button>
-                </div>
-
-                <div className="cs-preview-box">
-                  {capturedImage ? (
-                    <img className="cs-preview-box__img" src={capturedImage} alt="Captured selfie holding ID" />
-                  ) : showLiveVideoCompact ? (
-                    <video ref={videoRef} className="cs-preview-box__video" autoPlay playsInline muted />
-                  ) : showLiveVideoExpanded ? (
-                    <div className="flex h-full w-full flex-col items-center justify-center gap-2 bg-gray-100 text-center text-xs text-gray-600">
-                      <ExpandIcon className="h-5 w-5" />
-                      Viewing full screen
-                    </div>
-                  ) : captureMode === "selfie" && cameraError ? (
-                    <div className="flex h-full w-full flex-col items-center justify-center gap-2 p-4 text-center text-xs leading-4 text-warning-800">
-                      <CameraOffIcon className="h-6 w-6" />
-                      <span>{cameraError}</span>
-                      <button
-                        type="button"
-                        onClick={() => setRetryToken((n) => n + 1)}
-                        className="mt-0.5 h-7 cursor-pointer rounded-full border border-warning-500 bg-white px-3 text-[11px] font-semibold text-warning-800"
+      <div className="flex-1 min-h-0 flex justify-center items-start gap-4 px-4 py-3">
+        <div className="flex min-h-0 gap-4">
+          <aside className="flex  items-center flex-shrink-0 min-h-0 w-[240px]">
+            <div className="bg-gray-100 border border-gray-200 rounded-xl px-5 py-8 flex flex-col gap-1 w-full self-start">
+              <div className="px-3 mb-1">
+                <p className="text-xs font-medium text-gray-400 m-0">
+                  Step {CURRENT_STEP} of {TOTAL_STEPS}
+                </p>
+              </div>
+              <div className="flex flex-col gap-0">
+                {steps.map((step, index) => (
+                  <div key={step.id} className="flex flex-col self-start">
+                    <div className="flex items-center gap-3 px-1 py-1">
+                      <div
+                        className={`size-6 rounded-full flex items-center justify-center flex-shrink-0 ${
+                          step.status === "completed"
+                            ? "bg-brand-400"
+                            : step.status === "current"
+                              ? "border-2 border-brand-400 bg-white"
+                              : "border-2 border-gray-300 bg-white"
+                        }`}
+                        style={
+                          step.status === "current"
+                            ? { boxShadow: "0 0 0 4px rgba(13, 77, 224, 0.15)" }
+                            : {}
+                        }
                       >
-                        Try again
-                      </button>
-                    </div>
-                  ) : (
-                    <button
-                      type="button"
-                      onClick={handleUploadClick}
-                      className="flex h-full w-full cursor-pointer flex-col items-center justify-center gap-2 border-none bg-transparent p-4 text-center font-sans text-xs leading-4 text-primary-500"
-                    >
-                      <UploadIcon className="h-6 w-6" />
-                      <span>Click to upload a photo of yourself holding your ID</span>
-                    </button>
-                  )}
-
-                  {capturedImage ? (
-                    <button
-                      type="button"
-                      onClick={handleRetake}
-                      className="group absolute bottom-2.5 left-1/2 flex h-[30px] -translate-x-1/2 cursor-pointer items-center gap-1.5 rounded-full border border-gray-300 bg-white px-3 text-xs font-semibold text-gray-700 shadow-[0_2px_6px_rgba(10,13,18,0.15)] transition-all duration-150 hover:border-primary-500 hover:text-primary-500 hover:shadow-[0_4px_10px_rgba(10,13,18,0.2)] active:scale-95"
-                    >
-                      <RotateCcwIcon className="h-3.5 w-3.5 transition-transform duration-300 group-hover:-rotate-180" />
-                      Retake
-                    </button>
-                  ) : showLiveVideoCompact ? (
-                    <button
-                      type="button"
-                      aria-label="Capture selfie (Ctrl + Space)"
-                      title="Capture selfie (Ctrl + Space)"
-                      onClick={handleCapture}
-                      className="cs-capture-button"
-                    >
-                      <CameraIcon className="h-5 w-5" />
-                    </button>
-                  ) : null}
-                </div>
-
-                <div className="flex min-h-8 items-center justify-between gap-2">
-                  {showLiveVideoCompact || showLiveVideoExpanded ? (
-                    <span className="flex items-center gap-1 text-[11px] font-medium text-gray-600">
-                      <kbd className="rounded border border-gray-300 bg-white px-1.5 py-1 font-sans text-[10px] font-semibold leading-none text-gray-700 shadow-[0_2px_0_#d1d5db]">Ctrl</kbd>
-                      +
-                      <kbd className="rounded border border-gray-300 bg-white px-1.5 py-1 font-sans text-[10px] font-semibold leading-none text-gray-700 shadow-[0_2px_0_#d1d5db]">Space</kbd>
-                      to capture
-                    </span>
-                  ) : (
-                    <span />
-                  )}
-                  <div className="flex items-center gap-2">
-                    {(capturedImage || showLiveVideoCompact) && (
-                      <button
-                        type="button"
-                        aria-label={isExpanded ? "Collapse preview" : "Expand preview to full screen"}
-                        title="Full screen"
-                        onClick={() => setIsExpanded((v) => !v)}
-                        className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg border border-gray-300 bg-white text-gray-700 transition-all duration-150 hover:border-primary-500 hover:text-primary-500 active:scale-90"
-                      >
-                        <ExpandIcon className="h-4 w-4" />
-                      </button>
-                    )}
-                    {capturedImage && (
-                      <button
-                        type="button"
-                        aria-label="Delete captured photo"
-                        title="Delete photo"
-                        onClick={handleDelete}
-                        className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg border border-error-500/40 bg-white text-error-500 transition-all duration-150 hover:bg-error-500 hover:text-white active:scale-90"
-                      >
-                        <TrashIcon className="h-4 w-4" />
-                      </button>
-                    )}
-                  </div>
-                </div>
-
-                <input ref={fileInputRef} type="file" accept="image/*" onChange={handleFileChange} className="hidden" />
-                <canvas ref={canvasRef} className="hidden" />
-                <canvas ref={detectionCanvasRef} className="hidden" />
-
-                {detectionBadges}
-
-                <div className="cs-examples-section">
-                  <p className="cs-examples-title">Before you capture, compare against these examples</p>
-                  <div className="cs-thumbnails">
-                    {THUMBNAIL_ATTEMPTS.map((attempt) => (
-                      <div key={attempt.id} className="flex flex-col items-center gap-2">
-                        <div
-                          className={
-                            attempt.status === "accepted"
-                              ? "cs-thumbnail cs-thumbnail--accepted"
-                              : "cs-thumbnail cs-thumbnail--rejected"
-                          }
-                        >
-                          <img
-                            className="cs-thumbnail__img"
-                            src={attempt.photo}
-                            alt={
-                              attempt.status === "accepted"
-                                ? "Accepted selfie with ID attempt"
-                                : "Rejected selfie with ID attempt"
-                            }
+                        {step.status === "completed" && (
+                          <CheckmarkIcon className="h-4 w-4 text-white" />
+                        )}
+                        {step.status === "current" && (
+                          <div
+                            className="rounded-full bg-brand-400"
+                            style={{ width: "8px", height: "8px" }}
                           />
-                          {attempt.status === "accepted" ? (
-                            <span className="cs-thumbnail__badge cs-thumbnail__badge--accepted">
-                              <CheckIcon />
-                            </span>
-                          ) : (
-                            <span className="cs-thumbnail__badge cs-thumbnail__badge--reject">
-                              <XIcon />
-                            </span>
-                          )}
-                        </div>
-                        <span
-                          className={`text-xs font-medium ${
-                            attempt.status === "accepted" ? "text-green-600" : "text-red-600"
-                          }`}
-                        >
-                          {attempt.id === "attempt-1"
-                            ? "Too far"
-                            : attempt.id === "attempt-2"
-                            ? "Sunglasses on"
-                            : attempt.id === "attempt-3"
-                            ? "Face turned"
-                            : "Good example"}
-                        </span>
+                        )}
                       </div>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="cs-notice">
-                  <strong>Important: </strong>
-                  Ensure that the face on your ID matches the face in your live selfie.
-                </div>
-              </div>
-
-              <div className="cs-col-right">
-                <div className="cs-id-panel">
-                  <div className="cs-id-panel__content">
-                    <div className="cs-id-panel__section">
-                      <p className="cs-id-panel__title">Your uploaded ID</p>
-                      <div className="cs-id-panel__image-wrap">
-                        <img className="cs-id-panel__img" src={idCardImageUrl} alt="Uploaded government issued ID" />
-                      </div>
-                      <div className="cs-id-panel__note">
-                        <div className="cs-id-panel__note-icon">
-                          <LockIcon />
-                        </div>
-                        <p className="cs-id-panel__note-text">Uploaded earlier and locked for this session. It is used only to check against your live selfie.</p>
-                      </div>
+                      <p
+                        className={`text-sm leading-normal m-0 whitespace-nowrap ${
+                          step.status === "completed"
+                            ? "font-normal text-gray-900"
+                            : step.status === "current"
+                              ? "font-semibold text-brand-500"
+                              : "font-medium text-gray-500"
+                        }`}
+                        style={{ width: "162px" }}
+                      >
+                        {step.name}
+                      </p>
                     </div>
-                    <div className="cs-id-panel__divider"></div>
-                    <div className="cs-id-panel__status">
-                      <p className="cs-id-panel__status-label">Government-issued ID</p>
-                      <div className="cs-id-panel__verified">
-                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" className="cs-id-panel__verified-icon">
-                          <path d="M13.3327 4L5.99935 11.3333L2.66602 8" stroke="#059669" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                        </svg>
-                        <span className="cs-id-panel__verified-text">Verified</span>
+                    {index < steps.length - 1 && (
+                      <div className="flex h-6 items-center px-1 py-0 w-full">
+                        <div className="flex h-full items-center justify-center w-6">
+                          <div
+                            className={`w-px h-full rounded ${
+                              step.status === "completed"
+                                ? "bg-brand-400"
+                                : "bg-gray-300"
+                            }`}
+                          />
+                        </div>
                       </div>
-                    </div>
+                    )}
                   </div>
-                </div>
-              </div>
+                ))}
               </div>
             </div>
-          </section>
+          </aside>
+
+          <main className="w-[1024px] min-h-0 flex justify-center px-3 overflow-y-auto pb-24 bg-gray-50">
+            <section className="w-full h-fit max-h-full bg-white rounded-[16px] shadow-sm overflow-hidden flex flex-col">
+              <div className="px-6 py-5 flex flex-col items-center text-center flex-shrink-0">
+                <h1 className="m-0 pb-3 text-2xl leading-8 font-bold text-[#07389d]">
+                  Capture Live Selfie with ID
+                </h1>
+                <p className="m-0 max-w-[628px] text-base leading-6 font-normal text-gray-700">
+                  Take a live selfie holding your ID. Make sure your face and ID
+                  are clear.
+                </p>
+              </div>
+
+              <div
+                className="px-5 flex flex-col gap-2.5 min-h-0"
+                style={{ paddingTop: "10px", paddingBottom: "14px" }}
+              >
+                <div className="grid grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)] gap-12 min-h-0">
+                  <div className="flex flex-col gap-3">
+                    <div
+                      className="flex gap-0 p-1 bg-gray-100 rounded-[12px] w-fit"
+                      role="tablist"
+                      aria-label="Selfie input method"
+                    >
+                      <button
+                        type="button"
+                        role="tab"
+                        aria-selected={captureMode === "selfie"}
+                        className={`flex items-center justify-center gap-2.5 px-5 py-2 rounded-lg border-none ${captureMode === "selfie" ? "bg-white text-[#052b78] shadow-[0_1px_2px_-1px_rgba(10,12.67,18,0.1),0_1px_3px_rgba(10,12.67,18,0.1)]" : "bg-transparent text-gray-700 hover:bg-blue-50"} text-sm font-semibold leading-5 cursor-pointer transition-all duration-200 flex-shrink-0 min-w-40`}
+                        onClick={() => handleModeChange("selfie")}
+                      >
+                        <CameraIcon className="h-5 w-5 flex-shrink-0" />
+                        <span>Take Selfie</span>
+                      </button>
+                      <button
+                        type="button"
+                        role="tab"
+                        aria-selected={captureMode === "upload"}
+                        className={`flex items-center justify-center gap-2.5 px-5 py-2 rounded-lg border-none ${captureMode === "upload" ? "bg-white text-[#052b78] shadow-[0_1px_2px_-1px_rgba(10,12.67,18,0.1),0_1px_3px_rgba(10,12.67,18,0.1)]" : "bg-transparent text-gray-700 hover:bg-blue-50"} text-sm font-semibold leading-5 cursor-pointer transition-all duration-200 flex-shrink-0 min-w-40`}
+                        onClick={() => handleModeChange("upload")}
+                      >
+                        <UploadIcon className="h-5 w-5 flex-shrink-0" />
+                        <span>Upload Photo</span>
+                      </button>
+                    </div>
+
+                    <div
+                      className="relative rounded-[20px] w-full aspect-video overflow-hidden border-2 border-[#0a4dd7]"
+                      style={{
+                        borderStyle: captureMode === "upload" ? "dashed" : "solid",
+                        boxShadow:
+                          showLiveVideoCompact && !showLiveVideoExpanded
+                            ? "0 0 12px rgba(10, 77, 224, 0.4)"
+                            : "none",
+                      }}
+                    >
+                      {capturedImage ? (
+                        <img
+                          className="w-full h-full object-cover block"
+                          src={capturedImage}
+                          alt="Captured selfie holding ID"
+                        />
+                      ) : showLiveVideoCompact ? (
+                        <video
+                          ref={videoRef}
+                          className="w-full h-full object-cover block bg-black"
+                          autoPlay
+                          playsInline
+                          muted
+                        />
+                      ) : showLiveVideoExpanded ? (
+                        <div className="flex h-full w-full flex-col items-center justify-center gap-2 bg-gray-100 text-center text-xs text-gray-600">
+                          <ExpandIcon className="h-5 w-5" />
+                          Viewing full screen
+                        </div>
+                      ) : captureMode === "selfie" && cameraError ? (
+                        <div className="flex h-full w-full flex-col items-center justify-center gap-2 p-4 text-center text-xs leading-4 text-yellow-900">
+                          <CameraOffIcon className="h-6 w-6" />
+                          <span>{cameraError}</span>
+                          <button
+                            type="button"
+                            onClick={() => setRetryToken((n) => n + 1)}
+                            className="mt-0.5 h-7 cursor-pointer rounded-full border border-yellow-500 bg-white px-3 text-[11px] font-semibold text-yellow-900"
+                          >
+                            Try again
+                          </button>
+                        </div>
+                      ) : (
+                        <button
+                          type="button"
+                          onClick={handleUploadClick}
+                          className="flex h-full w-full cursor-pointer flex-col items-center justify-center gap-4 border-none p-8 text-center transition-all duration-300 hover:bg-gray-100/80"
+                          style={{
+                            background:
+                              "linear-gradient(135deg, #f0f4ff 0%, #f5f9ff 100%)",
+                          }}
+                        >
+                          <div className="flex h-16 w-16 items-center justify-center rounded-full bg-brand-400/15 transition-all duration-300 group-hover:bg-brand-400/25">
+                            <UploadIcon className="h-8 w-8 text-brand-400" />
+                          </div>
+                          <div className="flex flex-col gap-1">
+                            <p className="text-sm font-semibold text-gray-900">
+                              Upload your selfie
+                            </p>
+                            <span className="text-xs text-gray-600">
+                              Click to upload a photo of yourself holding your
+                              ID
+                            </span>
+                          </div>
+                          <div className="text-xs font-medium text-brand-400">
+                            or drag and drop
+                          </div>
+                        </button>
+                      )}
+
+                      {capturedImage ? (
+                        <button
+                          type="button"
+                          onClick={handleRetake}
+                          className="group absolute bottom-2.5 left-1/2 flex h-[30px] -translate-x-1/2 cursor-pointer items-center gap-1.5 rounded-full border border-gray-300 bg-white px-3 text-xs font-semibold text-gray-700 shadow-[0_2px_6px_rgba(10,13,18,0.15)] transition-all duration-150 hover:border-blue-600 hover:text-blue-600 hover:shadow-[0_4px_10px_rgba(10,13,18,0.2)] active:scale-95"
+                        >
+                          <RotateCcwIcon className="h-3.5 w-3.5 transition-transform duration-300 group-hover:-rotate-180" />
+                          Retake
+                        </button>
+                      ) : showLiveVideoCompact ? (
+                        <button
+                          type="button"
+                          aria-label="Capture selfie (Ctrl + Space)"
+                          title="Capture selfie (Ctrl + Space)"
+                          onClick={handleCapture}
+                          className="absolute bottom-2.5 left-1/2 -translate-x-1/2 w-16 h-16 flex items-center justify-center rounded-full bg-brand-400 shadow-lg hover:shadow-xl cursor-pointer border-none text-white transition-all duration-200 hover:scale-105 active:scale-95"
+                        >
+                          <CameraIcon className="h-8 w-8" />
+                        </button>
+                      ) : null}
+
+                      {(capturedImage || showLiveVideoCompact) && (
+                        <button
+                          type="button"
+                          aria-label={
+                            isExpanded
+                              ? "Collapse preview"
+                              : "Expand preview to full screen"
+                          }
+                          title="Full screen"
+                          onClick={() => setIsExpanded((v) => !v)}
+                          className="absolute bottom-3 right-3 flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg border border-gray-300 bg-white text-gray-700 transition-all duration-150 hover:border-blue-600 hover:text-blue-600 active:scale-90"
+                        >
+                          <ExpandIcon className="h-4 w-4" />
+                        </button>
+                      )}
+                    </div>
+
+                    <div className="flex min-h-8 items-center justify-between gap-2 mt-1">
+                      {capturedImage && (
+                        <button
+                          type="button"
+                          aria-label="Delete captured photo"
+                          title="Delete photo"
+                          onClick={handleDelete}
+                          className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg border border-error-500/40 bg-white text-error-500 transition-all duration-150 hover:bg-red-600 hover:text-white active:scale-90"
+                        >
+                          <TrashIcon className="h-4 w-4" />
+                        </button>
+                      )}
+                      {showLiveVideoCompact || showLiveVideoExpanded ? (
+                        <div className="flex flex-wrap items-center justify-between gap-2 w-full">
+                          {showLiveVideoCompact && (
+                            <div className="flex items-center gap-2">
+                              <span
+                                className={
+                                  "inline-flex items-center gap-1.5 rounded-full border px-2 py-1 text-xs transition-colors duration-300 " +
+                                  (faceDetected
+                                    ? "border-success-500/40 bg-success-25"
+                                    : "border-warning-500/40 bg-warning-100")
+                                }
+                              >
+                                <span className="font-medium text-gray-700">
+                                  Face:
+                                </span>
+                                <span
+                                  className={
+                                    "flex items-center gap-1 font-semibold " +
+                                    (faceDetected
+                                      ? "text-success-500"
+                                      : "text-warning-800")
+                                  }
+                                >
+                                  {faceDetected ? (
+                                    <CircleCheckIcon className="h-3.5 w-3.5 text-success-500" />
+                                  ) : (
+                                    <CircleAlertIcon className="h-3.5 w-3.5 animate-pulse text-warning-500" />
+                                  )}
+                                  {faceDetected ? "Detected" : "Not Detected"}
+                                </span>
+                              </span>
+                              <span
+                                className={
+                                  "inline-flex items-center gap-1.5 rounded-full border px-2 py-1 text-xs transition-colors duration-300 " +
+                                  (idHeld
+                                    ? "border-success-500/40 bg-success-25"
+                                    : "border-warning-500/40 bg-warning-100")
+                                }
+                              >
+                                <span className="font-medium text-gray-700">
+                                  ID:
+                                </span>
+                                <span
+                                  className={
+                                    "flex items-center gap-1 font-semibold " +
+                                    (idHeld
+                                      ? "text-success-500"
+                                      : "text-warning-800")
+                                  }
+                                >
+                                  {idHeld ? (
+                                    <CircleCheckIcon className="h-3.5 w-3.5 text-success-500" />
+                                  ) : (
+                                    <CircleAlertIcon className="h-3.5 w-3.5 animate-pulse text-warning-500" />
+                                  )}
+                                  {idHeld ? "Held" : "Not Held"}
+                                </span>
+                              </span>
+                            </div>
+                          )}
+                          <span className="flex items-center gap-1.5 text-[12px] font-medium text-gray-400">
+                            <span className="flex items-center gap-0.5">
+                              <kbd className="rounded border border-gray-200 bg-gray-50 px-2 py-1 font-mono text-[11px] font-semibold leading-none text-gray-500">
+                                Ctrl
+                              </kbd>
+                              <span className="text-gray-300">+</span>
+                              <kbd className="rounded border border-gray-200 bg-gray-50 px-2 py-1 font-mono text-[11px] font-semibold leading-none text-gray-500">
+                                Space
+                              </kbd>
+                            </span>
+                            <span className="text-gray-400">to capture</span>
+                          </span>
+                        </div>
+                      ) : (
+                        <span />
+                      )}
+                    </div>
+
+                    <input
+                      ref={fileInputRef}
+                      type="file"
+                      accept="image/*"
+                      onChange={handleFileChange}
+                      className="hidden"
+                    />
+                    <canvas ref={canvasRef} className="hidden" />
+                    <canvas ref={detectionCanvasRef} className="hidden" />
+
+                    <div className="flex flex-col gap-2 flex-shrink-0 mb-2">
+                      <p className="m-0 mt-5 text-xs leading-5 font-medium text-gray-700">
+                        Before you capture, compare against these examples
+                      </p>
+                      <div className="flex gap-3 flex-nowrap w-full">
+                        {THUMBNAIL_ATTEMPTS.map((attempt) => (
+                          <div
+                            key={attempt.id}
+                            className="flex flex-col items-center gap-2 flex-1"
+                          >
+                            <div
+                              className={`relative w-full overflow-hidden bg-white min-w-0 outline outline-[1.4px] -outline-offset-[1.4px] rounded-lg p-1 ${
+                                attempt.status === "accepted"
+                                  ? "outline-[#079455]"
+                                  : "outline-[#f02b2b]"
+                              }`}
+                              style={{ aspectRatio: "16 / 10" }}
+                            >
+                              <img
+                                className="rounded-md w-full h-full object-cover block"
+                                src={attempt.photo}
+                                alt={
+                                  attempt.status === "accepted"
+                                    ? "Accepted selfie with ID attempt"
+                                    : "Rejected selfie with ID attempt"
+                                }
+                              />
+                              {attempt.status === "accepted" ? (
+                                <span
+                                  className={`absolute top-1 right-1 w-3 h-3 rounded-full flex items-center justify-center overflow-hidden outline outline-0.75 outline-white bg-[#079455]`}
+                                >
+                                  <CheckIcon />
+                                </span>
+                              ) : (
+                                <span
+                                  className={`absolute top-1 right-1 w-3 h-3 rounded-full flex items-center justify-center overflow-hidden outline outline-0.75 outline-white bg-[#f02b2b]`}
+                                >
+                                  <XIcon />
+                                </span>
+                              )}
+                            </div>
+                            <span
+                              className={`text-xs font-medium ${
+                                attempt.status === "accepted"
+                                  ? "text-green-600"
+                                  : "text-red-600"
+                              }`}
+                            >
+                              {attempt.id === "attempt-1"
+                                ? "Too far"
+                                : attempt.id === "attempt-2"
+                                  ? "Sunglasses on"
+                                  : attempt.id === "attempt-3"
+                                    ? "Face turned"
+                                    : "Good example"}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="hidden bg-yellow-50 border-l-[3px] border-yellow-500 px-3 py-1 text-yellow-900 text-xs leading-4 flex-shrink-0">
+                      <strong>Important: </strong>
+                      Ensure that the face on your ID matches the face in your
+                      live selfie.
+                    </div>
+                  </div>
+
+                  <div className="flex flex-col">
+                    <div className="bg-white border border-gray-300 rounded-[12px] p-6 flex flex-col gap-5">
+                      <div className="flex flex-col gap-5">
+                        <div className="flex flex-col gap-4">
+                          <p className="m-0 text-sm leading-5 font-semibold text-gray-500">
+                            Your uploaded ID
+                          </p>
+                          <div
+                            className="w-full rounded-lg overflow-hidden"
+                            style={{ aspectRatio: "303/194" }}
+                          >
+                            <img
+                              className="w-full h-full object-cover block"
+                              src={idCardImageUrl}
+                              alt="Uploaded government issued ID"
+                            />
+                          </div>
+                          <div className="flex gap-3 items-start">
+                            <div className="w-[18px] h-[18px] flex-shrink-0 flex items-center justify-center">
+                              <LockIcon />
+                            </div>
+                            <p className="m-0 text-xs leading-4 font-normal text-gray-400">
+                              Uploaded earlier and locked for this session. It
+                              is used only to check against your live selfie.
+                            </p>
+                          </div>
+                        </div>
+                        <div className="h-px bg-gray-300 m-0"></div>
+                        <div className="flex justify-between items-center gap-10">
+                          <p className="m-0 text-sm leading-5 font-normal text-gray-500">
+                            Government-issued ID
+                          </p>
+                          <div className="flex items-center gap-1.5">
+                            <svg
+                              width="16"
+                              height="16"
+                              viewBox="0 0 16 16"
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg"
+                              className="w-4 h-4 text-green-600"
+                            >
+                              <path
+                                d="M13.3327 4L5.99935 11.3333L2.66602 8"
+                                stroke="#059669"
+                                strokeWidth="2"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                              />
+                            </svg>
+                            <span className="text-xs leading-4 font-semibold text-green-600">
+                              Verified
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
           </main>
         </div>
+      </div>
 
-        <footer className="cs-footer">
-          <div>
-            <button
-              type="button"
-              className="h-[34px] cursor-pointer rounded-lg border border-gray-300 bg-white px-3.5 text-[13px] font-semibold text-gray-700 hover:bg-gray-50"
-            >
-              Previous
-            </button>
-            <div className="cs-footer-right">
-              <button type="button" className="cursor-pointer border-none bg-transparent p-0 text-[13px] font-semibold text-primary-700 hover:underline">
-                Save as draft
-              </button>
-              <button
-                type="button"
-                className="h-[34px] cursor-pointer rounded-lg border-none bg-primary-600 px-3.5 text-[13px] font-semibold text-white shadow-[0_1px_2px_rgba(10,13,18,0.05)] hover:bg-primary-700"
-              >
-                Next
-              </button>
-            </div>
+      <footer className="fixed bottom-0 left-0 right-0 z-40 border-t border-gray-200 bg-white shadow-[-2px_-2px_8px_rgba(10,13,18,0.08)] flex items-center justify-center p-0 flex-wrap gap-0 flex-shrink-0 h-auto">
+        <div className="w-full max-w-[1280px] flex items-center justify-between py-3 gap-3">
+          <Button variant="secondary" size="sm" className="w-24">
+            Previous
+          </Button>
+          <div className="flex items-center gap-4">
+            <Button variant="tertiary" size="sm">
+              Save as draft
+            </Button>
+            <Button variant="primary" size="sm" className="w-24">
+              Next
+            </Button>
           </div>
-        </footer>
+        </div>
+      </footer>
 
       {isExpanded && (
         <div className="fixed inset-0 z-50 flex flex-col items-center justify-center gap-4 bg-black/85 p-6">
-          <div className="relative aspect-video w-full max-w-5xl overflow-hidden rounded-xl bg-black">
+          <div className="relative aspect-video w-full max-w-5xl overflow-hidden rounded-xl bg-black border-2 border-white">
             {capturedImage ? (
-              <img className="h-full w-full object-cover" src={capturedImage} alt="Captured selfie holding ID" />
+              <img
+                className="h-full w-full object-cover"
+                src={capturedImage}
+                alt="Captured selfie holding ID"
+              />
             ) : showLiveVideoExpanded ? (
-              <video ref={videoRef} className="h-full w-full object-cover" autoPlay playsInline muted />
+              <video
+                ref={videoRef}
+                className="h-full w-full object-cover"
+                autoPlay
+                playsInline
+                muted
+              />
             ) : (
-              <div className="flex h-full w-full items-center justify-center text-sm text-white/70">No live preview</div>
+              <div className="flex h-full w-full items-center justify-center text-sm text-white/70">
+                No live preview
+              </div>
             )}
           </div>
 
           <div className="flex w-full max-w-5xl items-center justify-between gap-3">
             {showLiveVideoExpanded ? (
               <span className="flex items-center gap-1 text-xs font-medium text-white/80">
-                <kbd className="rounded border border-white/40 bg-white/15 px-1.5 py-1 font-sans text-[10px] font-semibold leading-none shadow-[0_2px_0_rgba(255,255,255,0.3)]">Ctrl</kbd>
+                <kbd className="rounded border border-white/40 bg-white/15 px-1.5 py-1 font-sans text-[10px] font-semibold leading-none shadow-[0_2px_0_rgba(255,255,255,0.3)]">
+                  Ctrl
+                </kbd>
                 +
-                <kbd className="rounded border border-white/40 bg-white/15 px-1.5 py-1 font-sans text-[10px] font-semibold leading-none shadow-[0_2px_0_rgba(255,255,255,0.3)]">Space</kbd>
+                <kbd className="rounded border border-white/40 bg-white/15 px-1.5 py-1 font-sans text-[10px] font-semibold leading-none shadow-[0_2px_0_rgba(255,255,255,0.3)]">
+                  Space
+                </kbd>
                 to capture
               </span>
             ) : (
@@ -806,7 +1043,7 @@ export default function CaptureSelfieTrack() {
                   <button
                     type="button"
                     onClick={handleDelete}
-                    className="flex h-10 cursor-pointer items-center gap-1.5 rounded-full bg-error-500/90 px-4 text-sm font-semibold text-white transition-all duration-150 hover:bg-error-500 active:scale-95"
+                    className="flex h-10 cursor-pointer items-center gap-1.5 rounded-full bg-red-600/90 px-4 text-sm font-semibold text-white transition-all duration-150 hover:bg-red-600 active:scale-95"
                   >
                     <TrashIcon className="h-4 w-4" />
                     Delete
@@ -818,9 +1055,9 @@ export default function CaptureSelfieTrack() {
                   aria-label="Capture selfie (Ctrl + Space)"
                   title="Capture selfie (Ctrl + Space)"
                   onClick={handleCapture}
-                  className="flex h-12 w-12 cursor-pointer items-center justify-center rounded-full outline outline-[1.25px] outline-offset-[-1.25px] outline-white bg-[#0a4dd7] text-white transition-all duration-150 hover:scale-110 active:scale-90"
+                  className="flex h-14 w-14 cursor-pointer items-center justify-center rounded-full bg-brand-400 shadow-lg hover:shadow-xl text-white transition-all duration-200 hover:scale-105 active:scale-95"
                 >
-                  <CameraIcon className="h-5 w-5" />
+                  <CameraIcon className="h-6 w-6" />
                 </button>
               ) : null}
 
@@ -829,14 +1066,12 @@ export default function CaptureSelfieTrack() {
                 aria-label="Close full screen"
                 title="Close full screen"
                 onClick={() => setIsExpanded(false)}
-                className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border-none bg-white/15 text-white transition-all duration-150 hover:rotate-90 hover:bg-white/25 active:scale-90"
+                className="flex h-14 w-14 cursor-pointer items-center justify-center rounded-full border-none bg-white/15 text-white transition-all duration-150 hover:rotate-90 hover:bg-white/25 active:scale-90"
               >
-                <CloseIcon className="h-4 w-4" />
+                <CloseIcon className="h-6 w-6" />
               </button>
             </div>
           </div>
-
-          {detectionBadges}
         </div>
       )}
     </div>
