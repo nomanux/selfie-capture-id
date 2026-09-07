@@ -34,7 +34,7 @@ export default function Login() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const [currentImageIndex, setCurrentImageIndex] = useState(2);
-  const [loginType, setLoginType] = useState<"admin" | "user">("admin");
+  const [loginType, setLoginType] = useState<"admin" | "user">("user");
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -70,8 +70,8 @@ export default function Login() {
   return (
     <div className="flex min-h-screen w-full bg-white flex-col lg:flex-row">
       {/* Left Side - Login Form */}
-      <div className="flex flex-col w-full lg:w-1/2">
-        <div className="flex flex-1 flex-col items-center justify-center px-8 py-16 sm:px-12">
+      <div className="flex flex-col w-full lg:w-1/2 min-h-screen lg:min-h-auto">
+        <div className="flex flex-1 flex-col items-center justify-start px-4 py-12 sm:px-8 sm:py-16 lg:px-12">
           <div className="w-full max-w-[400px] space-y-8">
             {/* Logo */}
             <div className="flex items-center justify-center">
@@ -82,7 +82,10 @@ export default function Login() {
             <div className="space-y-2 text-center">
               <h1 className="text-3xl font-bold text-gray-900">Welcome Back</h1>
               <p className="text-base text-gray-600">
-                Please enter your email and password to access your account
+                {loginType === "admin"
+                  ? "Enter your email and password to continue."
+                  : "Enter your User ID and password to continue."
+                }
               </p>
             </div>
 
@@ -90,46 +93,50 @@ export default function Login() {
             <div className="flex gap-2 rounded-lg bg-gray-100 p-1">
               <button
                 type="button"
-                onClick={() => setLoginType("admin")}
-                className={`flex-1 flex items-center justify-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-all ${
-                  loginType === "admin"
-                    ? "bg-white text-gray-900 shadow-sm"
-                    : "bg-transparent text-gray-500 hover:text-gray-700"
-                }`}
-              >
-                <svg
-                  width="18"
-                  height="18"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                >
-                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-                </svg>
-                Login as Admin
-              </button>
-              <button
-                type="button"
                 onClick={() => setLoginType("user")}
-                className={`flex-1 flex items-center justify-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-all ${
+                className={`flex-1 flex items-center justify-center gap-1 sm:gap-2 rounded-lg px-2 sm:px-3 py-2 text-xs sm:text-sm font-medium transition-all cursor-pointer ${
                   loginType === "user"
                     ? "bg-white text-gray-900 shadow-sm"
                     : "bg-transparent text-gray-500 hover:text-gray-700"
                 }`}
               >
                 <svg
-                  width="18"
-                  height="18"
+                  width="16"
+                  height="16"
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="currentColor"
                   strokeWidth="2"
+                  className="shrink-0"
                 >
                   <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
                   <circle cx="12" cy="7" r="4" />
                 </svg>
-                Login as User
+                <span className="hidden sm:inline">Login as Seller</span>
+                <span className="sm:hidden">Seller</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setLoginType("admin")}
+                className={`flex-1 flex items-center justify-center gap-1 sm:gap-2 rounded-lg px-2 sm:px-3 py-2 text-xs sm:text-sm font-medium transition-all cursor-pointer ${
+                  loginType === "admin"
+                    ? "bg-white text-gray-900 shadow-sm"
+                    : "bg-transparent text-gray-500 hover:text-gray-700"
+                }`}
+              >
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  className="shrink-0"
+                >
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                </svg>
+                <span className="hidden sm:inline">Login as Admin</span>
+                <span className="sm:hidden">Admin</span>
               </button>
             </div>
 
@@ -141,21 +148,21 @@ export default function Login() {
                 </div>
               )}
 
-              {/* Email Field */}
+              {/* Email/User ID Field */}
               <div className="space-y-1.5">
                 <label
                   htmlFor="email"
                   className="block text-sm font-medium text-gray-700"
                 >
-                  Email<span className="ml-0.5 text-brand-600">*</span>
+                  {loginType === "admin" ? "Email" : "User ID"}<span className="ml-0.5 text-brand-600">*</span>
                 </label>
                 <Input
                   id="email"
-                  type="email"
+                  type={loginType === "admin" ? "email" : "text"}
                   name="email"
                   value={formData.email}
                   onChange={handleInputChange}
-                  placeholder="Email address"
+                  placeholder={loginType === "admin" ? "Email address" : "Enter your User ID"}
                   required
                 />
               </div>
@@ -172,7 +179,7 @@ export default function Login() {
                     </label>
                     <button
                       type="button"
-                      className="text-sm font-medium text-brand-600 hover:text-blue-700"
+                      className="text-sm font-medium text-brand-600 hover:text-blue-700 cursor-pointer"
                     >
                       Forgot Password?
                     </button>
@@ -191,7 +198,7 @@ export default function Login() {
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3 text-gray-400 hover:text-gray-600"
+                      className="absolute right-3 text-gray-400 hover:text-gray-600 cursor-pointer"
                       aria-label={
                         showPassword ? "Hide password" : "Show password"
                       }
@@ -213,34 +220,44 @@ export default function Login() {
               </Button>
             </form>
 
-            <div className="flex items-center gap-3">
-              <div className="flex-1 border-t border-gray-300" />
-              <span className="text-sm font-medium text-gray-500">
-                Or Continue With
-              </span>
-              <div className="flex-1 border-t border-gray-300" />
-            </div>
+            {loginType === "admin" && (
+              <>
+                <div className="flex items-center gap-3">
+                  <div className="flex-1 border-t border-gray-300" />
+                  <span className="text-sm font-medium text-gray-500">
+                    Or Continue With
+                  </span>
+                  <div className="flex-1 border-t border-gray-300" />
+                </div>
 
-            <div className="flex gap-3">
-              <button
-                type="button"
-                className="flex-1 flex items-center justify-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm font-semibold text-gray-900 hover:bg-gray-50"
-              >
-                <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                  <rect x="1" y="1" width="6" height="6" fill="#F25022" />
-                  <rect x="9" y="1" width="6" height="6" fill="#7FBA00" />
-                  <rect x="1" y="9" width="6" height="6" fill="#00A4EF" />
-                  <rect x="9" y="9" width="6" height="6" fill="#FFB900" />
-                </svg>
-                Microsoft
-              </button>
-            </div>
+                <div className="flex gap-3">
+                  <button
+                    type="button"
+                    className="flex-1 flex items-center justify-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm font-semibold text-gray-900 hover:bg-gray-50 cursor-pointer transition-colors"
+                  >
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                      <rect x="1" y="1" width="6" height="6" fill="#F25022" />
+                      <rect x="9" y="1" width="6" height="6" fill="#7FBA00" />
+                      <rect x="1" y="9" width="6" height="6" fill="#00A4EF" />
+                      <rect x="9" y="9" width="6" height="6" fill="#FFB900" />
+                    </svg>
+                    Microsoft
+                  </button>
+                </div>
+              </>
+            )}
           </div>
         </div>
 
-        <div className="border-t border-gray-200 bg-white px-8 py-2 flex items-center justify-center gap-3 text-xs text-gray-500">
-          <img src={opcoopcIcon} alt="NPC Logo" className="h-10 w-auto" />
-          <span>DMCI Sales @2026 All Rights Reserved</span>
+        <div className="border-t border-gray-200 bg-white px-4 sm:px-8 py-3 flex items-center justify-center gap-2 sm:gap-3 text-xs sm:text-sm text-gray-500 mt-auto">
+          <img
+            src={opcoopcIcon}
+            alt="NPC Logo"
+            className="h-8 sm:h-10 w-auto shrink-0"
+          />
+          <span className="text-center">
+            DMCI Sales @2026 All Rights Reserved
+          </span>
         </div>
       </div>
 
@@ -267,7 +284,7 @@ export default function Login() {
               <button
                 key={index}
                 onClick={() => setCurrentImageIndex(index)}
-                className={`transition-all duration-300 rounded-full h-1 ${index === currentImageIndex ? "w-11 bg-white" : "w-8 bg-gray-300"}`}
+                className={`transition-all duration-300 rounded-full h-1 cursor-pointer ${index === currentImageIndex ? "w-11 bg-white" : "w-8 bg-gray-300 hover:bg-gray-400"}`}
               />
             ))}
           </div>
