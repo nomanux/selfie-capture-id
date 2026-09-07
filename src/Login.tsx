@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { useNavigation } from "./NavigationContext";
 import Button from "./Button";
 import Input from "./Input";
-import Checkbox from "./Checkbox";
 import { EyeIcon } from "./icons";
 import dmciLogo from "./assets/dmci-logo.svg";
 import opcoopcIcon from "./assets/opcoops.png";
@@ -15,7 +14,6 @@ import carousel5 from "./assets/carousel5-OqOzCcEj.jpg";
 interface LoginFormData {
   email: string;
   password: string;
-  rememberMe: boolean;
 }
 
 const CAROUSEL_IMAGES = [
@@ -31,12 +29,12 @@ export default function Login() {
   const [formData, setFormData] = useState<LoginFormData>({
     email: "",
     password: "",
-    rememberMe: false,
   });
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const [currentImageIndex, setCurrentImageIndex] = useState(2);
+  const [loginType, setLoginType] = useState<"admin" | "user">("admin");
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -88,8 +86,55 @@ export default function Login() {
               </p>
             </div>
 
+            {/* Login Type Selection */}
+            <div className="flex gap-2 rounded-lg bg-gray-100 p-1">
+              <button
+                type="button"
+                onClick={() => setLoginType("admin")}
+                className={`flex-1 flex items-center justify-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-all ${
+                  loginType === "admin"
+                    ? "bg-white text-gray-900 shadow-sm"
+                    : "bg-transparent text-gray-500 hover:text-gray-700"
+                }`}
+              >
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                </svg>
+                Login as Admin
+              </button>
+              <button
+                type="button"
+                onClick={() => setLoginType("user")}
+                className={`flex-1 flex items-center justify-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-all ${
+                  loginType === "user"
+                    ? "bg-white text-gray-900 shadow-sm"
+                    : "bg-transparent text-gray-500 hover:text-gray-700"
+                }`}
+              >
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                  <circle cx="12" cy="7" r="4" />
+                </svg>
+                Login as User
+              </button>
+            </div>
+
             {/* Form */}
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <form onSubmit={handleSubmit} className="space-y-4">
               {error && (
                 <div className="rounded-md bg-red-50 p-3 text-sm text-red-700">
                   {error}
@@ -97,7 +142,7 @@ export default function Login() {
               )}
 
               {/* Email Field */}
-              <div className="space-y-2">
+              <div className="space-y-1.5">
                 <label
                   htmlFor="email"
                   className="block text-sm font-medium text-gray-700"
@@ -116,14 +161,22 @@ export default function Login() {
               </div>
 
               {/* Password Field */}
-              <div className="space-y-3">
-                <div className="space-y-2">
-                  <label
-                    htmlFor="password"
-                    className="block text-sm font-medium text-gray-700"
-                  >
-                    Password<span className="ml-0.5 text-brand-600">*</span>
-                  </label>
+              <div className="space-y-2">
+                <div className="space-y-1.5">
+                  <div className="flex items-center justify-between">
+                    <label
+                      htmlFor="password"
+                      className="block text-sm font-medium text-gray-700"
+                    >
+                      Password<span className="ml-0.5 text-brand-600">*</span>
+                    </label>
+                    <button
+                      type="button"
+                      className="text-sm font-medium text-brand-600 hover:text-blue-700"
+                    >
+                      Forgot Password?
+                    </button>
+                  </div>
                   <div className="relative flex items-center">
                     <Input
                       id="password"
@@ -147,25 +200,6 @@ export default function Login() {
                     </button>
                   </div>
                 </div>
-
-                <div className="flex items-center justify-between">
-                  <label className="flex items-center gap-2">
-                    <Checkbox
-                      name="rememberMe"
-                      checked={formData.rememberMe}
-                      onChange={handleInputChange}
-                    />
-                    <span className="text-sm font-medium text-gray-700">
-                      Remember me
-                    </span>
-                  </label>
-                  <button
-                    type="button"
-                    className="text-sm font-medium text-brand-600 hover:text-blue-700"
-                  >
-                    Forgot Password?
-                  </button>
-                </div>
               </div>
 
               <Button
@@ -179,7 +213,7 @@ export default function Login() {
               </Button>
             </form>
 
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-3">
               <div className="flex-1 border-t border-gray-300" />
               <span className="text-sm font-medium text-gray-500">
                 Or Continue With
@@ -187,10 +221,10 @@ export default function Login() {
               <div className="flex-1 border-t border-gray-300" />
             </div>
 
-            <div className="flex gap-4">
+            <div className="flex gap-3">
               <button
                 type="button"
-                className="flex-1 flex items-center justify-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-3 text-sm font-semibold text-gray-900 hover:bg-gray-50"
+                className="flex-1 flex items-center justify-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm font-semibold text-gray-900 hover:bg-gray-50"
               >
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
                   <rect x="1" y="1" width="6" height="6" fill="#F25022" />
@@ -201,26 +235,12 @@ export default function Login() {
                 Microsoft
               </button>
             </div>
-
-            {/* Official NPC Registered System Badge */}
-            <div className="flex flex-col items-center justify-center">
-              <div className="flex items-center gap-3">
-                <img src={opcoopcIcon} alt="NPC Logo" className="h-14 w-auto" />
-                <div className="w-px h-7 bg-blue-100" />
-                <div className="flex flex-col text-center">
-                  <p className="text-sm font-semibold text-brand-600">
-                    Official NPC
-                    <br />
-                    Registered System
-                  </p>
-                </div>
-              </div>
-            </div>
           </div>
         </div>
 
-        <div className="border-t border-gray-200 bg-white px-8 py-4 text-center text-xs text-gray-500">
-          DMCI Sales @2025 All Rights Reserved
+        <div className="border-t border-gray-200 bg-white px-8 py-2 flex items-center justify-center gap-3 text-xs text-gray-500">
+          <img src={opcoopcIcon} alt="NPC Logo" className="h-10 w-auto" />
+          <span>DMCI Sales @2026 All Rights Reserved</span>
         </div>
       </div>
 

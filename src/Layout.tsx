@@ -1,4 +1,72 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
+
+function Clock() {
+  const [time, setTime] = useState<string>("");
+  const [date, setDate] = useState<string>("");
+
+  useEffect(() => {
+    const updateTime = () => {
+      const now = new Date();
+      setTime(
+        now.toLocaleTimeString("en-US", {
+          hour: "2-digit",
+          minute: "2-digit",
+          second: "2-digit",
+          hour12: true,
+        }),
+      );
+      setDate(
+        now.toLocaleDateString("en-US", {
+          month: "short",
+          day: "2-digit",
+          year: "numeric",
+        }),
+      );
+    };
+
+    updateTime();
+    const interval = setInterval(updateTime, 1000);
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <div className="px-3 py-2 rounded-[10px] outline outline-1 outline-offset-[-1px] outline-primary-100 inline-flex justify-center items-center gap-3 bg-gradient-to-r from-primary-25 to-blue-50 hover:outline-primary-200 transition-all">
+      <svg
+        width="16"
+        height="16"
+        viewBox="0 0 18 18"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        className="shrink-0"
+      >
+        <g clipPath="url(#clip0_174316_409414)">
+          <path
+            d="M9 4.5V9L12 10.5M16.5 9C16.5 13.1421 13.1421 16.5 9 16.5C4.85786 16.5 1.5 13.1421 1.5 9C1.5 4.85786 4.85786 1.5 9 1.5C13.1421 1.5 16.5 4.85786 16.5 9Z"
+            stroke="#07389D"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </g>
+        <defs>
+          <clipPath id="clip0_174316_409414">
+            <rect width="18" height="18" fill="white" />
+          </clipPath>
+        </defs>
+      </svg>
+      <div className="w-px h-5 bg-gradient-to-b from-transparent via-primary-200 to-transparent" />
+      <div className="flex items-center gap-2.5 justify-center">
+        <div className="text-gray-700 text-sm font-semibold font-['Ubuntu']">
+          {time || "—:—:—"}
+        </div>
+        <div className="w-px h-4 bg-primary-200" />
+        <div className="text-gray-600 text-xs font-medium font-['Ubuntu']">
+          {date || "—"}
+        </div>
+      </div>
+    </div>
+  );
+}
 import "./tailwind.css";
 import "./Dashboard.css";
 import { dmciLogoUrl } from "./assets/figmaAssets";
@@ -277,7 +345,10 @@ export default function Layout({
   // drawer. Also supports Ctrl+click to open in new tab.
   // Dropdown expand/collapse (NavDropdown's own onClick) is untouched
   // so opening "Properties" on a phone doesn't immediately hide its sub-items.
-  const go = (route: Parameters<typeof navigate>[0], event?: React.MouseEvent) => {
+  const go = (
+    route: Parameters<typeof navigate>[0],
+    event?: React.MouseEvent,
+  ) => {
     if (event && (event.ctrlKey || event.metaKey)) {
       // Ctrl/Cmd+click: open in new tab
       window.open(routeToUrl(route), "_blank");
@@ -292,7 +363,10 @@ export default function Layout({
   // viewport: below lg it opens/closes the off-canvas drawer, at lg and up
   // it collapses the static sidebar to an icon-only rail.
   const toggleSidebar = () => {
-    if (typeof window !== "undefined" && window.matchMedia("(min-width: 1024px)").matches) {
+    if (
+      typeof window !== "undefined" &&
+      window.matchMedia("(min-width: 1024px)").matches
+    ) {
       setCollapsed((v) => !v);
     } else {
       setSidebarOpen((v) => !v);
@@ -321,10 +395,14 @@ export default function Layout({
       label: "Properties",
       icon: Building2Icon,
       items: [
-        { label: "Projects", onClick: (e?: React.MouseEvent) => go({ screen: "properties" }, e) },
+        {
+          label: "Projects",
+          onClick: (e?: React.MouseEvent) => go({ screen: "properties" }, e),
+        },
         {
           label: "Unit Availability",
-          onClick: (e?: React.MouseEvent) => go({ screen: "unit-availability" }, e),
+          onClick: (e?: React.MouseEvent) =>
+            go({ screen: "unit-availability" }, e),
         },
         {
           label: "Unit Holding",
@@ -339,11 +417,13 @@ export default function Layout({
       items: [
         {
           label: "Advance Commission",
-          onClick: (e?: React.MouseEvent) => go({ screen: "advance-commission" }, e),
+          onClick: (e?: React.MouseEvent) =>
+            go({ screen: "advance-commission" }, e),
         },
         {
           label: "Regular Commission",
-          onClick: (e?: React.MouseEvent) => go({ screen: "regular-commission" }, e),
+          onClick: (e?: React.MouseEvent) =>
+            go({ screen: "regular-commission" }, e),
         },
         {
           label: "For Compliance",
@@ -370,11 +450,13 @@ export default function Layout({
       items: [
         {
           label: "Registration",
-          onClick: (e?: React.MouseEvent) => go({ screen: "lottery-registration" }, e),
+          onClick: (e?: React.MouseEvent) =>
+            go({ screen: "lottery-registration" }, e),
         },
         {
           label: "Lottery",
-          onClick: (e?: React.MouseEvent) => go({ screen: "lottery-unit-picker" }, e),
+          onClick: (e?: React.MouseEvent) =>
+            go({ screen: "lottery-unit-picker" }, e),
         },
       ],
     },
@@ -580,22 +662,27 @@ export default function Layout({
             </nav>
           </div>
 
-          <button
-            type="button"
-            onClick={() => setEntityModalOpen(true)}
-            className="flex shrink-0 cursor-pointer items-center gap-2 rounded-full border border-primary-50 bg-white py-1 pl-1 px-1 hover:bg-gray-50"
-          >
-            <span className="shrink-0 rounded-full bg-blue-50 px-2.5 py-1 text-xs font-bold text-primary-500">
-              {selectedEntity.code}
-            </span>
-            <span className="hidden truncate text-sm font-medium text-gray-700 sm:block">
-              {selectedEntity.name}
-            </span>
-          </button>
+          <div className="flex items-center gap-3">
+            <Clock />
+            <button
+              type="button"
+              onClick={() => setEntityModalOpen(true)}
+              className="flex shrink-0 cursor-pointer items-center gap-2 rounded-full border border-primary-50 bg-white py-1 pl-1 px-1 hover:bg-gray-50"
+            >
+              <span className="shrink-0 rounded-full bg-blue-50 px-2.5 py-1 text-xs font-bold text-primary-500">
+                {selectedEntity.code}
+              </span>
+              <span className="hidden truncate text-sm font-medium text-gray-700 sm:block">
+                {selectedEntity.name}
+              </span>
+            </button>
+          </div>
         </header>
 
         {/* Scrollable content */}
-        <main ref={mainRef} className="db-main">{children}</main>
+        <main ref={mainRef} className="db-main">
+          {children}
+        </main>
       </div>
 
       {entityModalOpen && (
