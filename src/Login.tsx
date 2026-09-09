@@ -71,21 +71,22 @@ export default function Login() {
     <div className="flex min-h-screen w-full bg-white flex-col lg:flex-row">
       {/* Left Side - Login Form */}
       <div className="flex flex-col w-full lg:w-1/2 min-h-screen lg:min-h-auto">
-        <div className="flex flex-1 flex-col items-center justify-start px-4 py-12 sm:px-8 sm:py-16 lg:px-12">
-          <div className="w-full max-w-[400px] space-y-8">
-            {/* Logo */}
-            <div className="flex items-center justify-center">
-              <img src={dmciLogo} alt="DMCI Logo" className="h-10 w-auto" />
-            </div>
+        {/* Logo - Top Left */}
+        <div className="px-4 py-6 sm:px-8 lg:px-12">
+          <img src={dmciLogo} alt="DMCI Logo" className="h-8 w-auto" />
+        </div>
 
+        <div className="flex flex-1 flex-col items-center justify-center px-4 pb-12 sm:px-8 sm:pb-16 lg:px-12">
+          <div className="w-full max-w-xs space-y-8">
             {/* Header */}
-            <div className="space-y-2 text-center">
-              <h1 className="text-3xl font-bold text-gray-900">Welcome Back</h1>
-              <p className="text-base text-gray-600">
+            <div className="space-y-2 text-left">
+              <h1 className="text-2xl font-bold text-slate-800">
+                {loginType === "admin" ? "Manage Your Properties" : "Sell with Confidence"}
+              </h1>
+              <p className="text-sm text-gray-600">
                 {loginType === "admin"
-                  ? "Enter your email and password to continue."
-                  : "Enter your User ID and password to continue."
-                }
+                  ? "Sign in to track sales, manage listings, and grow your business"
+                  : "Access your seller dashboard and manage your property listings"}
               </p>
             </div>
 
@@ -112,7 +113,7 @@ export default function Login() {
                   <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
                   <circle cx="12" cy="7" r="4" />
                 </svg>
-                <span className="hidden sm:inline">Login as Seller</span>
+                <span className="hidden sm:inline"> Seller</span>
                 <span className="sm:hidden">Seller</span>
               </button>
               <button
@@ -135,7 +136,7 @@ export default function Login() {
                 >
                   <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
                 </svg>
-                <span className="hidden sm:inline">Login as Admin</span>
+                <span className="hidden sm:inline"> Admin</span>
                 <span className="sm:hidden">Admin</span>
               </button>
             </div>
@@ -154,7 +155,8 @@ export default function Login() {
                   htmlFor="email"
                   className="block text-sm font-medium text-gray-700"
                 >
-                  {loginType === "admin" ? "Email" : "User ID"}<span className="ml-0.5 text-brand-600">*</span>
+                  {loginType === "admin" ? "Email" : "User ID"}
+                  <span className="ml-0.5 text-brand-600">*</span>
                 </label>
                 <Input
                   id="email"
@@ -162,7 +164,11 @@ export default function Login() {
                   name="email"
                   value={formData.email}
                   onChange={handleInputChange}
-                  placeholder={loginType === "admin" ? "Email address" : "Enter your User ID"}
+                  placeholder={
+                    loginType === "admin"
+                      ? "Email address"
+                      : "Enter your User ID"
+                  }
                   required
                 />
               </div>
@@ -220,36 +226,32 @@ export default function Login() {
               </Button>
             </form>
 
-            {loginType === "admin" && (
-              <>
-                <div className="flex items-center gap-3">
-                  <div className="flex-1 border-t border-gray-300" />
-                  <span className="text-sm font-medium text-gray-500">
-                    Or Continue With
-                  </span>
-                  <div className="flex-1 border-t border-gray-300" />
-                </div>
+            <div className={`space-y-6 ${loginType === "admin" ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"} transition-opacity -mt-2`}>
+              <div className="flex items-center gap-3">
+                <div className="flex-1 border-t border-gray-300" />
+                <span className="text-sm font-medium text-gray-500">Or</span>
+                <div className="flex-1 border-t border-gray-300" />
+              </div>
 
-                <div className="flex gap-3">
-                  <button
-                    type="button"
-                    className="flex-1 flex items-center justify-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm font-semibold text-gray-900 hover:bg-gray-50 cursor-pointer transition-colors"
-                  >
-                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                      <rect x="1" y="1" width="6" height="6" fill="#F25022" />
-                      <rect x="9" y="1" width="6" height="6" fill="#7FBA00" />
-                      <rect x="1" y="9" width="6" height="6" fill="#00A4EF" />
-                      <rect x="9" y="9" width="6" height="6" fill="#FFB900" />
-                    </svg>
-                    Microsoft
-                  </button>
-                </div>
-              </>
-            )}
+              <div className="flex gap-3">
+                <button
+                  type="button"
+                  className="flex-1 flex items-center justify-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm font-semibold text-gray-900 hover:bg-gray-50 cursor-pointer transition-colors"
+                >
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                    <rect x="1" y="1" width="6" height="6" fill="#F25022" />
+                    <rect x="9" y="1" width="6" height="6" fill="#7FBA00" />
+                    <rect x="1" y="9" width="6" height="6" fill="#00A4EF" />
+                    <rect x="9" y="9" width="6" height="6" fill="#FFB900" />
+                  </svg>
+                  Microsoft
+                </button>
+              </div>
+            </div>
           </div>
         </div>
 
-        <div className="border-t border-gray-200 bg-white px-4 sm:px-8 py-3 flex items-center justify-center gap-2 sm:gap-3 text-xs sm:text-sm text-gray-500 mt-auto">
+        <div className="border-t border-gray-100 bg-white px-4 sm:px-8 py-3 flex items-center justify-center gap-2 sm:gap-3 text-xs text-gray-500 mt-auto">
           <img
             src={opcoopcIcon}
             alt="NPC Logo"

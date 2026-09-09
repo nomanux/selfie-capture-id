@@ -115,7 +115,7 @@
  */
 @layer components {
   .input-field {
-    @apply w-full rounded-md border border-gray-300 bg-white px-3 text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-1 focus:ring-primary-500;
+    @apply w-full rounded-md border border-gray-300 bg-slate-50 px-3 text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-1 focus:ring-primary-500 focus:bg-white transition-colors;
   }
 
   .input-sm {
