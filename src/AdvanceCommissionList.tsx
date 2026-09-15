@@ -1,8 +1,9 @@
 import { useState } from "react";
 import Layout from "./Layout";
-import FilterBar, { type FilterField } from "./FilterBar";
+import { type FilterField } from "./FilterBar";
 import Pagination from "./Pagination";
 import Checkbox from "./Checkbox";
+import Select from "./Select";
 import { DownloadPdfButton, RecordTabs } from "./StatusBadge";
 import { EyeIcon } from "./icons";
 import { useNavigation } from "./NavigationContext";
@@ -96,11 +97,207 @@ const ROWS: AdvanceRow[] = [
     completionDate: "Jul 20, 2026 9:03 PM",
     days: 5,
   },
+  {
+    reservationId: "HLD0327354",
+    clientName: "Lebron James",
+    buildingUnit: "DNL-00A-C-06020",
+    reservationDate: "Jul 19, 2026 8:00 AM",
+    completionDate: "Jul 19, 2026 8:00 AM",
+    days: 8,
+  },
+  {
+    reservationId: "HLD0327340",
+    clientName: "Luka Doncic",
+    buildingUnit: "AST-00B-D-08019",
+    reservationDate: "Jul 18, 2026 2:30 PM",
+    completionDate: "Jul 18, 2026 2:30 PM",
+    days: 7,
+  },
+  {
+    reservationId: "HLD0327335",
+    clientName: "Giannis Antetokounmpo",
+    buildingUnit: "SAT-00E-P-B1208",
+    reservationDate: "Jul 17, 2026 3:15 PM",
+    completionDate: "Jul 17, 2026 3:15 PM",
+    days: 9,
+  },
+  {
+    reservationId: "HLD0327328",
+    clientName: "Kawhi Leonard",
+    buildingUnit: "LMR-00F-C-02015",
+    reservationDate: "Jul 16, 2026 10:45 AM",
+    completionDate: "Jul 16, 2026 10:45 AM",
+    days: 6,
+  },
+  {
+    reservationId: "HLD0327315",
+    clientName: "Nikola Jokic",
+    buildingUnit: "ALR-00D-C-01008",
+    reservationDate: "Jul 15, 2026 4:20 PM",
+    completionDate: "Jul 15, 2026 4:20 PM",
+    days: 4,
+  },
+  {
+    reservationId: "HLD0327302",
+    clientName: "Devin Booker",
+    buildingUnit: "ARP-00L-C-04006",
+    reservationDate: "Jul 14, 2026 12:15 PM",
+    completionDate: "Jul 14, 2026 12:15 PM",
+    days: 10,
+  },
+  {
+    reservationId: "HLD0327289",
+    clientName: "Shai Gilgeous-Alexander",
+    buildingUnit: "AVB-00B-C-01002",
+    reservationDate: "Jul 13, 2026 5:30 PM",
+    completionDate: "Jul 13, 2026 5:30 PM",
+    days: 5,
+  },
+  {
+    reservationId: "HLD0327276",
+    clientName: "Trae Young",
+    buildingUnit: "BRX-00G-C-03010",
+    reservationDate: "Jul 12, 2026 8:45 AM",
+    completionDate: "Jul 12, 2026 8:45 AM",
+    days: 7,
+  },
+  {
+    reservationId: "HLD0327263",
+    clientName: "Donovan Mitchell",
+    buildingUnit: "CPT-00C-D-05013",
+    reservationDate: "Jul 11, 2026 6:25 PM",
+    completionDate: "Jul 11, 2026 6:25 PM",
+    days: 6,
+  },
+  {
+    reservationId: "HLD0327250",
+    clientName: "Damian Lillard",
+    buildingUnit: "DNL-00B-C-06021",
+    reservationDate: "Jul 10, 2026 9:00 AM",
+    completionDate: "Jul 10, 2026 9:00 AM",
+    days: 8,
+  },
+  {
+    reservationId: "HLD0327237",
+    clientName: "Tyson Jalis",
+    buildingUnit: "AST-00C-D-08020",
+    reservationDate: "Jul 09, 2026 1:15 PM",
+    completionDate: "Jul 09, 2026 1:15 PM",
+    days: 5,
+  },
+  {
+    reservationId: "HLD0327224",
+    clientName: "Paolo Banchero",
+    buildingUnit: "SAT-00F-P-B1209",
+    reservationDate: "Jul 08, 2026 2:45 PM",
+    completionDate: "Jul 08, 2026 2:45 PM",
+    days: 9,
+  },
+  {
+    reservationId: "HLD0327211",
+    clientName: "Victor Wembanyama",
+    buildingUnit: "LMR-00G-C-02016",
+    reservationDate: "Jul 07, 2026 11:30 AM",
+    completionDate: "Jul 07, 2026 11:30 AM",
+    days: 4,
+  },
+  {
+    reservationId: "HLD0327198",
+    clientName: "Zion Williamson",
+    buildingUnit: "ALR-00E-C-01009",
+    reservationDate: "Jul 06, 2026 5:00 PM",
+    completionDate: "Jul 06, 2026 5:00 PM",
+    days: 7,
+  },
+  {
+    reservationId: "HLD0327185",
+    clientName: "Tyler Herro",
+    buildingUnit: "ARP-00M-C-04007",
+    reservationDate: "Jul 05, 2026 1:20 PM",
+    completionDate: "Jul 05, 2026 1:20 PM",
+    days: 6,
+  },
+  {
+    reservationId: "HLD0327172",
+    clientName: "Chris Paul",
+    buildingUnit: "AVB-00C-C-01003",
+    reservationDate: "Jul 04, 2026 6:45 PM",
+    completionDate: "Jul 04, 2026 6:45 PM",
+    days: 8,
+  },
+  {
+    reservationId: "HLD0327159",
+    clientName: "Khris Middleton",
+    buildingUnit: "BRX-00H-C-03011",
+    reservationDate: "Jul 03, 2026 9:30 AM",
+    completionDate: "Jul 03, 2026 9:30 AM",
+    days: 5,
+  },
+  {
+    reservationId: "HLD0327146",
+    clientName: "Jimmy Butler",
+    buildingUnit: "CPT-00D-D-05014",
+    reservationDate: "Jul 02, 2026 7:15 PM",
+    completionDate: "Jul 02, 2026 7:15 PM",
+    days: 9,
+  },
+  {
+    reservationId: "HLD0327133",
+    clientName: "Scottie Barnes",
+    buildingUnit: "DNL-00C-C-06022",
+    reservationDate: "Jul 01, 2026 10:00 AM",
+    completionDate: "Jul 01, 2026 10:00 AM",
+    days: 6,
+  },
+  {
+    reservationId: "HLD0327120",
+    clientName: "Jalen Brunson",
+    buildingUnit: "AST-00D-D-08021",
+    reservationDate: "Jun 30, 2026 3:45 PM",
+    completionDate: "Jun 30, 2026 3:45 PM",
+    days: 7,
+  },
+  {
+    reservationId: "HLD0327107",
+    clientName: "Darius Garland",
+    buildingUnit: "SAT-00G-P-B1210",
+    reservationDate: "Jun 29, 2026 4:20 PM",
+    completionDate: "Jun 29, 2026 4:20 PM",
+    days: 8,
+  },
+  {
+    reservationId: "HLD0327094",
+    clientName: "Anfernee Simons",
+    buildingUnit: "LMR-00H-C-02017",
+    reservationDate: "Jun 28, 2026 12:15 PM",
+    completionDate: "Jun 28, 2026 12:15 PM",
+    days: 5,
+  },
 ];
 
 export default function AdvanceCommissionList() {
   const { navigate } = useNavigation();
   const [tab, setTab] = useState("My commission");
+  const [showFilters, setShowFilters] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filters, setFilters] = useState({
+    clientName: "",
+    sellerName: "",
+    propertyUnit: "",
+    noOfDays: "",
+    accounts: "",
+    reservationDateStart: "",
+    reservationDateEnd: "",
+    commissionType: "",
+  });
+
+  const activeFilterCount = Object.values(filters).filter((val) => val).length;
+
+  const filteredRows = ROWS.filter((row) => {
+    if (filters.clientName && !row.clientName.toLowerCase().includes(filters.clientName.toLowerCase())) return false;
+    if (filters.propertyUnit && !row.buildingUnit.toLowerCase().includes(filters.propertyUnit.toLowerCase())) return false;
+    return true;
+  });
 
   return (
     <Layout
@@ -116,65 +313,102 @@ export default function AdvanceCommissionList() {
       ]}
     >
       <div className="flex h-full w-full flex-col">
-        <div className="flex shrink-0 flex-col gap-4 px-5 pt-3">
+        <div className="shrink-0 px-5 py-3">
           <div className="flex flex-col gap-1">
-            <h1 className="text-lg font-semibold text-gray-900">
+            <h1 className="text-base font-semibold text-gray-900">
               Advance Commission
             </h1>
-            <p className="text-sm text-gray-600">30 records found</p>
+            <p className="text-xs text-gray-600">
+              {filteredRows.length} records available
+            </p>
           </div>
-
-          <FilterBar fields={FILTERS} />
         </div>
 
-        <div className="flex min-h-0 flex-1 flex-col px-5 pb-3 pt-4">
-          <div className="flex w-full flex-1 flex-col overflow-hidden rounded-xl border border-gray-200 bg-white shadow-[0_1px_2px_rgba(10,13,18,0.05)]">
-            <div className="flex flex-wrap items-center justify-between gap-3 pr-6 pt-2">
+        <div className="flex min-h-0 flex-1 flex-col px-5 pb-3 pt-2">
+          <div className="flex w-full flex-1 flex-col overflow-hidden rounded-lg border border-gray-200 bg-white shadow-[0_1px_2px_rgba(10,13,18,0.05)]">
+            <div className="flex items-center gap-2 border-b border-gray-200 px-4 py-3">
+              <input
+                type="text"
+                placeholder="Search..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-56 rounded-md border border-gray-300 px-2.5 py-1.5 text-xs placeholder-gray-500 focus:border-primary-500 focus:outline-none"
+              />
+              <button
+                onClick={() => setShowFilters(!showFilters)}
+                className="relative inline-flex items-center gap-1.5 rounded-md border border-gray-300 px-2.5 py-1.5 text-xs font-medium text-gray-700 hover:bg-gray-50"
+              >
+                <svg
+                  className="h-4 w-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"
+                  />
+                </svg>
+                Filter
+                {activeFilterCount > 0 && (
+                  <span className="absolute -right-2 -top-2 inline-flex h-5 w-5 items-center justify-center rounded-full bg-primary-600 text-xs font-semibold text-white">
+                    {activeFilterCount}
+                  </span>
+                )}
+              </button>
+              <div className="ml-auto">
+                <DownloadPdfButton />
+              </div>
+            </div>
+
+            <div className="flex flex-wrap items-center gap-3 border-b border-gray-100 px-4 py-2">
               <RecordTabs
                 tabs={["My commission", "Teams Commission"]}
                 active={tab}
                 onChange={setTab}
               />
-              <DownloadPdfButton />
             </div>
+
             <div className="flex-1 min-h-0 overflow-auto [scrollbar-gutter:stable]">
-              <table className="w-full min-w-[960px] border-collapse text-sm">
+              <table className="w-full min-w-[1040px] border-collapse" style={{ fontSize: "13px" }}>
                 <thead className="sticky top-0 z-10 bg-gray-50 [&_th]:text-xs [&_th]:font-semibold">
                   <tr className="shadow-[inset_0_-1px_0_0_#e5e7eb] bg-gray-50 text-left text-gray-500">
-                    <th className="w-10 px-4 py-2">
+                    <th className="w-8 px-3 py-1">
                       <Checkbox size="sm" />
                     </th>
-                    <th className="px-2 py-2 font-semibold">Reservation ID</th>
-                    <th className="px-2 py-2 font-semibold">Client Name</th>
-                    <th className="px-2 py-2 font-semibold">Building Unit</th>
-                    <th className="px-2 py-2 font-semibold">
+                    <th className="px-2 py-1 font-semibold">Reservation ID</th>
+                    <th className="px-2 py-1 font-semibold">Client Name</th>
+                    <th className="px-2 py-1 font-semibold">Building Unit</th>
+                    <th className="px-2 py-1 font-semibold">
                       Reservation Date
                     </th>
-                    <th className="px-2 py-2 font-semibold">Completion Date</th>
-                    <th className="px-2 py-2 font-semibold">No. of Days</th>
-                    <th className="w-[88px] px-2 py-2 text-center font-semibold">
+                    <th className="px-2 py-1 font-semibold">Completion Date</th>
+                    <th className="px-2 py-1 font-semibold">No. of Days</th>
+                    <th className="w-16 px-2 py-1 text-center font-semibold">
                       Actions
                     </th>
                   </tr>
                 </thead>
                 <tbody>
-                  {ROWS.map((row) => (
+                  {filteredRows.map((row) => (
                     <tr
                       key={row.reservationId}
                       className="border-b border-gray-100 text-gray-600 hover:bg-gray-50"
                     >
-                      <td className="px-4 py-1">
+                      <td className="px-3 py-2">
                         <Checkbox size="sm" />
                       </td>
-                      <td className="px-2 py-1 font-medium text-gray-900">
+                      <td className="px-2 py-2 font-medium text-gray-900">
                         {row.reservationId}
                       </td>
-                      <td className="px-2 py-1">{row.clientName}</td>
-                      <td className="px-2 py-1">{row.buildingUnit}</td>
-                      <td className="px-2 py-1">{row.reservationDate}</td>
-                      <td className="px-2 py-1">{row.completionDate}</td>
-                      <td className="px-2 py-1">{row.days} days</td>
-                      <td className="px-2 py-1">
+                      <td className="px-2 py-2">{row.clientName}</td>
+                      <td className="px-2 py-2">{row.buildingUnit}</td>
+                      <td className="px-2 py-2">{row.reservationDate}</td>
+                      <td className="px-2 py-2">{row.completionDate}</td>
+                      <td className="px-2 py-2">{row.days} days</td>
+                      <td className="px-2 py-2">
                         <div className="flex items-center justify-center">
                           <button
                             type="button"
@@ -185,9 +419,9 @@ export default function AdvanceCommissionList() {
                                 itemId: row.reservationId,
                               })
                             }
-                            className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-md text-gray-400 hover:bg-gray-50 hover:text-gray-700"
+                            className="flex h-6 w-6 cursor-pointer items-center justify-center rounded-md text-gray-400 hover:bg-gray-50 hover:text-gray-700"
                           >
-                            <EyeIcon className="h-4 w-4" />
+                            <EyeIcon className="h-3 w-3" />
                           </button>
                         </div>
                       </td>
@@ -196,9 +430,171 @@ export default function AdvanceCommissionList() {
                 </tbody>
               </table>
             </div>
-            <Pagination total={85} />
+            <Pagination total={filteredRows.length} />
           </div>
         </div>
+
+        <>
+          <div
+            className={`fixed inset-0 z-40 bg-black/10 transition-opacity duration-300 ${
+              showFilters ? "opacity-100" : "pointer-events-none opacity-0"
+            }`}
+            onClick={() => setShowFilters(false)}
+          />
+          <div
+            className={`fixed right-0 top-0 z-50 flex h-full w-96 flex-col bg-white shadow-xl transition-transform duration-300 ease-out ${
+              showFilters ? "translate-x-0" : "translate-x-full"
+            }`}
+          >
+            <div className="flex shrink-0 items-center justify-between border-b border-gray-200 px-5 py-3">
+              <h2 className="text-base font-semibold text-gray-900">Filters</h2>
+              <button
+                onClick={() => setShowFilters(false)}
+                className="rounded-md p-0.5 text-gray-500 hover:bg-gray-100 hover:text-gray-700"
+              >
+                <svg
+                  className="h-6 w-6"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </button>
+            </div>
+
+            <div className="flex-1 overflow-y-auto px-5 py-4">
+              <div className="space-y-4">
+                {FILTERS.map((filter, idx) => (
+                  <div key={idx} className="flex flex-col gap-1">
+                    <label className="text-xs font-medium text-gray-900">
+                      {filter.label}
+                    </label>
+                    {filter.kind === "select" && filter.label === "No. of Days" && (
+                      <Select
+                        size="md"
+                        value={filters.noOfDays}
+                        onChange={(value) => setFilters({ ...filters, noOfDays: value })}
+                        placeholder={filter.placeholder}
+                        options={[
+                          { value: "", label: filter.placeholder },
+                          { value: "1-5", label: "1-5 days" },
+                          { value: "6-10", label: "6-10 days" },
+                          { value: "11-15", label: "11-15 days" },
+                          { value: "15+", label: "15+ days" },
+                        ]}
+                      />
+                    )}
+                    {filter.kind === "select" && filter.label === "Accounts" && (
+                      <Select
+                        size="md"
+                        value={filters.accounts}
+                        onChange={(value) => setFilters({ ...filters, accounts: value })}
+                        placeholder={filter.placeholder}
+                        options={[
+                          { value: "", label: filter.placeholder },
+                          { value: "account1", label: "Account 1" },
+                          { value: "account2", label: "Account 2" },
+                          { value: "account3", label: "Account 3" },
+                        ]}
+                      />
+                    )}
+                    {filter.kind === "select" && filter.label === "Commission Type" && (
+                      <Select
+                        size="md"
+                        value={filters.commissionType}
+                        onChange={(value) => setFilters({ ...filters, commissionType: value })}
+                        placeholder={filter.placeholder}
+                        options={[
+                          { value: "", label: filter.placeholder },
+                          { value: "advance", label: "Advance" },
+                          { value: "balance", label: "Balance" },
+                          { value: "final", label: "Final" },
+                        ]}
+                      />
+                    )}
+                    {filter.kind === "text" && filter.label === "Client Name" && (
+                      <input
+                        type="text"
+                        placeholder={filter.placeholder}
+                        value={filters.clientName}
+                        onChange={(e) => setFilters({ ...filters, clientName: e.target.value })}
+                        className="rounded-lg border border-gray-300 px-3 py-2 text-sm placeholder-gray-500 focus:border-primary-500 focus:outline-none"
+                      />
+                    )}
+                    {filter.kind === "text" && filter.label === "Seller Name" && (
+                      <input
+                        type="text"
+                        placeholder={filter.placeholder}
+                        value={filters.sellerName}
+                        onChange={(e) => setFilters({ ...filters, sellerName: e.target.value })}
+                        className="rounded-lg border border-gray-300 px-3 py-2 text-sm placeholder-gray-500 focus:border-primary-500 focus:outline-none"
+                      />
+                    )}
+                    {filter.kind === "text" && filter.label === "Property Unit" && (
+                      <input
+                        type="text"
+                        placeholder={filter.placeholder}
+                        value={filters.propertyUnit}
+                        onChange={(e) => setFilters({ ...filters, propertyUnit: e.target.value })}
+                        className="rounded-lg border border-gray-300 px-3 py-2 text-sm placeholder-gray-500 focus:border-primary-500 focus:outline-none"
+                      />
+                    )}
+                    {filter.kind === "date-range" && (
+                      <div className="flex gap-2">
+                        <input
+                          type="date"
+                          value={filters.reservationDateStart}
+                          onChange={(e) => setFilters({ ...filters, reservationDateStart: e.target.value })}
+                          className="flex-1 rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-primary-500 focus:outline-none"
+                        />
+                        <input
+                          type="date"
+                          value={filters.reservationDateEnd}
+                          onChange={(e) => setFilters({ ...filters, reservationDateEnd: e.target.value })}
+                          className="flex-1 rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-primary-500 focus:outline-none"
+                        />
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="shrink-0 border-t border-gray-200 px-5 py-3">
+              <div className="flex gap-2">
+                <button
+                  onClick={() => {
+                    setFilters({
+                      clientName: "",
+                      sellerName: "",
+                      propertyUnit: "",
+                      noOfDays: "",
+                      accounts: "",
+                      reservationDateStart: "",
+                      reservationDateEnd: "",
+                      commissionType: "",
+                    });
+                  }}
+                  className="flex-1 rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+                >
+                  Reset
+                </button>
+                <button
+                  onClick={() => setShowFilters(false)}
+                  className="flex-1 rounded-lg bg-primary-600 px-4 py-2 text-sm font-medium text-white hover:bg-primary-700"
+                >
+                  Search
+                </button>
+              </div>
+            </div>
+          </div>
+        </>
       </div>
     </Layout>
   );

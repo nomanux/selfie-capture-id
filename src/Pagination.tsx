@@ -81,7 +81,7 @@ export default function Pagination({
   };
 
   return (
-    <div className="flex flex-wrap items-center justify-center gap-4 border-t border-gray-200 bg-white px-6 py-2 text-sm sm:flex-nowrap">
+    <div className="flex flex-wrap items-center justify-center gap-2 border-t border-gray-200 bg-white px-4 py-1.5 text-xs sm:flex-nowrap">
       {/* Mobile: prev/next + a "Page X of Y" control that opens a jump-to-page box. */}
       <div className="flex w-full items-center justify-between gap-2 sm:hidden">
           <button
@@ -89,9 +89,9 @@ export default function Pagination({
             aria-label="Previous page"
             disabled={page === 1}
             onClick={() => goTo(page - 1)}
-            className="flex h-9 w-9 shrink-0 cursor-pointer items-center justify-center rounded-md border border-gray-200 text-gray-500 hover:bg-gray-50 disabled:cursor-default disabled:opacity-40 disabled:hover:bg-transparent"
+            className="flex h-7 w-7 shrink-0 cursor-pointer items-center justify-center rounded-md border border-gray-200 text-gray-500 hover:bg-gray-50 disabled:cursor-default disabled:opacity-40 disabled:hover:bg-transparent"
           >
-            <ChevronLeftIcon className="h-4 w-4" />
+            <ChevronLeftIcon className="h-3.5 w-3.5" />
           </button>
 
           {jumpOpen ? (
@@ -138,29 +138,29 @@ export default function Pagination({
             aria-label="Next page"
             disabled={page === totalPages}
             onClick={() => goTo(page + 1)}
-            className="flex h-9 w-9 shrink-0 cursor-pointer items-center justify-center rounded-md border border-gray-200 text-gray-500 hover:bg-gray-50 disabled:cursor-default disabled:opacity-40 disabled:hover:bg-transparent"
+            className="flex h-7 w-7 shrink-0 cursor-pointer items-center justify-center rounded-md border border-gray-200 text-gray-500 hover:bg-gray-50 disabled:cursor-default disabled:opacity-40 disabled:hover:bg-transparent"
           >
-            <ChevronRightIcon className="h-4 w-4" />
+            <ChevronRightIcon className="h-3.5 w-3.5" />
           </button>
         </div>
 
       {/* Desktop: Figma node 173424:195170 — one centered row, Total N items
           grouped together with the numbered nav, "•••" ellipsis, then a
           16px gap before the page-size select. */}
-      <div className="hidden items-center gap-2 sm:flex">
-        <span className="whitespace-nowrap pr-2 text-gray-900">Total {total} items</span>
+      <div className="hidden items-center gap-1.5 sm:flex">
+        <span className="whitespace-nowrap pr-1 text-xs text-gray-900">Total {total} items</span>
         <button
           type="button"
           aria-label="Previous page"
           disabled={page === 1}
           onClick={() => goTo(page - 1)}
-          className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-md text-gray-500 hover:bg-gray-50 disabled:cursor-default disabled:opacity-40 disabled:hover:bg-transparent"
+          className="flex h-7 w-7 cursor-pointer items-center justify-center rounded-md text-gray-500 hover:bg-gray-50 disabled:cursor-default disabled:opacity-40 disabled:hover:bg-transparent"
         >
-          <ChevronLeftIcon className="h-4 w-4" />
+          <ChevronLeftIcon className="h-3.5 w-3.5" />
         </button>
         {getPageNumbers(page, totalPages).map((p, index) =>
           p === "..." ? (
-            <span key={"dots-" + index} className="flex h-8 w-8 items-center justify-center tracking-[2px] text-gray-300">
+            <span key={"dots-" + index} className="flex h-7 w-6 items-center justify-center tracking-[2px] text-xs text-gray-300">
               •••
             </span>
           ) : (
@@ -170,7 +170,7 @@ export default function Pagination({
               onClick={() => goTo(p)}
               aria-current={p === page ? "page" : undefined}
               className={
-                "flex h-8 min-w-[18px] cursor-pointer items-center justify-center rounded-md px-[7px] text-sm font-medium " +
+                "flex h-7 min-w-[24px] cursor-pointer items-center justify-center rounded-md px-1.5 text-xs font-medium " +
                 (p === page ? "border border-primary-500 bg-gray-50 text-primary-500" : "text-gray-700 hover:bg-gray-50")
               }
             >
@@ -183,9 +183,9 @@ export default function Pagination({
           aria-label="Next page"
           disabled={page === totalPages}
           onClick={() => goTo(page + 1)}
-          className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-md text-gray-500 hover:bg-gray-50 disabled:cursor-default disabled:opacity-40 disabled:hover:bg-transparent"
+          className="flex h-7 w-7 cursor-pointer items-center justify-center rounded-md text-gray-500 hover:bg-gray-50 disabled:cursor-default disabled:opacity-40 disabled:hover:bg-transparent"
         >
-          <ChevronRightIcon className="h-4 w-4" />
+          <ChevronRightIcon className="h-3.5 w-3.5" />
         </button>
       </div>
 

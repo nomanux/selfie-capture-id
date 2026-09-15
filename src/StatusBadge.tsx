@@ -100,6 +100,15 @@ export function Badge({
   );
 }
 
+export function LinkBadge({ label }: { label: string }) {
+  return (
+    <span className="inline-flex items-center gap-1 rounded-md border border-primary-50 bg-blue-50 px-2.5 py-1 text-xs font-semibold text-primary-500">
+      <LinkIcon className="h-3.5 w-3.5" />
+      {label}
+    </span>
+  );
+}
+
 export function TableCardHeader({ title, rightSlot }: { title: string; rightSlot?: React.ReactNode }) {
   return (
     <div className="flex flex-wrap items-center justify-between gap-3 border-b border-gray-100 px-5 py-2.5">
