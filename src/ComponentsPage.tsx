@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { SearchIcon, MoreHorizontalIcon } from "./icons";
 import Button, { IconButton, type ButtonSize, type ButtonVariant } from "./Button";
 import SecondaryIconButton from "./IconButton";
@@ -5,6 +6,7 @@ import Select from "./Select";
 import Input from "./Input";
 import Checkbox from "./Checkbox";
 import DatePicker from "./DatePicker";
+import RightDrawer from "./RightDrawer";
 import { StatusPill, Badge } from "./StatusBadge";
 
 /**
@@ -338,7 +340,86 @@ export default function ComponentsPage() {
             </Swatch>
           </div>
         </Section>
+
+        {/* Right Drawer */}
+        <Section
+          title="Right Drawer"
+          description="Slide-out drawer from the right side with transitions, used for filters and other content. Click the button below to see it in action."
+        >
+          <RightDrawerDemo />
+        </Section>
       </main>
+    </div>
+  );
+}
+
+function RightDrawerDemo() {
+  const [isOpen, setIsOpen] = useState(false);
+
+  return (
+    <div className="flex flex-col gap-6">
+      <div className="flex items-center gap-3">
+        <Button onClick={() => setIsOpen(true)}>
+          <SearchIcon className="h-4 w-4" />
+          Open Filter Drawer
+        </Button>
+        <p className="text-sm text-gray-600">Click to see the right drawer with sticky buttons</p>
+      </div>
+
+      <RightDrawer isOpen={isOpen} onClose={() => setIsOpen(false)} title="Filters">
+        {/* Scrollable content */}
+        <div className="flex-1 overflow-y-auto space-y-4 px-5 py-4">
+          <div className="flex flex-col gap-1">
+            <label className="text-xs font-medium text-gray-900">Project</label>
+            <Select placeholder="Select one" options={[
+              { value: "ast", label: "AST" },
+              { value: "sat", label: "SAT" },
+              { value: "bxp", label: "BXP" },
+            ]} size="sm" />
+          </div>
+          <div className="flex flex-col gap-1">
+            <label className="text-xs font-medium text-gray-900">Expiry Date</label>
+            <div className="flex gap-2">
+              <input type="date" className="flex-1 rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-primary-500 focus:outline-none" />
+              <input type="date" className="flex-1 rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-primary-500 focus:outline-none" />
+            </div>
+          </div>
+          <div className="flex flex-col gap-1">
+            <label className="text-xs font-medium text-gray-900">Client Name</label>
+            <Input type="text" placeholder="Enter client name" size="sm" />
+          </div>
+          <div className="flex flex-col gap-1">
+            <label className="text-xs font-medium text-gray-900">Seller Name</label>
+            <Input type="text" placeholder="Enter seller name" size="sm" />
+          </div>
+          <div className="flex flex-col gap-1">
+            <label className="text-xs font-medium text-gray-900">Status</label>
+            <Select placeholder="Select one" options={[
+              { value: "active", label: "Active" },
+              { value: "queue", label: "On Queue" },
+              { value: "cancelled", label: "Cancelled" },
+            ]} size="sm" />
+          </div>
+        </div>
+
+        {/* Sticky buttons at bottom */}
+        <div className="shrink-0 border-t border-gray-200 px-5 py-3">
+          <div className="flex gap-2">
+            <button
+              type="button"
+              onClick={() => {}}
+              className="flex-1 rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+            >
+              Reset
+            </button>
+            <div className="flex-1">
+              <Button onClick={() => setIsOpen(false)} size="md" className="w-full">
+                Search
+              </Button>
+            </div>
+          </div>
+        </div>
+      </RightDrawer>
     </div>
   );
 }

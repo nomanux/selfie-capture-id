@@ -149,7 +149,7 @@
   }
 
   .select-panel {
-    @apply absolute bottom-full mb-1 z-50 w-full rounded-lg border border-gray-200 bg-white py-1 shadow-lg;
+    @apply absolute top-full mt-1 z-50 w-full rounded-lg border border-gray-200 bg-white py-1 shadow-lg;
   }
 
   .select-clear-row {

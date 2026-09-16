@@ -109,10 +109,13 @@ export function LinkBadge({ label }: { label: string }) {
   );
 }
 
-export function TableCardHeader({ title, rightSlot }: { title: string; rightSlot?: React.ReactNode }) {
+export function TableCardHeader({ title, leftSlot, rightSlot }: { title?: string; leftSlot?: React.ReactNode; rightSlot?: React.ReactNode }) {
   return (
     <div className="flex flex-wrap items-center justify-between gap-3 border-b border-gray-100 px-5 py-2.5">
-      <h2 className="text-base font-semibold text-gray-900">{title}</h2>
+      <div className="flex items-center gap-4">
+        {title && <h2 className="text-base font-semibold text-gray-900">{title}</h2>}
+        {leftSlot && <div className="flex items-center gap-2">{leftSlot}</div>}
+      </div>
       <div className="flex items-center gap-3">{rightSlot}</div>
     </div>
   );

@@ -3,7 +3,8 @@
     "allow": [
       "Bash(cd c:/Users/BJIT/Documents/GitHub/selfie-capture-id && rm -f src/ClientCompanyRepresentative.tsx src/ReservationPaymentFinal.tsx && ls -la src/*.tsx | grep -i payment)",
       "mcp__claude_ai_Figma__get_screenshot",
-      "mcp__claude_ai_Figma__get_design_context"
+      "mcp__claude_ai_Figma__get_design_context",
+      "Read(//c/Users/BJIT/AppData/Local/Temp/**)"
     ],
     "additionalDirectories": [
       "c:\\Users\\BJIT\\Documents\\GitHub\\selfie-capture-id\\src"
