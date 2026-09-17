@@ -5,6 +5,7 @@ import Pagination from "./Pagination";
 import Checkbox from "./Checkbox";
 import Select from "./Select";
 import { DownloadPdfButton, RecordTabs } from "./StatusBadge";
+import FilterTrigger from "./FilterTrigger";
 import { EyeIcon } from "./icons";
 import { useNavigation } from "./NavigationContext";
 
@@ -293,6 +294,19 @@ export default function AdvanceCommissionList() {
 
   const activeFilterCount = Object.values(filters).filter((val) => val).length;
 
+  const resetFilters = () => {
+    setFilters({
+      clientName: "",
+      sellerName: "",
+      propertyUnit: "",
+      noOfDays: "",
+      accounts: "",
+      reservationDateStart: "",
+      reservationDateEnd: "",
+      commissionType: "",
+    });
+  };
+
   const filteredRows = ROWS.filter((row) => {
     if (filters.clientName && !row.clientName.toLowerCase().includes(filters.clientName.toLowerCase())) return false;
     if (filters.propertyUnit && !row.buildingUnit.toLowerCase().includes(filters.propertyUnit.toLowerCase())) return false;
@@ -334,30 +348,11 @@ export default function AdvanceCommissionList() {
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-56 rounded-md border border-gray-300 px-2.5 py-1.5 text-xs placeholder-gray-500 focus:border-primary-500 focus:outline-none"
               />
-              <button
-                onClick={() => setShowFilters(!showFilters)}
-                className="relative inline-flex items-center gap-1.5 rounded-md border border-gray-300 px-2.5 py-1.5 text-xs font-medium text-gray-700 hover:bg-gray-50"
-              >
-                <svg
-                  className="h-4 w-4"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"
-                  />
-                </svg>
-                Filter
-                {activeFilterCount > 0 && (
-                  <span className="absolute -right-2 -top-2 inline-flex h-5 w-5 items-center justify-center rounded-full bg-primary-600 text-xs font-semibold text-white">
-                    {activeFilterCount}
-                  </span>
-                )}
-              </button>
+              <FilterTrigger
+                activeFilterCount={activeFilterCount}
+                onOpenFilters={() => setShowFilters(true)}
+                onReset={resetFilters}
+              />
               <div className="ml-auto">
                 <DownloadPdfButton />
               </div>
@@ -436,7 +431,7 @@ export default function AdvanceCommissionList() {
 
         <>
           <div
-            className={`fixed inset-0 z-40 bg-black/10 transition-opacity duration-300 ${
+            className={`fixed inset-0 z-40 bg-black/70 transition-opacity duration-300 ${
               showFilters ? "opacity-100" : "pointer-events-none opacity-0"
             }`}
             onClick={() => setShowFilters(false)}

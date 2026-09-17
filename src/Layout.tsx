@@ -30,7 +30,7 @@ function Clock() {
   }, []);
 
   return (
-    <div className="px-3 py-2 rounded-[10px] outline outline-1 outline-offset-[-1px] outline-primary-100 inline-flex justify-center items-center gap-3 bg-gradient-to-r from-primary-25 to-blue-50 hover:outline-primary-200 transition-all">
+    <div className="h-[34px] px-3 py-2 rounded-[10px] outline outline-1 outline-offset-[-1px] outline-primary-100 inline-flex justify-center items-center gap-3 bg-gradient-to-r from-primary-25 to-blue-50 hover:outline-primary-200 transition-all">
       <svg
         width="16"
         height="16"
@@ -54,7 +54,7 @@ function Clock() {
           </clipPath>
         </defs>
       </svg>
-      <div className="w-px h-5 bg-gradient-to-b from-transparent via-primary-200 to-transparent" />
+
       <div className="flex items-center gap-2.5 justify-center">
         <div className="text-gray-700 text-sm font-semibold font-['Ubuntu']">
           {time || "—:—:—"}
@@ -613,7 +613,7 @@ export default function Layout({
               aria-label="Toggle navigation"
               aria-pressed={collapsed}
               onClick={toggleSidebar}
-              className="flex h-10 w-10 shrink-0 cursor-pointer items-center justify-center rounded-md text-gray-500 hover:bg-gray-50"
+              className="flex h-8 w-8 shrink-0 cursor-pointer items-center justify-center rounded-md text-gray-500 hover:bg-gray-50"
             >
               <MenuIcon className="h-5 w-5" />
             </button>

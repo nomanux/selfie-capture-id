@@ -1,6 +1,8 @@
 import { useState } from "react";
 import Layout from "./Layout";
-import FilterBar, { type FilterField } from "./FilterBar";
+import RightDrawer from "./RightDrawer";
+import FilterTrigger from "./FilterTrigger";
+import Select from "./Select";
 import Pagination from "./Pagination";
 import Checkbox from "./Checkbox";
 import { DownloadPdfButton, RecordTabs } from "./StatusBadge";
@@ -12,15 +14,6 @@ import { useNavigation } from "./NavigationContext";
  * Source: Figma file NcMe5sSgPs65q3Ed2rV1Kv, node 171748:282530.
  */
 
-const FILTERS: FilterField[] = [
-  { kind: "text", label: "Client Name", placeholder: "Enter client name" },
-  { kind: "text", label: "Seller Name", placeholder: "Enter seller name" },
-  { kind: "select", label: "Accounts", placeholder: "Select one" },
-  { kind: "select", label: "Contract Status", placeholder: "Select one" },
-  { kind: "date-range", label: "Reservation Date" },
-  { kind: "select", label: "Commission Status", placeholder: "Select one" },
-];
-
 interface RegularRow {
   contractNo: string;
   buildingUnit: string;
@@ -29,6 +22,10 @@ interface RegularRow {
   primarySellerName: string;
   sellerRole: string;
   sellerGroup: string;
+  accounts: string;
+  contractStatus: string;
+  commissionStatus: string;
+  reservationDate: string;
 }
 
 const ROWS: RegularRow[] = [
@@ -40,6 +37,10 @@ const ROWS: RegularRow[] = [
     primarySellerName: "Ja Morant",
     sellerRole: "-",
     sellerGroup: "LG_RMC29",
+    accounts: "E000000000000000008729345",
+    contractStatus: "Approved",
+    commissionStatus: "Released",
+    reservationDate: "2026-01-10",
   },
   {
     contractNo: "HLD0327448",
@@ -49,6 +50,10 @@ const ROWS: RegularRow[] = [
     primarySellerName: "Damian Lillard",
     sellerRole: "-",
     sellerGroup: "LG_RMC189",
+    accounts: "E000000000000000008729345",
+    contractStatus: "Pending",
+    commissionStatus: "Pending",
+    reservationDate: "2026-01-18",
   },
   {
     contractNo: "HLD0327426",
@@ -58,6 +63,10 @@ const ROWS: RegularRow[] = [
     primarySellerName: "Stephen Curry",
     sellerRole: "-",
     sellerGroup: "LG_RMC132",
+    accounts: "E000000000000000008729345",
+    contractStatus: "Approved",
+    commissionStatus: "Released",
+    reservationDate: "2025-12-22",
   },
   {
     contractNo: "HLD0327412",
@@ -67,6 +76,10 @@ const ROWS: RegularRow[] = [
     primarySellerName: "Kevin Durant",
     sellerRole: "-",
     sellerGroup: "LG_RMC6",
+    accounts: "E000000000000000008729345",
+    contractStatus: "Cancelled",
+    commissionStatus: "Withheld",
+    reservationDate: "2025-12-05",
   },
   {
     contractNo: "HLD0327408",
@@ -76,6 +89,10 @@ const ROWS: RegularRow[] = [
     primarySellerName: "Anthony Edwards",
     sellerRole: "-",
     sellerGroup: "LG_RMC195",
+    accounts: "E000000000000000008729345",
+    contractStatus: "Approved",
+    commissionStatus: "Released",
+    reservationDate: "2025-11-19",
   },
   {
     contractNo: "HLD0327395",
@@ -85,6 +102,10 @@ const ROWS: RegularRow[] = [
     primarySellerName: "Jimmy Butler",
     sellerRole: "-",
     sellerGroup: "LG_RMC195",
+    accounts: "E000000000000000008729345",
+    contractStatus: "Pending",
+    commissionStatus: "Pending",
+    reservationDate: "2025-11-02",
   },
   {
     contractNo: "HLD0327382",
@@ -94,12 +115,90 @@ const ROWS: RegularRow[] = [
     primarySellerName: "Joel Embiid",
     sellerRole: "-",
     sellerGroup: "LG_RMC6",
+    accounts: "E000000000000000008729345",
+    contractStatus: "Approved",
+    commissionStatus: "Released",
+    reservationDate: "2025-10-14",
   },
 ];
+
+const ACCOUNTS_OPTIONS = [...new Set(ROWS.map((r) => r.accounts))].map(
+  (value) => ({ value, label: value }),
+);
+const CONTRACT_STATUS_OPTIONS = [
+  ...new Set(ROWS.map((r) => r.contractStatus)),
+].map((value) => ({ value, label: value }));
+const COMMISSION_STATUS_OPTIONS = [
+  ...new Set(ROWS.map((r) => r.commissionStatus)),
+].map((value) => ({ value, label: value }));
 
 export default function RegularCommissionList() {
   const { navigate } = useNavigation();
   const [tab, setTab] = useState("My commission");
+  const [showFilters, setShowFilters] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [clientNameFilter, setClientNameFilter] = useState("");
+  const [sellerNameFilter, setSellerNameFilter] = useState("");
+  const [accountsFilter, setAccountsFilter] = useState("");
+  const [contractStatusFilter, setContractStatusFilter] = useState("");
+  const [commissionStatusFilter, setCommissionStatusFilter] = useState("");
+  const [reservationDateStart, setReservationDateStart] = useState("");
+  const [reservationDateEnd, setReservationDateEnd] = useState("");
+
+  const resetFilters = () => {
+    setSearchQuery("");
+    setClientNameFilter("");
+    setSellerNameFilter("");
+    setAccountsFilter("");
+    setContractStatusFilter("");
+    setCommissionStatusFilter("");
+    setReservationDateStart("");
+    setReservationDateEnd("");
+  };
+
+  const activeFilterCount = [
+    clientNameFilter,
+    sellerNameFilter,
+    accountsFilter,
+    contractStatusFilter,
+    commissionStatusFilter,
+    reservationDateStart,
+    reservationDateEnd,
+  ].filter((val) => val !== "").length;
+
+  const filteredRows = ROWS.filter((row) => {
+    const query = searchQuery.trim().toLowerCase();
+    const matchesSearch =
+      query === "" ||
+      row.contractNo.toLowerCase().includes(query) ||
+      row.buildingUnit.toLowerCase().includes(query) ||
+      row.clientName.toLowerCase().includes(query) ||
+      row.primarySellerName.toLowerCase().includes(query) ||
+      row.sellerGroup.toLowerCase().includes(query);
+    const matchesClientName =
+      clientNameFilter.trim() === "" ||
+      row.clientName.toLowerCase().includes(clientNameFilter.trim().toLowerCase());
+    const matchesSellerName =
+      sellerNameFilter.trim() === "" ||
+      row.primarySellerName.toLowerCase().includes(sellerNameFilter.trim().toLowerCase());
+    const matchesAccounts = accountsFilter === "" || row.accounts === accountsFilter;
+    const matchesContractStatus =
+      contractStatusFilter === "" || row.contractStatus === contractStatusFilter;
+    const matchesCommissionStatus =
+      commissionStatusFilter === "" || row.commissionStatus === commissionStatusFilter;
+    const matchesReservationDate =
+      (reservationDateStart === "" || row.reservationDate >= reservationDateStart) &&
+      (reservationDateEnd === "" || row.reservationDate <= reservationDateEnd);
+    return (
+      matchesSearch &&
+      matchesClientName &&
+      matchesSellerName &&
+      matchesAccounts &&
+      matchesContractStatus &&
+      matchesCommissionStatus &&
+      matchesReservationDate
+    );
+  });
 
   return (
     <Layout
@@ -120,13 +219,13 @@ export default function RegularCommissionList() {
             <h1 className="text-base font-semibold text-gray-900">
               Regular Commission
             </h1>
-            <p className="text-xs text-gray-600">30 records found</p>
+            <p className="text-xs text-gray-600">
+              {filteredRows.length} records found
+            </p>
           </div>
         </div>
 
         <div className="flex flex-col gap-4 px-5">
-          <FilterBar fields={FILTERS} />
-
           <p className="text-xs text-gray-500">
             <strong className="font-semibold">Note:</strong> All reservations
             prior to July 1, 2016 and released in IFCA (previous system) will
@@ -161,7 +260,21 @@ export default function RegularCommissionList() {
                 active={tab}
                 onChange={setTab}
               />
-              <DownloadPdfButton />
+              <div className="flex items-center gap-2">
+                <input
+                  type="text"
+                  placeholder="Search..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-56 rounded-md border border-gray-300 px-2.5 py-1.5 text-xs placeholder-gray-500 focus:border-primary-500 focus:outline-none"
+                />
+                <FilterTrigger
+                  activeFilterCount={activeFilterCount}
+                  onOpenFilters={() => setShowFilters(true)}
+                  onReset={resetFilters}
+                />
+                <DownloadPdfButton />
+              </div>
             </div>
             <div className="flex-1 min-h-0 overflow-auto [scrollbar-gutter:stable]">
               <table className="w-full min-w-[1040px] border-collapse text-sm">
@@ -185,7 +298,7 @@ export default function RegularCommissionList() {
                   </tr>
                 </thead>
                 <tbody>
-                  {ROWS.map((row) => (
+                  {filteredRows.map((row) => (
                     <tr
                       key={row.contractNo}
                       className="border-b border-gray-100 text-gray-600 hover:bg-gray-50"
@@ -230,6 +343,118 @@ export default function RegularCommissionList() {
           </div>
         </div>
       </div>
+
+      <RightDrawer
+        isOpen={showFilters}
+        onClose={() => setShowFilters(false)}
+        title="Filters"
+      >
+        <div className="flex-1 overflow-y-auto space-y-4 px-5 py-4">
+          <div className="flex flex-col gap-1">
+            <label className="text-xs font-medium text-gray-900">
+              Client Name
+            </label>
+            <input
+              type="text"
+              placeholder="Enter client name"
+              value={clientNameFilter}
+              onChange={(e) => setClientNameFilter(e.target.value)}
+              className="rounded-lg border border-gray-300 px-3 py-2 text-sm placeholder-gray-500 focus:border-primary-500 focus:outline-none"
+            />
+          </div>
+
+          <div className="flex flex-col gap-1">
+            <label className="text-xs font-medium text-gray-900">
+              Seller Name
+            </label>
+            <input
+              type="text"
+              placeholder="Enter seller name"
+              value={sellerNameFilter}
+              onChange={(e) => setSellerNameFilter(e.target.value)}
+              className="rounded-lg border border-gray-300 px-3 py-2 text-sm placeholder-gray-500 focus:border-primary-500 focus:outline-none"
+            />
+          </div>
+
+          <div className="flex flex-col gap-1">
+            <label className="text-xs font-medium text-gray-900">
+              Accounts
+            </label>
+            <Select
+              size="sm"
+              placeholder="Select one"
+              value={accountsFilter}
+              onChange={setAccountsFilter}
+              options={ACCOUNTS_OPTIONS}
+            />
+          </div>
+
+          <div className="flex flex-col gap-1">
+            <label className="text-xs font-medium text-gray-900">
+              Contract Status
+            </label>
+            <Select
+              size="sm"
+              placeholder="Select one"
+              value={contractStatusFilter}
+              onChange={setContractStatusFilter}
+              options={CONTRACT_STATUS_OPTIONS}
+            />
+          </div>
+
+          <div className="flex flex-col gap-1">
+            <label className="text-xs font-medium text-gray-900">
+              Reservation Date
+            </label>
+            <div className="flex gap-2">
+              <input
+                type="date"
+                value={reservationDateStart}
+                onChange={(e) => setReservationDateStart(e.target.value)}
+                className="flex-1 rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-primary-500 focus:outline-none"
+              />
+              <input
+                type="date"
+                value={reservationDateEnd}
+                onChange={(e) => setReservationDateEnd(e.target.value)}
+                className="flex-1 rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-primary-500 focus:outline-none"
+              />
+            </div>
+          </div>
+
+          <div className="flex flex-col gap-1">
+            <label className="text-xs font-medium text-gray-900">
+              Commission Status
+            </label>
+            <Select
+              size="sm"
+              placeholder="Select one"
+              value={commissionStatusFilter}
+              onChange={setCommissionStatusFilter}
+              options={COMMISSION_STATUS_OPTIONS}
+            />
+          </div>
+        </div>
+
+        <div className="shrink-0 border-t border-gray-200 px-5 py-3">
+          <div className="flex gap-2">
+            <button
+              type="button"
+              onClick={resetFilters}
+              className="flex-1 rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+            >
+              Reset
+            </button>
+            <button
+              type="button"
+              onClick={() => setShowFilters(false)}
+              className="flex-1 rounded-lg bg-primary-600 px-4 py-2 text-sm font-medium text-white hover:bg-primary-700"
+            >
+              Apply
+            </button>
+          </div>
+        </div>
+      </RightDrawer>
     </Layout>
   );
 }
