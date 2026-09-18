@@ -8,6 +8,8 @@ import Checkbox from "./Checkbox";
 import DatePicker from "./DatePicker";
 import RightDrawer from "./RightDrawer";
 import { StatusPill, Badge } from "./StatusBadge";
+import RowActionButton from "./RowActionButton";
+import { EyeIcon } from "./icons";
 
 /**
  * ComponentsPage — standalone style-guide screen listing the shared form
@@ -185,6 +187,24 @@ export default function ComponentsPage() {
             </Swatch>
             <Swatch label="Secondary icon (for form fields)">
               <SecondaryIconButtonTable />
+            </Swatch>
+          </div>
+        </Section>
+
+        {/* Table Action Button */}
+        <Section
+          title="Table Action Button"
+          description="Icon + label action used in table 'Actions' columns (View / Image / Hold, etc). Default is gray-400 icon and text; hover shows a slate-100 background with brand-500 icon/text; disabled drops both to gray-300. These are real buttons — hover or inspect to see the true states, the middle one isn't faked."
+        >
+          <div className="flex items-center gap-6">
+            <Swatch label="Default">
+              <RowActionButton icon={<EyeIcon className="h-6 w-6" />} label="View" />
+            </Swatch>
+            <Swatch label="Hover (hover over it)">
+              <RowActionButton icon={<EyeIcon className="h-6 w-6" />} label="View" />
+            </Swatch>
+            <Swatch label="Disabled">
+              <RowActionButton icon={<EyeIcon className="h-6 w-6" />} label="View" disabled />
             </Swatch>
           </div>
         </Section>

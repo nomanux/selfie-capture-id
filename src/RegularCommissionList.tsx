@@ -6,6 +6,7 @@ import Select from "./Select";
 import Pagination from "./Pagination";
 import Checkbox from "./Checkbox";
 import { DownloadPdfButton, RecordTabs } from "./StatusBadge";
+import RowActionButton from "./RowActionButton";
 import { EyeIcon } from "./icons";
 import { useNavigation } from "./NavigationContext";
 
@@ -254,7 +255,7 @@ export default function RegularCommissionList() {
 
         <div className="flex min-h-0 flex-1 flex-col px-5 pb-3 pt-2">
           <div className="flex w-full flex-1 flex-col overflow-hidden rounded-xl border border-gray-200 bg-white shadow-[0_1px_2px_rgba(10,13,18,0.05)]">
-            <div className="flex flex-wrap items-center justify-between gap-3 pr-6 pt-2">
+            <div className="flex flex-wrap items-center justify-between gap-3 border-b border-gray-200 px-4 py-3">
               <RecordTabs
                 tabs={["My commission", "Teams Commission"]}
                 active={tab}
@@ -292,7 +293,7 @@ export default function RegularCommissionList() {
                     </th>
                     <th className="px-2 py-2 font-semibold">Seller Role</th>
                     <th className="px-2 py-2 font-semibold">Seller Group</th>
-                    <th className="w-[88px] px-2 py-2 text-center font-semibold">
+                    <th className="w-24 px-2 py-2 text-center font-semibold">
                       Actions
                     </th>
                   </tr>
@@ -319,8 +320,7 @@ export default function RegularCommissionList() {
                       <td className="px-2 py-1">{row.sellerGroup}</td>
                       <td className="px-2 py-1">
                         <div className="flex items-center justify-center">
-                          <button
-                            type="button"
+                          <RowActionButton
                             aria-label={`View ${row.contractNo} details`}
                             onClick={() =>
                               navigate({
@@ -328,10 +328,9 @@ export default function RegularCommissionList() {
                                 itemId: row.contractNo,
                               })
                             }
-                            className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-md text-gray-400 hover:bg-gray-50 hover:text-gray-700"
-                          >
-                            <EyeIcon className="h-4 w-4" />
-                          </button>
+                            icon={<EyeIcon className="h-6 w-6" />}
+                            label="View"
+                          />
                         </div>
                       </td>
                     </tr>

@@ -1,10 +1,11 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import Layout from "./Layout";
 import Pagination from "./Pagination";
 import Checkbox from "./Checkbox";
 import ImagePreviewModal from "./ImagePreviewModal";
 import RightDrawer from "./RightDrawer";
 import FilterTrigger from "./FilterTrigger";
+import RowActionButton from "./RowActionButton";
 import Select from "./Select";
 import { DownloadPdfButton, StatusPill, TableCardHeader } from "./StatusBadge";
 import { BuildingIcon, EyeIcon, ImageIcon, PauseCircleIcon } from "./icons";
@@ -12,7 +13,7 @@ import { useNavigation } from "./NavigationContext";
 import { unitFloorplanB3Url } from "./assets/figmaAssets";
 
 /**
- * UnitAvailabilityList — "Property > Unit Availability" screen, reached
+ * UnitAvailabilityList 窶・"Property > Unit Availability" screen, reached
  * from the sidebar (not scoped to a single project). Its Actions column has
  * three icons: View (opens Details), Image (opens the image preview
  * modal), and Hold.
@@ -268,6 +269,7 @@ export default function UnitAvailabilityList() {
               }
               rightSlot={
                 <div className="flex items-center gap-3">
+                  <DownloadPdfButton />
                   <div className="flex items-center gap-1.5 shrink-0">
                     <button
                       type="button"
@@ -298,7 +300,6 @@ export default function UnitAvailabilityList() {
                       />
                     </button>
                   </div>
-                  <DownloadPdfButton />
                 </div>
               }
             />
@@ -318,7 +319,7 @@ export default function UnitAvailabilityList() {
                       <th className="px-2 py-2 font-semibold">Unit Location</th>
                       <th className="px-2 py-2 font-semibold">Price</th>
                       <th className="px-2 py-2 font-semibold">Property Unit</th>
-                      <th className="w-[104px] px-2 py-2 text-center font-semibold">
+                      <th className="w-[300px] px-2 py-2 text-center font-semibold">
                         Actions
                       </th>
                     </tr>
@@ -345,9 +346,8 @@ export default function UnitAvailabilityList() {
                         <td className="px-2 py-1">{formatPrice(row.price)}</td>
                         <td className="px-2 py-1">{row.propertyUnit}</td>
                         <td className="px-2 py-1">
-                          <div className="flex items-center justify-center gap-1">
-                            <button
-                              type="button"
+                          <div className="flex items-center justify-center gap-3">
+                            <RowActionButton
                               aria-label={`View ${row.buildingUnit} details`}
                               onClick={() =>
                                 navigate({
@@ -355,25 +355,20 @@ export default function UnitAvailabilityList() {
                                   itemId: row.propertyUnit,
                                 })
                               }
-                              className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-md text-gray-400 hover:bg-gray-50 hover:text-gray-700"
-                            >
-                              <EyeIcon className="h-4 w-4" />
-                            </button>
-                            <button
-                              type="button"
+                              icon={<EyeIcon className="h-6 w-6" />}
+                              label="View"
+                            />
+                            <RowActionButton
                               aria-label={`View ${row.buildingUnit} image`}
                               onClick={() => setPreviewRow(row)}
-                              className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-md text-gray-400 hover:bg-gray-50 hover:text-gray-700"
-                            >
-                              <ImageIcon className="h-4 w-4" />
-                            </button>
-                            <button
-                              type="button"
+                              icon={<ImageIcon className="h-6 w-6" />}
+                              label="Image"
+                            />
+                            <RowActionButton
                               aria-label={`Put ${row.buildingUnit} on hold`}
-                              className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-md text-gray-400 hover:bg-gray-50 hover:text-gray-700"
-                            >
-                              <PauseCircleIcon className="h-4 w-4" />
-                            </button>
+                              icon={<PauseCircleIcon className="h-6 w-6" />}
+                              label="Hold"
+                            />
                           </div>
                         </td>
                       </tr>
@@ -603,3 +598,4 @@ export default function UnitAvailabilityList() {
     </Layout>
   );
 }
+

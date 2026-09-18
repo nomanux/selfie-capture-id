@@ -385,7 +385,7 @@ export default function LotteryRegistrationList() {
         <LiveBatchBanner />
 
         <div className="flex min-h-0 flex-1 flex-col px-5 pb-3 pt-2">
-          <div className="flex w-full flex-1 flex-col overflow-hidden rounded-lg border border-gray-200 bg-white shadow-[0_1px_2px_rgba(10,13,18,0.05)]">
+          <div className="flex w-full flex-1 flex-col overflow-hidden rounded-xl border border-gray-200 bg-white shadow-[0_1px_2px_rgba(10,13,18,0.05)]">
             <div className="flex items-center gap-2 border-b border-gray-200 px-4 py-3">
               <input
                 type="text"

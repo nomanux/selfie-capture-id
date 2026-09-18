@@ -4,8 +4,9 @@ import Pagination from "./Pagination";
 import Checkbox from "./Checkbox";
 import Button from "./Button";
 import Select from "./Select";
-import { DownloadPdfButton, StatusPill } from "./StatusBadge";
+import { DownloadPdfButton, StatusPill, TableCardHeader } from "./StatusBadge";
 import FilterTrigger from "./FilterTrigger";
+import RowActionButton from "./RowActionButton";
 import { EyeIcon, PlusIcon } from "./icons";
 import { useNavigation } from "./NavigationContext";
 
@@ -124,24 +125,26 @@ export default function ParkingSlotList() {
         </div>
 
         <div className="flex min-h-0 flex-1 flex-col px-5 pb-3 pt-2">
-          <div className="flex w-full flex-1 flex-col overflow-hidden rounded-lg border border-gray-200 bg-white shadow-[0_1px_2px_rgba(10,13,18,0.05)]">
-            <div className="flex items-center gap-2 border-b border-gray-200 px-4 py-3">
-              <input
-                type="text"
-                placeholder="Search..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-56 rounded-md border border-gray-300 px-2.5 py-1.5 text-xs placeholder-gray-500 focus:border-primary-500 focus:outline-none"
-              />
-              <FilterTrigger
-                activeFilterCount={activeFilterCount}
-                onOpenFilters={() => setShowFilters(true)}
-                onReset={resetFilters}
-              />
-              <div className="ml-auto">
-                <DownloadPdfButton />
-              </div>
-            </div>
+          <div className="flex w-full flex-1 flex-col overflow-hidden rounded-xl border border-gray-200 bg-white shadow-[0_1px_2px_rgba(10,13,18,0.05)]">
+            <TableCardHeader
+              leftSlot={
+                <div className="flex items-center gap-2">
+                  <input
+                    type="text"
+                    placeholder="Search..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="w-56 rounded-md border border-gray-300 px-2.5 py-1.5 text-xs placeholder-gray-500 focus:border-primary-500 focus:outline-none"
+                  />
+                  <FilterTrigger
+                    activeFilterCount={activeFilterCount}
+                    onOpenFilters={() => setShowFilters(true)}
+                    onReset={resetFilters}
+                  />
+                </div>
+              }
+              rightSlot={<DownloadPdfButton />}
+            />
             <div className="flex-1 min-h-0 overflow-auto [scrollbar-gutter:stable]">
               <table className="w-full min-w-[1040px] border-collapse" style={{ fontSize: "13px" }}>
                 <thead className="sticky top-0 z-10 bg-gray-50 [&_th]:text-xs [&_th]:font-semibold">
@@ -154,7 +157,7 @@ export default function ParkingSlotList() {
                     <th className="px-2 py-1 font-semibold">Description</th>
                     <th className="px-2 py-1 font-semibold">Status</th>
                     <th className="px-2 py-1 font-semibold">Category</th>
-                    <th className="w-16 px-2 py-1 text-center font-semibold">
+                    <th className="w-24 px-2 py-1 text-center font-semibold">
                       Actions
                     </th>
                   </tr>
@@ -179,8 +182,7 @@ export default function ParkingSlotList() {
                       <td className="px-2 py-2">{row.category}</td>
                       <td className="px-2 py-2">
                         <div className="flex items-center justify-center">
-                          <button
-                            type="button"
+                          <RowActionButton
                             aria-label={`View ${row.code} details`}
                             onClick={() =>
                               navigate({
@@ -188,10 +190,9 @@ export default function ParkingSlotList() {
                                 itemId: row.code,
                               })
                             }
-                            className="flex h-6 w-6 cursor-pointer items-center justify-center rounded-md text-gray-400 hover:bg-gray-50 hover:text-gray-700"
-                          >
-                            <EyeIcon className="h-3 w-3" />
-                          </button>
+                            icon={<EyeIcon className="h-6 w-6" />}
+                            label="View"
+                          />
                         </div>
                       </td>
                     </tr>

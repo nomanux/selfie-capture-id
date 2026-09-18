@@ -5,6 +5,7 @@ import Pagination from "./Pagination";
 import Checkbox from "./Checkbox";
 import ImagePreviewModal from "./ImagePreviewModal";
 import { DownloadPdfButton, StatusPill, TableCardHeader } from "./StatusBadge";
+import RowActionButton from "./RowActionButton";
 import { EyeIcon, ImageIcon } from "./icons";
 import { useNavigation } from "./NavigationContext";
 import { unitFloorplanB3Url } from "./assets/figmaAssets";
@@ -116,7 +117,7 @@ export default function UnitStyleTable({
                       <th className="px-2 py-2 font-semibold">Property Unit</th>
                     )}
                     <th className="px-2 py-2 font-semibold">Property Notes</th>
-                    <th className="w-[104px] px-2 py-2 text-center font-semibold">
+                    <th className="w-[200px] px-2 py-2 text-center font-semibold">
                       Actions
                     </th>
                   </tr>
@@ -144,22 +145,18 @@ export default function UnitStyleTable({
                       )}
                       <td className="px-2 py-1">{row.notes ?? "-"}</td>
                       <td className="px-2 py-1">
-                        <div className="flex items-center justify-center gap-1">
-                          <button
-                            type="button"
+                        <div className="flex items-center justify-center gap-3">
+                          <RowActionButton
                             aria-label={`View ${row.code} details`}
-                            className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-md text-gray-400 hover:bg-gray-50 hover:text-gray-700"
-                          >
-                            <EyeIcon className="h-4 w-4" />
-                          </button>
-                          <button
-                            type="button"
+                            icon={<EyeIcon className="h-6 w-6" />}
+                            label="View"
+                          />
+                          <RowActionButton
                             aria-label={`View ${row.code} image`}
                             onClick={() => setPreviewRow(row)}
-                            className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-md text-gray-400 hover:bg-gray-50 hover:text-gray-700"
-                          >
-                            <ImageIcon className="h-4 w-4" />
-                          </button>
+                            icon={<ImageIcon className="h-6 w-6" />}
+                            label="Image"
+                          />
                         </div>
                       </td>
                     </tr>

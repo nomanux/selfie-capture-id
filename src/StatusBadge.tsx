@@ -35,9 +35,17 @@ const STATUS_STYLES: Record<string, string> = {
 };
 
 export function StatusPill({ status }: { status: string }) {
-  const style = STATUS_STYLES[status] ?? "border border-gray-200 bg-gray-50 text-gray-700";
+  const style =
+    STATUS_STYLES[status] ?? "border border-gray-200 bg-gray-50 text-gray-700";
   return (
-    <span className={"inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium " + style}>{status}</span>
+    <span
+      className={
+        "inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium " +
+        style
+      }
+    >
+      {status}
+    </span>
   );
 }
 
@@ -52,9 +60,10 @@ const BADGE_COLOR_STYLES: Record<BadgeColor, string> = {
   brand: "bg-[#d4e1fc] text-[#052b78]",
 };
 
-const BADGE_BORDER_STYLES: Record<BadgeColor, { plain: string; icon: string }> = {
-  brand: { plain: "border-[#98b9ff]", icon: "border-[#6293f8]" },
-};
+const BADGE_BORDER_STYLES: Record<BadgeColor, { plain: string; icon: string }> =
+  {
+    brand: { plain: "border-[#98b9ff]", icon: "border-[#6293f8]" },
+  };
 
 const BADGE_TEXT_STYLES: Record<BadgeSize, string> = {
   sm: "text-xs leading-[18px]",
@@ -62,8 +71,18 @@ const BADGE_TEXT_STYLES: Record<BadgeSize, string> = {
 };
 
 const BADGE_PADDING_STYLES: Record<BadgeSize, Record<BadgeIcon, string>> = {
-  sm: { none: "px-1.5 py-0.5", leading: "gap-1 py-0.5 pl-1 pr-1.5", trailing: "gap-1 py-0.5 pl-1.5 pr-1", only: "p-1" },
-  md: { none: "px-2 py-0.5", leading: "gap-1 py-0.5 pl-1.5 pr-2", trailing: "gap-1 py-0.5 pl-2 pr-1.5", only: "p-1.5" },
+  sm: {
+    none: "px-1.5 py-0.5",
+    leading: "gap-1 py-0.5 pl-1 pr-1.5",
+    trailing: "gap-1 py-0.5 pl-1.5 pr-1",
+    only: "p-1",
+  },
+  md: {
+    none: "px-2 py-0.5",
+    leading: "gap-1 py-0.5 pl-1.5 pr-2",
+    trailing: "gap-1 py-0.5 pl-2 pr-1.5",
+    only: "p-1.5",
+  },
 };
 
 export function Badge({
@@ -77,8 +96,12 @@ export function Badge({
   size?: BadgeSize;
   icon?: BadgeIcon;
 }) {
-  const iconEl = icon !== "none" ? <LinkIcon className="h-3 w-3 shrink-0" /> : null;
-  const border = icon === "none" ? BADGE_BORDER_STYLES[color].plain : BADGE_BORDER_STYLES[color].icon;
+  const iconEl =
+    icon !== "none" ? <LinkIcon className="h-3 w-3 shrink-0" /> : null;
+  const border =
+    icon === "none"
+      ? BADGE_BORDER_STYLES[color].plain
+      : BADGE_BORDER_STYLES[color].icon;
   return (
     <span
       className={
@@ -109,11 +132,21 @@ export function LinkBadge({ label }: { label: string }) {
   );
 }
 
-export function TableCardHeader({ title, leftSlot, rightSlot }: { title?: string; leftSlot?: React.ReactNode; rightSlot?: React.ReactNode }) {
+export function TableCardHeader({
+  title,
+  leftSlot,
+  rightSlot,
+}: {
+  title?: string;
+  leftSlot?: React.ReactNode;
+  rightSlot?: React.ReactNode;
+}) {
   return (
-    <div className="flex flex-wrap items-center justify-between gap-3 border-b border-gray-100 px-5 py-2.5">
+    <div className="flex items-center justify-between gap-2 border-b border-gray-200 px-4 py-3">
       <div className="flex items-center gap-4">
-        {title && <h2 className="text-base font-semibold text-gray-900">{title}</h2>}
+        {title && (
+          <h2 className="text-base font-semibold text-gray-900">{title}</h2>
+        )}
         {leftSlot && <div className="flex items-center gap-2">{leftSlot}</div>}
       </div>
       <div className="flex items-center gap-3">{rightSlot}</div>
@@ -122,7 +155,15 @@ export function TableCardHeader({ title, leftSlot, rightSlot }: { title?: string
 }
 
 /** Tab switcher used at the top of the Advance/Regular Commission tables ("My commission" / "Teams Commission"). */
-export function RecordTabs({ tabs, active, onChange }: { tabs: string[]; active: string; onChange: (tab: string) => void }) {
+export function RecordTabs({
+  tabs,
+  active,
+  onChange,
+}: {
+  tabs: string[];
+  active: string;
+  onChange: (tab: string) => void;
+}) {
   return (
     <div className="flex items-center gap-6 border-b border-gray-100 px-6">
       {tabs.map((tab) => (
@@ -132,7 +173,9 @@ export function RecordTabs({ tabs, active, onChange }: { tabs: string[]; active:
           onClick={() => onChange(tab)}
           className={
             "cursor-pointer border-b-2 py-3 text-sm font-semibold " +
-            (tab === active ? "border-primary-500 text-primary-500" : "border-transparent text-gray-500 hover:text-gray-700")
+            (tab === active
+              ? "border-primary-500 text-primary-500"
+              : "border-transparent text-gray-500 hover:text-gray-700")
           }
         >
           {tab}

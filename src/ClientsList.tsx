@@ -5,6 +5,7 @@ import FilterTrigger from "./FilterTrigger";
 import Pagination from "./Pagination";
 import Select from "./Select";
 import { StatusPill } from "./StatusBadge";
+import RowActionButton from "./RowActionButton";
 import { EyeIcon } from "./icons";
 import { useNavigation } from "./NavigationContext";
 import ClientDetailsModal, { type ClientDetails } from "./ClientDetailsModal";
@@ -131,7 +132,7 @@ export default function ClientsList() {
         </div>
 
         <div className="flex min-h-0 flex-1 flex-col px-5 pb-3 pt-2">
-          <div className="flex w-full flex-1 flex-col overflow-hidden rounded-lg border border-gray-200 bg-white shadow-[0_1px_2px_rgba(10,13,18,0.05)]">
+          <div className="flex w-full flex-1 flex-col overflow-hidden rounded-xl border border-gray-200 bg-white shadow-[0_1px_2px_rgba(10,13,18,0.05)]">
             <div className="flex items-center gap-2 border-b border-gray-200 px-4 py-3">
               <input
                 type="text"
@@ -157,7 +158,7 @@ export default function ClientsList() {
                     <th className="px-2 py-1 font-semibold">Status</th>
                     <th className="px-2 py-1 font-semibold">Seller Name</th>
                     <th className="px-2 py-1 font-semibold">Sales Group</th>
-                    <th className="w-16 px-2 py-1 text-center font-semibold">Actions</th>
+                    <th className="w-24 px-2 py-1 text-center font-semibold">Actions</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -173,14 +174,12 @@ export default function ClientsList() {
                       <td className="px-2 py-2">{row.salesGroup}</td>
                       <td className="px-2 py-2">
                         <div className="flex items-center justify-center">
-                          <button
-                            type="button"
+                          <RowActionButton
                             aria-label={`View ${row.clientName}`}
                             onClick={() => setViewingClient(row)}
-                            className="flex h-6 w-6 cursor-pointer items-center justify-center rounded-md text-gray-400 hover:bg-gray-50 hover:text-gray-700"
-                          >
-                            <EyeIcon className="h-3 w-3" />
-                          </button>
+                            icon={<EyeIcon className="h-6 w-6" />}
+                            label="View"
+                          />
                         </div>
                       </td>
                     </tr>
