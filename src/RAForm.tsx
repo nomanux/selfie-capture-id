@@ -115,9 +115,9 @@ const RAForm = () => {
 
   const renderProgressBar = () => {
     return (
-      <div className="w-full bg-white border-b">
-        <div className="max-w-[1024px] mx-auto px-8 py-5">
-          <p className="text-sm font-normal text-gray-900 mb-3">
+      <div className="w-full bg-white border-b border-gray-200">
+        <div className="max-w-[1024px] mx-auto px-8 py-3">
+          <p className="text-xs font-normal text-gray-900 mb-2">
             {currentStep + 1}/8 steps
           </p>
           <div className="flex gap-1.5 h-1.5">
@@ -136,22 +136,22 @@ const RAForm = () => {
   };
 
   const renderStep1 = () => (
-    <div className="bg-white rounded-3xl shadow-lg">
-      <div className="pt-6 px-8 pb-4">
-        <h2 className="text-2xl font-bold text-brand-500 text-center mb-2">
+    <div className="bg-white rounded-3xl shadow-sm">
+      <div className="pt-5 px-8 pb-3">
+        <h2 className="text-xl font-bold text-brand-500 text-center mb-1">
           Buyer & Property Information
         </h2>
-        <p className="text-center text-gray-700">
+        <p className="text-center text-sm text-gray-700">
           Review and confirm buyer type and property details for this
           reservation.
         </p>
       </div>
 
-      <div className="p-6 space-y-6">
+      <div className="p-5 space-y-4">
         {/* Top 3 fields */}
-        <div className="grid grid-cols-3 gap-5">
+        <div className="grid grid-cols-3 gap-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-gray-700 mb-1.5">
               Buyer Type <span className="text-red-500">*</span>
             </label>
             <Select
@@ -166,7 +166,7 @@ const RAForm = () => {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-gray-700 mb-1.5">
               Buyer Classification <span className="text-red-500">*</span>
             </label>
             <Select
@@ -183,7 +183,7 @@ const RAForm = () => {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-gray-700 mb-1.5">
               Control Number (RA No.)
             </label>
             <Input
@@ -198,21 +198,21 @@ const RAForm = () => {
         </div>
 
         {/* Reservation Agreement Section */}
-        <div className="bg-reservation-bg flex flex-col items-start pb-2 pt-0 px-2 relative rounded-3xl">
+        <div className="bg-reservation-bg flex flex-col items-start overflow-hidden pb-1.5 pt-0 px-1.5 relative rounded-2xl">
           {/* Header */}
-          <div className="flex gap-3 items-center justify-center py-2 rounded-none shrink-0 w-full">
-            <h3 className="text-lg font-semibold text-reservation-heading">
+          <div className="flex gap-3 items-center justify-center py-1.5 rounded-none shrink-0 w-full">
+            <h3 className="text-base font-semibold text-reservation-heading">
               Reservation Agreement
             </h3>
           </div>
 
           {/* Content - Horizontal Layout */}
-          <div className="bg-white flex gap-5 items-end px-6 py-4 relative rounded-lg shrink-0 w-full">
+          <div className="bg-white flex gap-5 items-end px-5 py-3 relative rounded-lg shrink-0 w-full">
             {/* Left: Labels (283px wide) */}
             <div className="flex flex-col gap-0.5 items-start relative shrink-0 w-[283px]">
               {/* Label + Asterisk */}
               <div className="flex gap-0.5 items-start relative shrink-0 whitespace-nowrap">
-                <label className="font-semibold text-base text-gray-700">
+                <label className="font-semibold text-sm text-gray-700">
                   Date of Reservation
                 </label>
                 <span className="font-medium text-sm text-[#06318a]">*</span>
@@ -239,13 +239,13 @@ const RAForm = () => {
 
         {/* Property Information */}
         <div>
-          <h3 className="text-base font-semibold text-brand-500 mb-6">
+          <h3 className="text-base font-semibold text-brand-500 mb-3">
             Property Information
           </h3>
 
-          <div className="grid grid-cols-3 gap-5 mb-5">
+          <div className="grid grid-cols-3 gap-4 mb-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-700 mb-1.5">
                 Property Name
               </label>
               <Input
@@ -258,7 +258,7 @@ const RAForm = () => {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-700 mb-1.5">
                 Unit / Lot No. / Parking Slot No.
               </label>
               <Input
@@ -269,7 +269,7 @@ const RAForm = () => {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-700 mb-1.5">
                 Unit Category
               </label>
               <Input
@@ -283,9 +283,9 @@ const RAForm = () => {
             </div>
           </div>
 
-          <div className="grid grid-cols-3 gap-5">
+          <div className="grid grid-cols-3 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-700 mb-1.5">
                 Building Name
               </label>
               <Input
@@ -298,7 +298,7 @@ const RAForm = () => {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-700 mb-1.5">
                 Area (M²)
               </label>
               <Input
@@ -309,7 +309,7 @@ const RAForm = () => {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-700 mb-1.5">
                 List Price (Php)
               </label>
               <Input
@@ -324,7 +324,7 @@ const RAForm = () => {
       </div>
 
       {/* Buttons */}
-      <div className="flex justify-between items-center p-6 border-t">
+      <div className="flex justify-between items-center p-5 border-t border-gray-200">
         <button
           onClick={handleSaveDraft}
           className="text-sm font-semibold text-brand-500 hover:text-brand-600"
@@ -347,20 +347,21 @@ const RAForm = () => {
 
   const renderStep2 = () => (
     <div className="bg-white rounded-3xl shadow-lg">
-      <div className="pt-6 px-8 pb-4">
-        <h2 className="text-2xl font-bold text-brand-500 text-center mb-2">
+      <div className="pt-5 px-8 pb-3">
+        <h2 className="text-xl font-bold text-brand-500 text-center mb-1">
           Client/Company Representative
         </h2>
-        <p className="text-center text-gray-700">
-          Enter your personal information as it appears on your official records.
+        <p className="text-center text-sm text-gray-700">
+          Enter your personal information as it appears on your official
+          records.
         </p>
       </div>
 
-      <div className="p-6 space-y-6">
+      <div className="p-5 space-y-4">
         {/* Client Type Selection */}
         <div className="flex gap-4 items-start">
           <div
-            className={`flex-1 border rounded-xl p-5 cursor-pointer transition-all ${
+            className={`flex-1 border rounded-xl p-4 cursor-pointer transition-all ${
               formData.clientType === "individual"
                 ? "bg-brand-50 border-brand-500"
                 : "bg-white border-gray-300"
@@ -380,9 +381,12 @@ const RAForm = () => {
                 )}
               </div>
               <div>
-                <p className="font-semibold text-gray-900">Private Individual</p>
+                <p className="font-semibold text-gray-900">
+                  Private Individual
+                </p>
                 <p className="text-xs text-gray-700 mt-1">
-                  I am a private individual OR a representative of a private partnership.
+                  I am a private individual OR a representative of a private
+                  partnership.
                 </p>
               </div>
             </div>
@@ -391,7 +395,7 @@ const RAForm = () => {
           <p className="text-gray-400 self-center">or</p>
 
           <div
-            className={`flex-1 border rounded-xl p-5 cursor-pointer transition-all ${
+            className={`flex-1 border rounded-xl p-4 cursor-pointer transition-all ${
               formData.clientType === "company"
                 ? "bg-white border-brand-500"
                 : "bg-white border-gray-300"
@@ -411,7 +415,9 @@ const RAForm = () => {
                 )}
               </div>
               <div>
-                <p className="font-medium text-gray-700">Company representative</p>
+                <p className="font-medium text-gray-700">
+                  Company representative
+                </p>
                 <p className="text-xs text-gray-700 mt-1">
                   I am a representative of a company or corporation.
                 </p>
@@ -421,13 +427,15 @@ const RAForm = () => {
         </div>
 
         {/* Personal Details */}
-        <div className="space-y-6">
-          <h3 className="text-base font-semibold text-brand-500">Personal Details</h3>
+        <div className="space-y-4">
+          <h3 className="text-base font-semibold text-brand-500">
+            Personal Details
+          </h3>
 
           {/* Prefix, First Name, Last Name */}
-          <div className="grid grid-cols-3 gap-5">
+          <div className="grid grid-cols-3 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-700 mb-1.5">
                 Prefix <span className="text-red-500">*</span>
               </label>
               <Select
@@ -443,7 +451,7 @@ const RAForm = () => {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-700 mb-1.5">
                 First Name <span className="text-red-500">*</span>
               </label>
               <Input
@@ -455,7 +463,7 @@ const RAForm = () => {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-700 mb-1.5">
                 Last Name <span className="text-red-500">*</span>
               </label>
               <Input
@@ -469,9 +477,9 @@ const RAForm = () => {
           </div>
 
           {/* Email, Phone, Citizenship */}
-          <div className="grid grid-cols-3 gap-5">
+          <div className="grid grid-cols-3 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-700 mb-1.5">
                 Email <span className="text-red-500">*</span>
               </label>
               <Input
@@ -484,7 +492,7 @@ const RAForm = () => {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-700 mb-1.5">
                 Phone <span className="text-red-500">*</span>
               </label>
               <Input
@@ -496,7 +504,7 @@ const RAForm = () => {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-700 mb-1.5">
                 Citizenship <span className="text-red-500">*</span>
               </label>
               <Select
@@ -514,9 +522,9 @@ const RAForm = () => {
           </div>
 
           {/* ID Type, ID Number */}
-          <div className="grid grid-cols-2 gap-5">
+          <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-700 mb-1.5">
                 ID Type <span className="text-red-500">*</span>
               </label>
               <Select
@@ -532,7 +540,7 @@ const RAForm = () => {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-700 mb-1.5">
                 ID Number <span className="text-red-500">*</span>
               </label>
               <Input
@@ -548,7 +556,7 @@ const RAForm = () => {
       </div>
 
       {/* Buttons */}
-      <div className="flex justify-between items-center p-6 border-t">
+      <div className="flex justify-between items-center p-5 border-t border-gray-200">
         <button
           onClick={handleSaveDraft}
           className="text-sm font-semibold text-brand-500 hover:text-brand-600"
@@ -596,8 +604,8 @@ const RAForm = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <div className="bg-white border-b">
-        <div className="max-w-6xl mx-auto px-8 py-4 flex items-center justify-between">
+      <div className="bg-white border-b border-gray-200">
+        <div className="max-w-6xl mx-auto px-8 py-3 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <img
               src="/src/assets/dmci-logo.svg"
@@ -615,8 +623,12 @@ const RAForm = () => {
       {renderProgressBar()}
 
       {/* Main Content */}
-      <div className="max-w-[1024px] mx-auto px-5 py-5">
-        {currentStep === 0 ? renderStep1() : currentStep === 1 ? renderStep2() : renderOtherSteps()}
+      <div className="max-w-[1024px] mx-auto px-5 py-4">
+        {currentStep === 0
+          ? renderStep1()
+          : currentStep === 1
+            ? renderStep2()
+            : renderOtherSteps()}
       </div>
     </div>
   );
