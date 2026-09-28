@@ -301,3 +301,102 @@
     @apply h-5 w-5 rounded-md;
   }
 }
+
+/*
+ * Clock cells — the header time (Layout.tsx) renders one cell per character so
+ * only the characters that actually change animate. On a change the old glyph
+ * slides up and out while the new one slides in from below.
+ */
+@layer components {
+  .clock-cell {
+    @apply relative inline-block overflow-hidden text-center align-bottom;
+    height: 1.25em;
+    line-height: 1.25em;
+  }
+
+  /* Digits get a fixed advance so the row never reflows as values change. */
+  .clock-cell-digit {
+    width: 1ch;
+  }
+
+  .clock-cell > span {
+    display: block;
+  }
+
+  .clock-cell-out {
+    position: absolute;
+    inset: 0;
+    animation: clock-cell-out var(--clock-cell-duration) var(--clock-cell-ease) forwards;
+  }
+
+  .clock-cell-in {
+    animation: clock-cell-in var(--clock-cell-duration) var(--clock-cell-ease);
+  }
+}
+
+:root {
+  --clock-cell-duration: 420ms;
+  --clock-cell-ease: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes clock-cell-out {
+  from {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+}
+
+@keyframes clock-cell-in {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .clock-cell-out {
+    display: none;
+  }
+
+  .clock-cell-in {
+    animation: none;
+  }
+}
+
+/*
+ * Entity chip (header, Layout.tsx) — a permanent, slow breathing blue glow on
+ * the border so the chip reads as interactive without needing hover.
+ * Colors are primary-50 -> primary-200 with a primary-400 halo.
+ */
+@layer components {
+  .entity-chip-glow {
+    animation: entity-chip-glow 2.8s ease-in-out infinite;
+  }
+}
+
+@keyframes entity-chip-glow {
+  0%,
+  100% {
+    border-color: #d4e1fc;
+    box-shadow: 0 0 0 0 rgb(10 77 224 / 0.16);
+  }
+  50% {
+    border-color: #b3ccff;
+    box-shadow: 0 0 0 4px rgb(10 77 224 / 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .entity-chip-glow {
+    animation: none;
+    box-shadow: 0 0 0 2px rgb(10 77 224 / 0.12);
+  }
+}

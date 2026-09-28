@@ -330,6 +330,14 @@ export default function LotteryRegistrationList() {
   };
 
   const filteredRows = ROWS.filter((row) => {
+    const query = searchQuery.trim().toLowerCase();
+    if (
+      query &&
+      !row.crfNumber.toLowerCase().includes(query) &&
+      !row.clientName.toLowerCase().includes(query) &&
+      !row.sellerName.toLowerCase().includes(query)
+    )
+      return false;
     if (
       filters.crfNumber &&
       !row.crfNumber.toLowerCase().includes(filters.crfNumber.toLowerCase())

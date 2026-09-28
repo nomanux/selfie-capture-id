@@ -96,6 +96,15 @@ export default function UnitHoldingList() {
   };
 
   const filteredRows = ROWS.filter((row) => {
+    const query = searchQuery.trim().toLowerCase();
+    if (
+      query &&
+      !row.holdingId.toLowerCase().includes(query) &&
+      !row.clientName.toLowerCase().includes(query) &&
+      !row.sellerName.toLowerCase().includes(query) &&
+      !row.buildingUnit.toLowerCase().includes(query)
+    )
+      return false;
     if (filters.project && row.project !== filters.project) return false;
     if (filters.clientName && !row.clientName.toLowerCase().includes(filters.clientName.toLowerCase())) return false;
     if (filters.sellerName && !row.sellerName.toLowerCase().includes(filters.sellerName.toLowerCase())) return false;

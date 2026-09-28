@@ -207,11 +207,11 @@ export default function Dashboard() {
           {/* Position breakdown table */}
           <div className="relative w-full overflow-x-auto rounded-lg border border-primary-50">
             <table className="w-full border-collapse text-xs sm:text-sm">
-              <thead>
-                <tr className="bg-gray-50">
-                  <th className="px-2 py-2 text-left font-semibold text-gray-900 sm:px-5 sm:py-3">Position</th>
+              <thead className="sticky top-0 z-10 bg-gray-50 [&_th]:text-xs [&_th]:font-semibold">
+                <tr className="shadow-[inset_0_-1px_0_0_#e5e7eb] bg-gray-50 text-left text-gray-500">
+                  <th className="px-2 py-2 sm:px-5 sm:py-3">Position</th>
                   {TREND_SERIES.map((series) => (
-                    <th key={series.key} className="px-1 py-2 text-center font-semibold text-gray-900 sm:px-5 sm:py-3">
+                    <th key={series.key} className="px-1 py-2 text-center sm:px-5 sm:py-3">
                       <span className="hidden sm:inline"><LegendDot color={series.color} label={series.label} /></span>
                       <span className="sm:hidden">{series.label.charAt(0)}</span>
                     </th>

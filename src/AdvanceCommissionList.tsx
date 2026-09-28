@@ -309,8 +309,26 @@ export default function AdvanceCommissionList() {
   };
 
   const filteredRows = ROWS.filter((row) => {
-    if (filters.clientName && !row.clientName.toLowerCase().includes(filters.clientName.toLowerCase())) return false;
-    if (filters.propertyUnit && !row.buildingUnit.toLowerCase().includes(filters.propertyUnit.toLowerCase())) return false;
+    const query = searchQuery.trim().toLowerCase();
+    if (
+      query &&
+      !row.reservationId.toLowerCase().includes(query) &&
+      !row.clientName.toLowerCase().includes(query) &&
+      !row.buildingUnit.toLowerCase().includes(query)
+    )
+      return false;
+    if (
+      filters.clientName &&
+      !row.clientName.toLowerCase().includes(filters.clientName.toLowerCase())
+    )
+      return false;
+    if (
+      filters.propertyUnit &&
+      !row.buildingUnit
+        .toLowerCase()
+        .includes(filters.propertyUnit.toLowerCase())
+    )
+      return false;
     return true;
   });
 
@@ -361,7 +379,7 @@ export default function AdvanceCommissionList() {
               rightSlot={<DownloadPdfButton />}
             />
 
-            <div className="flex flex-wrap items-center gap-3 border-b border-gray-100 px-4 py-2">
+            <div className="flex flex-wrap items-center gap-3 border-b border-gray-100 py-2">
               <RecordTabs
                 tabs={["My commission", "Teams Commission"]}
                 active={tab}
@@ -370,7 +388,10 @@ export default function AdvanceCommissionList() {
             </div>
 
             <div className="flex-1 min-h-0 overflow-auto [scrollbar-gutter:stable]">
-              <table className="w-full min-w-[1040px] border-collapse" style={{ fontSize: "13px" }}>
+              <table
+                className="w-full min-w-[1040px] border-collapse"
+                style={{ fontSize: "13px" }}
+              >
                 <thead className="sticky top-0 z-10 bg-gray-50 [&_th]:text-xs [&_th]:font-semibold">
                   <tr className="shadow-[inset_0_-1px_0_0_#e5e7eb] bg-gray-50 text-left text-gray-500">
                     <th className="w-8 px-3 py-1">
@@ -471,88 +492,125 @@ export default function AdvanceCommissionList() {
                     <label className="text-xs font-medium text-gray-900">
                       {filter.label}
                     </label>
-                    {filter.kind === "select" && filter.label === "No. of Days" && (
-                      <Select
-                        size="md"
-                        value={filters.noOfDays}
-                        onChange={(value) => setFilters({ ...filters, noOfDays: value })}
-                        placeholder={filter.placeholder}
-                        options={[
-                          { value: "", label: filter.placeholder },
-                          { value: "1-5", label: "1-5 days" },
-                          { value: "6-10", label: "6-10 days" },
-                          { value: "11-15", label: "11-15 days" },
-                          { value: "15+", label: "15+ days" },
-                        ]}
-                      />
-                    )}
-                    {filter.kind === "select" && filter.label === "Accounts" && (
-                      <Select
-                        size="md"
-                        value={filters.accounts}
-                        onChange={(value) => setFilters({ ...filters, accounts: value })}
-                        placeholder={filter.placeholder}
-                        options={[
-                          { value: "", label: filter.placeholder },
-                          { value: "account1", label: "Account 1" },
-                          { value: "account2", label: "Account 2" },
-                          { value: "account3", label: "Account 3" },
-                        ]}
-                      />
-                    )}
-                    {filter.kind === "select" && filter.label === "Commission Type" && (
-                      <Select
-                        size="md"
-                        value={filters.commissionType}
-                        onChange={(value) => setFilters({ ...filters, commissionType: value })}
-                        placeholder={filter.placeholder}
-                        options={[
-                          { value: "", label: filter.placeholder },
-                          { value: "advance", label: "Advance" },
-                          { value: "balance", label: "Balance" },
-                          { value: "final", label: "Final" },
-                        ]}
-                      />
-                    )}
-                    {filter.kind === "text" && filter.label === "Client Name" && (
-                      <input
-                        type="text"
-                        placeholder={filter.placeholder}
-                        value={filters.clientName}
-                        onChange={(e) => setFilters({ ...filters, clientName: e.target.value })}
-                        className="rounded-lg border border-gray-300 px-3 py-2 text-sm placeholder-gray-500 focus:border-primary-500 focus:outline-none"
-                      />
-                    )}
-                    {filter.kind === "text" && filter.label === "Seller Name" && (
-                      <input
-                        type="text"
-                        placeholder={filter.placeholder}
-                        value={filters.sellerName}
-                        onChange={(e) => setFilters({ ...filters, sellerName: e.target.value })}
-                        className="rounded-lg border border-gray-300 px-3 py-2 text-sm placeholder-gray-500 focus:border-primary-500 focus:outline-none"
-                      />
-                    )}
-                    {filter.kind === "text" && filter.label === "Property Unit" && (
-                      <input
-                        type="text"
-                        placeholder={filter.placeholder}
-                        value={filters.propertyUnit}
-                        onChange={(e) => setFilters({ ...filters, propertyUnit: e.target.value })}
-                        className="rounded-lg border border-gray-300 px-3 py-2 text-sm placeholder-gray-500 focus:border-primary-500 focus:outline-none"
-                      />
-                    )}
+                    {filter.kind === "select" &&
+                      filter.label === "No. of Days" && (
+                        <Select
+                          size="md"
+                          value={filters.noOfDays}
+                          onChange={(value) =>
+                            setFilters({ ...filters, noOfDays: value })
+                          }
+                          placeholder={filter.placeholder}
+                          options={[
+                            { value: "", label: filter.placeholder },
+                            { value: "1-5", label: "1-5 days" },
+                            { value: "6-10", label: "6-10 days" },
+                            { value: "11-15", label: "11-15 days" },
+                            { value: "15+", label: "15+ days" },
+                          ]}
+                        />
+                      )}
+                    {filter.kind === "select" &&
+                      filter.label === "Accounts" && (
+                        <Select
+                          size="md"
+                          value={filters.accounts}
+                          onChange={(value) =>
+                            setFilters({ ...filters, accounts: value })
+                          }
+                          placeholder={filter.placeholder}
+                          options={[
+                            { value: "", label: filter.placeholder },
+                            { value: "account1", label: "Account 1" },
+                            { value: "account2", label: "Account 2" },
+                            { value: "account3", label: "Account 3" },
+                          ]}
+                        />
+                      )}
+                    {filter.kind === "select" &&
+                      filter.label === "Commission Type" && (
+                        <Select
+                          size="md"
+                          value={filters.commissionType}
+                          onChange={(value) =>
+                            setFilters({ ...filters, commissionType: value })
+                          }
+                          placeholder={filter.placeholder}
+                          options={[
+                            { value: "", label: filter.placeholder },
+                            { value: "advance", label: "Advance" },
+                            { value: "balance", label: "Balance" },
+                            { value: "final", label: "Final" },
+                          ]}
+                        />
+                      )}
+                    {filter.kind === "text" &&
+                      filter.label === "Client Name" && (
+                        <input
+                          type="text"
+                          placeholder={filter.placeholder}
+                          value={filters.clientName}
+                          onChange={(e) =>
+                            setFilters({
+                              ...filters,
+                              clientName: e.target.value,
+                            })
+                          }
+                          className="rounded-lg border border-gray-300 px-3 py-2 text-sm placeholder-gray-500 focus:border-primary-500 focus:outline-none"
+                        />
+                      )}
+                    {filter.kind === "text" &&
+                      filter.label === "Seller Name" && (
+                        <input
+                          type="text"
+                          placeholder={filter.placeholder}
+                          value={filters.sellerName}
+                          onChange={(e) =>
+                            setFilters({
+                              ...filters,
+                              sellerName: e.target.value,
+                            })
+                          }
+                          className="rounded-lg border border-gray-300 px-3 py-2 text-sm placeholder-gray-500 focus:border-primary-500 focus:outline-none"
+                        />
+                      )}
+                    {filter.kind === "text" &&
+                      filter.label === "Property Unit" && (
+                        <input
+                          type="text"
+                          placeholder={filter.placeholder}
+                          value={filters.propertyUnit}
+                          onChange={(e) =>
+                            setFilters({
+                              ...filters,
+                              propertyUnit: e.target.value,
+                            })
+                          }
+                          className="rounded-lg border border-gray-300 px-3 py-2 text-sm placeholder-gray-500 focus:border-primary-500 focus:outline-none"
+                        />
+                      )}
                     {filter.kind === "date-range" && (
                       <div className="flex gap-2">
                         <input
                           type="date"
                           value={filters.reservationDateStart}
-                          onChange={(e) => setFilters({ ...filters, reservationDateStart: e.target.value })}
+                          onChange={(e) =>
+                            setFilters({
+                              ...filters,
+                              reservationDateStart: e.target.value,
+                            })
+                          }
                           className="flex-1 rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-primary-500 focus:outline-none"
                         />
                         <input
                           type="date"
                           value={filters.reservationDateEnd}
-                          onChange={(e) => setFilters({ ...filters, reservationDateEnd: e.target.value })}
+                          onChange={(e) =>
+                            setFilters({
+                              ...filters,
+                              reservationDateEnd: e.target.value,
+                            })
+                          }
                           className="flex-1 rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-primary-500 focus:outline-none"
                         />
                       </div>

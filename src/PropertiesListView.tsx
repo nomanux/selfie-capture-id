@@ -12,12 +12,15 @@ import {
   StatusPill,
   TableCardHeader,
 } from "./StatusBadge";
-import { FilterIcon } from "./icons";
+import FilterTrigger from "./FilterTrigger";
 import { useNavigation, type Screen } from "./NavigationContext";
 import {
-  acaciaEstatesLogoUrl,
   aristaPlaceLogoUrl,
-  valeronTowerLogoUrl,
+  anissaHeightsLogoUrl,
+  astonPlaceLogoUrl,
+  athertonLogoUrl,
+  altaVistaBoracayLogoUrl,
+  allegraGardenPlaceLogoUrl,
   noImageAvailableUrl,
 } from "./assets/figmaAssets";
 
@@ -27,13 +30,6 @@ import {
  *   List view: node 173418:205101
  *   Grid view: node 173418:205694
  */
-
-const FILTERS: FilterField[] = [
-  { kind: "select", label: "Project", placeholder: "Select project" },
-  { kind: "text", label: "Location", placeholder: "Enter location" },
-  { kind: "select", label: "Status", placeholder: "Select status" },
-  { kind: "select", label: "Type", placeholder: "Select type" },
-];
 
 // Only these link labels have a matching screen to navigate to.
 const LINK_SCREENS: Record<string, Screen> = {
@@ -145,52 +141,81 @@ interface GridCard {
 
 const GRID_CARDS: GridCard[] = [
   {
+    name: "Accolade Place",
+    available: [0, 9, 0],
+    sold: [125, 144, 129],
+  },
+  {
+    name: "Allegra Garden Place",
+    logoUrl: allegraGardenPlaceLogoUrl,
+    available: [713, 138, 0],
+    sold: [1706, 998, 0],
+  },
+  {
+    name: "Alder Residences",
+    available: [21, 30, 0],
+    sold: [1198, 1126, 0],
+  },
+  {
+    name: "Alea Residences",
+    available: [17, 1, 17],
+    sold: [538, 248, 538],
+  },
+  {
+    name: "Anissa Heights",
+    logoUrl: anissaHeightsLogoUrl,
+    available: [45, 1, 0],
+    sold: [1340, 311, 0],
+  },
+  {
     name: "Arista Place",
     logoUrl: aristaPlaceLogoUrl,
-    available: [1302, 1230, 1123],
-    sold: [523, 523, 523],
+    available: [0, 110, 0],
+    sold: [1295, 898, 1295],
   },
   {
-    name: "Acacia Estates",
-    logoUrl: acaciaEstatesLogoUrl,
-    available: [1302, 1230, 1123],
-    sold: [523, 523, 523],
+    name: "Asteria Residences",
+    available: [0, 141, 0],
+    sold: [863, 716, 863],
   },
   {
-    name: "The Valeron Tower",
-    logoUrl: valeronTowerLogoUrl,
-    available: [1302, 1230, 1123],
-    sold: [523, 523, 523],
+    name: "The Aston Place",
+    logoUrl: astonPlaceLogoUrl,
+    available: [0, 7, 0],
+    sold: [1096, 546, 0],
+  },
+  {
+    name: "The Atherton",
+    logoUrl: athertonLogoUrl,
+    available: [6, 13, 1],
+    sold: [866, 497, 192],
   },
   {
     name: "Alta Vista De Boracay",
-    available: [1302, 1230, 1123],
-    sold: [523, 523, 523],
+    logoUrl: altaVistaBoracayLogoUrl,
+    available: [99, 0, 0],
+    sold: [204, 0, 0],
   },
+];
+
+// Project dropdown is populated from the grid cards' names (deduped, sorted),
+// so the filter always lists the same projects shown on the page.
+const PROJECT_OPTIONS = Array.from(
+  new Set(GRID_CARDS.map((card) => card.name)),
+)
+  .sort((a, b) => a.localeCompare(b))
+  .map((name) => ({ value: name, label: name }));
+
+const FILTERS: FilterField[] = [
   {
-    name: "Arista Place",
-    logoUrl: aristaPlaceLogoUrl,
-    available: [1302, 1230, 1123],
-    sold: [523, 523, 523],
+    kind: "select",
+    label: "Project",
+    placeholder: "Select project",
+    options: PROJECT_OPTIONS,
   },
-  {
-    name: "Arista Place",
-    logoUrl: aristaPlaceLogoUrl,
-    available: [1302, 1230, 1123],
-    sold: [523, 523, 523],
-  },
-  {
-    name: "Acacia Estates",
-    logoUrl: acaciaEstatesLogoUrl,
-    available: [1302, 1230, 1123],
-    sold: [523, 523, 523],
-  },
-  {
-    name: "Arista Place",
-    logoUrl: aristaPlaceLogoUrl,
-    available: [1302, 1230, 1123],
-    sold: [523, 523, 523],
-  },
+  { kind: "text", label: "Location", placeholder: "Enter location" },
+  { kind: "select", label: "Status", placeholder: "Select status" },
+  { kind: "select", label: "Type", placeholder: "Select type" },
 ];
 
 function ViewToggle({
@@ -242,12 +267,37 @@ function TableView({
   view,
   onViewChange,
   onFilterClick,
+  activeFilterCount,
+  onResetFilters,
+  filters,
 }: {
   view: "list" | "grid";
   onViewChange: (view: "list" | "grid") => void;
   onFilterClick: () => void;
+  activeFilterCount: number;
+  onResetFilters: () => void;
+  filters: Record<string, string>;
 }) {
   const { navigate } = useNavigation();
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const filteredProjects = PROJECTS.filter((row) => {
+    // Filters drawer.
+    if (filters.Project && row.project !== filters.Project) return false;
+    if (filters.Status && row.status !== filters.Status) return false;
+    if (filters.Type && row.type !== filters.Type) return false;
+    // Free-text search box.
+    const query = searchQuery.trim().toLowerCase();
+    if (
+      query &&
+      !row.code.toLowerCase().includes(query) &&
+      !row.project.toLowerCase().includes(query) &&
+      !row.type.toLowerCase().includes(query) &&
+      !row.status.toLowerCase().includes(query)
+    )
+      return false;
+    return true;
+  });
 
   return (
     <div className="flex h-full w-full flex-col overflow-hidden rounded-xl border border-gray-200 bg-white shadow-[0_1px_2px_rgba(10,13,18,0.05)]">
@@ -257,17 +307,15 @@ function TableView({
             <input
               type="text"
               placeholder="Search..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
               className="w-56 rounded-md border border-gray-300 px-2.5 py-1.5 text-xs placeholder-gray-500 focus:border-primary-500 focus:outline-none"
             />
-            <button
-              type="button"
-              onClick={onFilterClick}
-              className="relative inline-flex items-center gap-1.5 rounded-md border border-gray-300 px-2.5 py-1.5 text-xs font-medium text-gray-700 hover:bg-gray-50"
-              aria-label="Open filters"
-            >
-              <FilterIcon className="h-4 w-4" />
-              Filter
-            </button>
+            <FilterTrigger
+              activeFilterCount={activeFilterCount}
+              onOpenFilters={onFilterClick}
+              onReset={onResetFilters}
+            />
           </div>
         }
         rightSlot={
@@ -294,7 +342,7 @@ function TableView({
             </tr>
           </thead>
           <tbody>
-            {PROJECTS.map((row) => (
+            {filteredProjects.map((row) => (
               <tr
                 key={row.code}
                 className="border-b border-gray-100 text-gray-600 hover:bg-gray-50"
@@ -351,7 +399,7 @@ function TableView({
           </tbody>
         </table>
       </div>
-      <Pagination total={85} />
+      <Pagination total={89} />
     </div>
   );
 }
@@ -360,12 +408,28 @@ function GridView({
   view,
   onViewChange,
   onFilterClick,
+  activeFilterCount,
+  onResetFilters,
+  filters,
 }: {
   view: "list" | "grid";
   onViewChange: (view: "list" | "grid") => void;
   onFilterClick: () => void;
+  activeFilterCount: number;
+  onResetFilters: () => void;
+  filters: Record<string, string>;
 }) {
   const { navigate } = useNavigation();
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const filteredCards = GRID_CARDS.filter((card) => {
+    // Project filter (from the Filters drawer).
+    if (filters.Project && card.name !== filters.Project) return false;
+    // Free-text search box.
+    const query = searchQuery.trim().toLowerCase();
+    if (query && !card.name.toLowerCase().includes(query)) return false;
+    return true;
+  });
 
   return (
     <div className="flex h-full w-full flex-col overflow-hidden rounded-xl border border-gray-200 bg-white shadow-[0_1px_2px_rgba(10,13,18,0.05)]">
@@ -375,31 +439,37 @@ function GridView({
             <input
               type="text"
               placeholder="Search..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
               className="w-56 rounded-md border border-gray-300 px-2.5 py-1.5 text-xs placeholder-gray-500 focus:border-primary-500 focus:outline-none"
             />
-            <button
-              type="button"
-              onClick={onFilterClick}
-              className="relative inline-flex items-center gap-1.5 rounded-md border border-gray-300 px-2.5 py-1.5 text-xs font-medium text-gray-700 hover:bg-gray-50"
-              aria-label="Open filters"
-            >
-              <FilterIcon className="h-4 w-4" />
-              Filter
-            </button>
+            <FilterTrigger
+              activeFilterCount={activeFilterCount}
+              onOpenFilters={onFilterClick}
+              onReset={onResetFilters}
+            />
           </div>
         }
         rightSlot={<ViewToggle view={view} onChange={onViewChange} />}
       />
       <div className="grid flex-1 min-h-0 auto-rows-min grid-cols-[repeat(auto-fill,minmax(256px,1fr))] items-start gap-5 overflow-auto p-6 [scrollbar-gutter:stable]">
-        {GRID_CARDS.map((card, index) => (
-          <button
+        {filteredCards.map((card, index) => (
+          <div
             key={card.name + index}
-            type="button"
+            role="button"
+            tabIndex={0}
             onClick={() =>
               navigate({ screen: "project-details", project: card.name })
             }
-            className="group flex origin-center transform-gpu cursor-pointer flex-col rounded-xl border border-gray-200 bg-white text-left backface-hidden transition-transform duration-200 ease-out will-change-transform hover:z-10 hover:scale-[1.02] hover:shadow-lg"
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                navigate({ screen: "project-details", project: card.name });
+              }
+            }}
+            className="group relative cursor-pointer select-text"
           >
+            <div className="flex flex-col rounded-xl border border-gray-200 bg-white text-left shadow-[0_1px_2px_rgba(16,24,40,0.04)] transition-[box-shadow,border-color] duration-300 ease-out group-hover:border-primary-200 group-hover:shadow-[0_10px_24px_-8px_rgba(16,24,40,0.15)]">
             <div className="flex h-32 shrink-0 items-center justify-center overflow-hidden rounded-t-xl bg-gray-50 p-4">
               {card.logoUrl ? (
                 <img
@@ -419,40 +489,37 @@ function GridView({
               <span className="text-base font-semibold text-primary-500 group-hover:underline">
                 {card.name}
               </span>
-              <div className="grid grid-cols-[1fr_repeat(3,minmax(40px,auto))] items-center gap-x-3 gap-y-1.5">
+              <div className="grid grid-cols-[1fr_repeat(3,minmax(40px,auto))] items-center gap-x-3 gap-y-1.5 text-[13px]">
                 <span />
                 {["CU", "PS", "SA"].map((label) => (
                   <span
                     key={label}
-                    className="justify-self-center rounded-[5px] bg-gray-50 px-3 py-0.5 text-xs font-semibold text-gray-600"
+                    className="mb-1.5 justify-self-center rounded-[5px] bg-gray-100 px-3 py-0.5 font-medium text-gray-500"
                   >
                     {label}
                   </span>
                 ))}
 
-                <span className="text-xs font-semibold text-primary-600">
-                  Available
-                </span>
+                <span className="font-medium text-gray-500">Available</span>
                 {card.available.map((value, i) => (
-                  <span key={i} className="text-center text-sm text-gray-900">
+                  <span key={i} className="text-center text-gray-900">
                     {value}
                   </span>
                 ))}
 
-                <span className="text-xs font-semibold text-primary-600">
-                  Sold
-                </span>
+                <span className="font-medium text-gray-500">Sold</span>
                 {card.sold.map((value, i) => (
-                  <span key={i} className="text-center text-sm text-gray-900">
+                  <span key={i} className="text-center text-gray-900">
                     {value}
                   </span>
                 ))}
               </div>
             </div>
-          </button>
+            </div>
+          </div>
         ))}
       </div>
-      <Pagination total={85} />
+      <Pagination total={89} />
     </div>
   );
 }
@@ -460,7 +527,12 @@ function GridView({
 export default function PropertiesListView() {
   const [view, setView] = useState<"list" | "grid">("grid");
   const [showFilterDrawer, setShowFilterDrawer] = useState(false);
+  // Filter values keyed by field label (Project / Location / Status / Type).
+  const [filters, setFilters] = useState<Record<string, string>>({});
   const { navigate } = useNavigation();
+
+  const activeFilterCount = Object.values(filters).filter(Boolean).length;
+  const resetFilters = () => setFilters({});
 
   return (
     <Layout
@@ -483,7 +555,7 @@ export default function PropertiesListView() {
         <div className="shrink-0 px-5 py-3">
           <div className="flex flex-col gap-1">
             <h1 className="text-base font-semibold text-gray-900">Projects</h1>
-            <p className="text-xs text-gray-600">12 Projects available</p>
+            <p className="text-xs text-gray-600">89 Projects available</p>
           </div>
         </div>
 
@@ -493,12 +565,18 @@ export default function PropertiesListView() {
               view={view}
               onViewChange={setView}
               onFilterClick={() => setShowFilterDrawer(true)}
+              activeFilterCount={activeFilterCount}
+              onResetFilters={resetFilters}
+              filters={filters}
             />
           ) : (
             <GridView
               view={view}
               onViewChange={setView}
               onFilterClick={() => setShowFilterDrawer(true)}
+              activeFilterCount={activeFilterCount}
+              onResetFilters={resetFilters}
+              filters={filters}
             />
           )}
         </div>
@@ -519,10 +597,17 @@ export default function PropertiesListView() {
               {field.kind === "select" && (
                 <Select
                   placeholder={field.placeholder}
-                  options={Array.from({ length: 10 }, (_, i) => ({
-                    value: String(i + 1),
-                    label: String(i + 1),
-                  }))}
+                  options={
+                    field.options ??
+                    Array.from({ length: 10 }, (_, i) => ({
+                      value: String(i + 1),
+                      label: String(i + 1),
+                    }))
+                  }
+                  value={filters[field.label] ?? ""}
+                  onChange={(value) =>
+                    setFilters((prev) => ({ ...prev, [field.label]: value }))
+                  }
                   size="sm"
                 />
               )}
@@ -530,6 +615,13 @@ export default function PropertiesListView() {
                 <Input
                   type="text"
                   placeholder={field.placeholder}
+                  value={filters[field.label] ?? ""}
+                  onChange={(e) =>
+                    setFilters((prev) => ({
+                      ...prev,
+                      [field.label]: e.target.value,
+                    }))
+                  }
                   size="sm"
                 />
               )}
@@ -542,7 +634,7 @@ export default function PropertiesListView() {
           <div className="flex gap-2">
             <button
               type="button"
-              onClick={() => setShowFilterDrawer(false)}
+              onClick={resetFilters}
               className="flex-1 rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
             >
               Reset

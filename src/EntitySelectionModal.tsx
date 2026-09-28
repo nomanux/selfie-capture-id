@@ -88,8 +88,8 @@ export default function EntitySelectionModal({
             </div>
             <div className="overflow-x-auto rounded-lg border border-gray-200">
               <table className="w-full min-w-[420px] border-collapse text-sm">
-                <thead>
-                  <tr className="border-b border-gray-200 bg-gray-50 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">
+                <thead className="sticky top-0 z-10 bg-gray-50 [&_th]:text-xs [&_th]:font-semibold">
+                  <tr className="shadow-[inset_0_-1px_0_0_#e5e7eb] bg-gray-50 text-left text-gray-500">
                     <th className="w-[38%] px-4 py-2">Company Code</th>
                     <th className="px-4 py-2">Company Name</th>
                   </tr>

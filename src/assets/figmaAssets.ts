@@ -17,6 +17,11 @@ import dmciLogoSvg from "./dmci-logo.svg";
 import acaciaEstatesLogoPng from "./acacia-estates-logo.png";
 import aristaPlaceLogoPng from "./arista-place-logo.png";
 import valeronTowerLogoPng from "./valeron-tower-logo.png";
+import anissaHeightsLogoPng from "./anissa-heights-logo.png";
+import astonPlaceLogoPng from "./aston-place-logo.png";
+import athertonLogoPng from "./atherton-logo.png";
+import altaVistaBoracayLogoPng from "./alta-vista-boracay-logo.png";
+import allegraGardenPlaceLogoPng from "./allegra-garden-place-logo.png";
 import noImageAvailablePng from "./no-image-available.png";
 import noImageAvailableGraphicSvg from "./no-image-available-graphic.svg";
 import thumbnailPhoto1Png from "./1.png";
@@ -48,6 +53,14 @@ export const acaciaEstatesLogoUrl = acaciaEstatesLogoPng;
 export const aristaPlaceLogoUrl = aristaPlaceLogoPng;
 export const valeronTowerLogoUrl = valeronTowerLogoPng;
 export const noImageAvailableUrl = noImageAvailablePng;
+
+// Additional Property List grid-view card logos, supplied directly by the
+// user and bundled locally so they never expire.
+export const anissaHeightsLogoUrl = anissaHeightsLogoPng;
+export const astonPlaceLogoUrl = astonPlaceLogoPng;
+export const athertonLogoUrl = athertonLogoPng;
+export const altaVistaBoracayLogoUrl = altaVistaBoracayLogoPng;
+export const allegraGardenPlaceLogoUrl = allegraGardenPlaceLogoPng;
 
 // "No Image Available" graphic (house icon + diagonal line + wordmark, all
 // one vector) used on the Unit Availability Details "Property Unit Image"

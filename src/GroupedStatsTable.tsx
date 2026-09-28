@@ -58,7 +58,7 @@ export default function GroupedStatsTable({ title, filters, leadingColumns, grou
           <div className="flex-1 min-h-0 overflow-auto [scrollbar-gutter:stable]">
           <table className="w-full min-w-[1100px] border-collapse text-sm">
             <thead className="sticky top-0 z-10 bg-gray-50 [&_th]:text-xs [&_th]:font-semibold">
-              <tr className="border-b border-gray-100 text-left text-gray-500">
+              <tr className="shadow-[inset_0_-1px_0_0_#e5e7eb] bg-gray-50 text-left text-gray-500">
                 {leadingColumns.map((col) => (
                   <th key={col} rowSpan={2} className="px-3 py-2 align-bottom font-semibold">
                     {col}

@@ -111,6 +111,15 @@ export default function ClientsList() {
   };
 
   const filteredRows = ROWS.filter((row) => {
+    const query = searchQuery.trim().toLowerCase();
+    if (
+      query &&
+      !row.crfNumber.toLowerCase().includes(query) &&
+      !row.accountNo.toLowerCase().includes(query) &&
+      !row.clientName.toLowerCase().includes(query) &&
+      !row.sellerName.toLowerCase().includes(query)
+    )
+      return false;
     if (filters.clientName && !row.clientName.toLowerCase().includes(filters.clientName.toLowerCase())) return false;
     if (filters.sellerName && !row.sellerName.toLowerCase().includes(filters.sellerName.toLowerCase())) return false;
     if (filters.status && row.status !== filters.status) return false;

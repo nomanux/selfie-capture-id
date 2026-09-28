@@ -278,22 +278,22 @@ export default function RegularCommissionList() {
               </div>
             </div>
             <div className="flex-1 min-h-0 overflow-auto [scrollbar-gutter:stable]">
-              <table className="w-full min-w-[1040px] border-collapse text-sm">
+              <table className="w-full min-w-[1040px] border-collapse" style={{ fontSize: "13px" }}>
                 <thead className="sticky top-0 z-10 bg-gray-50 [&_th]:text-xs [&_th]:font-semibold">
                   <tr className="shadow-[inset_0_-1px_0_0_#e5e7eb] bg-gray-50 text-left text-gray-500">
-                    <th className="w-10 px-4 py-2">
+                    <th className="w-8 px-3 py-1">
                       <Checkbox size="sm" />
                     </th>
-                    <th className="px-2 py-2 font-semibold">Contract No.</th>
-                    <th className="px-2 py-2 font-semibold">Building Unit</th>
-                    <th className="px-2 py-2 font-semibold">Client Name</th>
-                    <th className="px-2 py-2 font-semibold">Net TCP</th>
-                    <th className="px-2 py-2 font-semibold">
+                    <th className="px-2 py-1 font-semibold">Contract No.</th>
+                    <th className="px-2 py-1 font-semibold">Building Unit</th>
+                    <th className="px-2 py-1 font-semibold">Client Name</th>
+                    <th className="px-2 py-1 font-semibold">Net TCP</th>
+                    <th className="px-2 py-1 font-semibold">
                       Primary Seller Name
                     </th>
-                    <th className="px-2 py-2 font-semibold">Seller Role</th>
-                    <th className="px-2 py-2 font-semibold">Seller Group</th>
-                    <th className="w-24 px-2 py-2 text-center font-semibold">
+                    <th className="px-2 py-1 font-semibold">Seller Role</th>
+                    <th className="px-2 py-1 font-semibold">Seller Group</th>
+                    <th className="w-24 px-2 py-1 text-center font-semibold">
                       Actions
                     </th>
                   </tr>
@@ -304,21 +304,21 @@ export default function RegularCommissionList() {
                       key={row.contractNo}
                       className="border-b border-gray-100 text-gray-600 hover:bg-gray-50"
                     >
-                      <td className="px-4 py-1">
+                      <td className="px-3 py-2">
                         <Checkbox size="sm" />
                       </td>
-                      <td className="px-2 py-1 font-medium text-gray-900">
+                      <td className="px-2 py-2 font-medium text-gray-900">
                         {row.contractNo}
                       </td>
-                      <td className="px-2 py-1">{row.buildingUnit}</td>
-                      <td className="px-2 py-1 font-medium text-gray-900">
+                      <td className="px-2 py-2">{row.buildingUnit}</td>
+                      <td className="px-2 py-2 font-medium text-gray-900">
                         {row.clientName}
                       </td>
-                      <td className="px-2 py-1">{row.netTcp}</td>
-                      <td className="px-2 py-1">{row.primarySellerName}</td>
-                      <td className="px-2 py-1">{row.sellerRole}</td>
-                      <td className="px-2 py-1">{row.sellerGroup}</td>
-                      <td className="px-2 py-1">
+                      <td className="px-2 py-2">{row.netTcp}</td>
+                      <td className="px-2 py-2">{row.primarySellerName}</td>
+                      <td className="px-2 py-2">{row.sellerRole}</td>
+                      <td className="px-2 py-2">{row.sellerGroup}</td>
+                      <td className="px-2 py-2">
                         <div className="flex items-center justify-center">
                           <RowActionButton
                             aria-label={`View ${row.contractNo} details`}

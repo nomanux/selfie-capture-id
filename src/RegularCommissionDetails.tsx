@@ -72,26 +72,26 @@ export default function RegularCommissionDetails() {
           </div>
 
           <div className="overflow-x-auto rounded-lg border border-gray-200">
-            <table className="w-full min-w-[720px] border-collapse text-sm">
-              <thead>
-                <tr className="bg-gray-50 text-left text-gray-500">
-                  <th className="px-5 py-3 font-medium">Milestone</th>
-                  <th className="px-5 py-3 font-medium">Net TCP</th>
-                  <th className="px-5 py-3 font-medium">Rate</th>
-                  <th className="px-5 py-3 font-medium">Gross Commission</th>
-                  <th className="px-5 py-3 font-medium">Percentage</th>
-                  <th className="px-5 py-3 font-medium">Commission Amount</th>
+            <table className="w-full min-w-[720px] border-collapse" style={{ fontSize: "13px" }}>
+              <thead className="sticky top-0 z-10 bg-gray-50 [&_th]:text-xs [&_th]:font-semibold">
+                <tr className="shadow-[inset_0_-1px_0_0_#e5e7eb] bg-gray-50 text-left text-gray-500">
+                  <th className="px-5 py-1">Milestone</th>
+                  <th className="px-5 py-1">Net TCP</th>
+                  <th className="px-5 py-1">Rate</th>
+                  <th className="px-5 py-1">Gross Commission</th>
+                  <th className="px-5 py-1">Percentage</th>
+                  <th className="px-5 py-1">Commission Amount</th>
                 </tr>
               </thead>
               <tbody>
                 {MILESTONES.map((row) => (
                   <tr key={row.milestone} className="border-t border-gray-100 text-gray-600">
-                    <td className="px-5 py-1">{row.milestone}</td>
-                    <td className="px-5 py-1">{row.netTcp}</td>
-                    <td className="px-5 py-1">{row.rate}</td>
-                    <td className="px-5 py-1">{row.grossCommission}</td>
-                    <td className="px-5 py-1">{row.percentage}</td>
-                    <td className="px-5 py-1">{row.commissionAmount}</td>
+                    <td className="px-5 py-2">{row.milestone}</td>
+                    <td className="px-5 py-2">{row.netTcp}</td>
+                    <td className="px-5 py-2">{row.rate}</td>
+                    <td className="px-5 py-2">{row.grossCommission}</td>
+                    <td className="px-5 py-2">{row.percentage}</td>
+                    <td className="px-5 py-2">{row.commissionAmount}</td>
                   </tr>
                 ))}
               </tbody>

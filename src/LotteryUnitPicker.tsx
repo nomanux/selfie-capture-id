@@ -125,6 +125,7 @@ export default function LotteryUnitPicker() {
   const { navigate } = useNavigation();
   const nowServingCountdown = useCountdown(4 * 3600 + 9 * 60 + 13);
   const [showFilters, setShowFilters] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
   const [filter, setFilter] = useState<AvailabilityFilter>("all");
   const [selected, setSelected] = useState<SelectedUnit | null>(null);
   const [filters, setFilters] = useState({
@@ -176,12 +177,14 @@ export default function LotteryUnitPicker() {
         </div>
 
         <div className="flex min-h-0 flex-1 flex-col px-5 pb-3 pt-2">
-          <div className="flex w-full flex-1 flex-col rounded-xl border border-gray-200 bg-white shadow-[0_1px_2px_rgba(10,13,18,0.05)]">
+          <div className="flex min-h-0 w-full flex-1 flex-col rounded-xl border border-gray-200 bg-white shadow-[0_1px_2px_rgba(10,13,18,0.05)]">
             <div className="flex items-center justify-between gap-2 border-b border-gray-100 px-6 py-3">
               <div className="flex items-center gap-2">
                 <input
                   type="text"
                   placeholder="Search..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
                   className="w-56 rounded-md border border-gray-300 px-2.5 py-1.5 text-xs placeholder-gray-500 focus:border-primary-500 focus:outline-none"
                 />
                 <button
@@ -283,13 +286,24 @@ export default function LotteryUnitPicker() {
               </div>
             </div>
 
-            <div className="flex flex-col">
+            <div className="flex min-h-0 flex-1 flex-col overflow-y-auto">
               {FLOORS.map((floor) => {
+                const query = searchQuery.trim().toLowerCase();
+                const floorMatchesQuery =
+                  !query ||
+                  floor.towerCode.toLowerCase().includes(query) ||
+                  String(floor.floorNumber).includes(query);
                 const units = range(floor.unitStart, floor.unitEnd).filter(
                   (unit) => {
                     const isAvailable = floor.available.includes(unit);
-                    if (filter === "available") return isAvailable;
-                    if (filter === "unavailable") return !isAvailable;
+                    if (filter === "available" && !isAvailable) return false;
+                    if (filter === "unavailable" && isAvailable) return false;
+                    if (
+                      query &&
+                      !floorMatchesQuery &&
+                      !String(unit).includes(query)
+                    )
+                      return false;
                     return true;
                   },
                 );
@@ -426,7 +440,7 @@ export default function LotteryUnitPicker() {
         </RightDrawer>
 
         {selected && (
-          <div className="sticky bottom-0 flex min-h-[68px] shrink-0 items-center justify-between border-t border-gray-200 bg-white px-6 py-4 shadow-[0_-1px_2px_rgba(10,13,18,0.05)]">
+          <div className="flex min-h-[68px] shrink-0 items-center justify-between border-t border-gray-200 bg-white px-6 py-4 shadow-[0_-1px_2px_rgba(10,13,18,0.05)]">
             <div className="flex items-center gap-3">
               <span className="text-sm text-gray-500">Selected Unit:</span>
               <span className="flex items-center gap-2 rounded-md bg-gray-50 px-3 py-1.5 text-sm font-medium text-gray-900">

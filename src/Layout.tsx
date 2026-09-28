@@ -1,5 +1,31 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
 
+const CELL_ANIM_MS = 420;
+
+/**
+ * One character of the clock. When the character changes, the old one slides
+ * out and the new one slides in (see .clock-cell rules in tailwind.css).
+ */
+function ClockCell({ char, isDigit }: { char: string; isDigit: boolean }) {
+  const [outgoing, setOutgoing] = useState<string | null>(null);
+  const prev = useRef(char);
+
+  useEffect(() => {
+    if (prev.current === char) return;
+    setOutgoing(prev.current);
+    prev.current = char;
+    const timer = setTimeout(() => setOutgoing(null), CELL_ANIM_MS);
+    return () => clearTimeout(timer);
+  }, [char]);
+
+  return (
+    <span className={`clock-cell${isDigit ? " clock-cell-digit" : ""}`}>
+      {outgoing !== null && <span className="clock-cell-out">{outgoing}</span>}
+      <span className={outgoing !== null ? "clock-cell-in" : ""}>{char}</span>
+    </span>
+  );
+}
+
 function Clock() {
   const [time, setTime] = useState<string>("");
   const [date, setDate] = useState<string>("");
@@ -30,16 +56,15 @@ function Clock() {
   }, []);
 
   return (
-    <div className="h-[34px] px-3 py-2 rounded-[10px] outline outline-1 outline-offset-[-1px] outline-primary-100 inline-flex justify-center items-center gap-3 bg-gradient-to-r from-primary-25 to-blue-50 hover:outline-primary-200 transition-all">
+    <div className="hidden lg:flex items-center gap-2 rounded-lg bg-[#F9FAFB] inset-ring-1 inset-ring-[#F3F4F6] px-3 py-1 shrink-0">
       <svg
-        width="16"
-        height="16"
+        width="18"
+        height="18"
         viewBox="0 0 18 18"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
-        className="shrink-0"
       >
-        <g clipPath="url(#clip0_174316_409414)">
+        <g clipPath="url(#clip0_174329_140792)">
           <path
             d="M9 4.5V9L12 10.5M16.5 9C16.5 13.1421 13.1421 16.5 9 16.5C4.85786 16.5 1.5 13.1421 1.5 9C1.5 4.85786 4.85786 1.5 9 1.5C13.1421 1.5 16.5 4.85786 16.5 9Z"
             stroke="#07389D"
@@ -49,24 +74,30 @@ function Clock() {
           />
         </g>
         <defs>
-          <clipPath id="clip0_174316_409414">
+          <clipPath id="clip0_174329_140792">
             <rect width="18" height="18" fill="white" />
           </clipPath>
         </defs>
       </svg>
 
-      <div className="flex items-center gap-2.5 justify-center">
-        <div className="text-gray-700 text-sm font-semibold font-['Ubuntu']">
-          {time || "—:—:—"}
-        </div>
-        <div className="w-px h-4 bg-primary-200" />
-        <div className="text-gray-600 text-xs font-medium font-['Ubuntu']">
-          {date || "—"}
-        </div>
-      </div>
+      <span className="inline-flex text-[14px] leading-[17px] font-semibold text-[#374151] font-ubuntu-sans tabular-nums whitespace-pre">
+        <span className="sr-only">{time}</span>
+        <span className="inline-flex align-bottom" aria-hidden="true">
+          {time.split("").map((char, index) => (
+            <ClockCell key={index} char={char} isDigit={/\d/.test(char)} />
+          ))}
+        </span>
+      </span>
+
+      <span className="text-[#D4E1FC]">|</span>
+
+      <span className="text-[14px] leading-[17px] font-normal text-[#6B7280] font-ubuntu-sans whitespace-nowrap">
+        {date}
+      </span>
     </div>
   );
 }
+
 import "./tailwind.css";
 import "./Dashboard.css";
 import { dmciLogoUrl } from "./assets/figmaAssets";
@@ -667,9 +698,9 @@ export default function Layout({
             <button
               type="button"
               onClick={() => setEntityModalOpen(true)}
-              className="flex shrink-0 cursor-pointer items-center gap-2 rounded-full border border-primary-50 bg-white py-1 pl-1 px-1 hover:bg-gray-50"
+              className="entity-chip-glow group flex shrink-0 cursor-pointer items-center gap-2 rounded-full border border-primary-50 bg-white py-1 pl-1 pr-2 px-1 hover:bg-gray-50"
             >
-              <span className="shrink-0 rounded-full bg-blue-50 px-2.5 py-1 text-xs font-bold text-primary-500">
+              <span className="shrink-0 rounded-full bg-blue-50 px-2.5 py-1 text-xs font-bold text-primary-500 transition-colors group-hover:bg-white">
                 {selectedEntity.code}
               </span>
               <span className="hidden truncate text-sm font-medium text-gray-700 sm:block">

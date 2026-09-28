@@ -68,20 +68,22 @@ export default function Login() {
   }
 
   return (
-    <div className="flex min-h-screen w-full bg-white flex-col lg:flex-row">
+    <div className="flex min-h-screen w-full bg-white flex-col lg:h-screen lg:min-h-screen lg:flex-row lg:overflow-hidden">
       {/* Left Side - Login Form */}
-      <div className="flex flex-col w-full lg:w-1/2 min-h-screen lg:min-h-auto">
+      <div className="flex flex-col w-full lg:w-1/2 min-h-screen lg:h-full lg:min-h-0">
         {/* Logo - Top Left */}
-        <div className="px-4 py-6 sm:px-8 lg:px-12">
+        <div className="shrink-0 px-4 py-6 sm:px-8 lg:px-12">
           <img src={dmciLogo} alt="DMCI Logo" className="h-8 w-auto" />
         </div>
 
-        <div className="flex flex-1 flex-col items-center justify-center px-4 pb-12 sm:px-8 sm:pb-16 lg:px-12">
-          <div className="w-full max-w-xs space-y-8">
+        <div className="flex flex-1 min-h-0 flex-col items-center justify-center overflow-y-auto px-4 pb-12 sm:px-8 sm:pb-16 lg:px-12">
+          <div className="w-full max-w-xs shrink-0 space-y-8 py-4">
             {/* Header */}
             <div className="space-y-2 text-left">
               <h1 className="text-2xl font-bold text-slate-800">
-                {loginType === "admin" ? "Manage Your Properties" : "Sell with Confidence"}
+                {loginType === "admin"
+                  ? "Manage Your Properties"
+                  : "Sell with Confidence"}
               </h1>
               <p className="text-sm text-gray-600">
                 {loginType === "admin"
@@ -226,7 +228,9 @@ export default function Login() {
               </Button>
             </form>
 
-            <div className={`space-y-6 ${loginType === "admin" ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"} transition-opacity -mt-2`}>
+            <div
+              className={`space-y-6 ${loginType === "admin" ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"} transition-opacity -mt-2`}
+            >
               <div className="flex items-center gap-3">
                 <div className="flex-1 border-t border-gray-300" />
                 <span className="text-sm font-medium text-gray-500">Or</span>
@@ -251,21 +255,23 @@ export default function Login() {
           </div>
         </div>
 
-        <div className="border-t border-gray-100 bg-white px-4 sm:px-8 py-3 flex items-center justify-center gap-2 sm:gap-3 text-xs text-gray-500 mt-auto">
-          <img
-            src={opcoopcIcon}
-            alt="NPC Logo"
-            className="h-8 sm:h-10 w-auto shrink-0"
-          />
-          <span className="text-center">
-            DMCI Sales @2026 All Rights Reserved
-          </span>
+        <div className="border-t border-gray-100 bg-white px-4 sm:px-8 lg:px-12 py-3 shrink-0 text-xs text-gray-500 mt-auto">
+          <div className="mx-auto flex w-full max-w-xs items-center justify-between gap-2 sm:gap-3">
+            <img
+              src={opcoopcIcon}
+              alt="NPC Logo"
+              className="h-8 sm:h-10 w-auto shrink-0"
+            />
+            <span className="text-right">
+              DMCI Sales @2026 All Rights Reserved
+            </span>
+          </div>
         </div>
       </div>
 
       {/* Right Side - Carousel */}
-      <div className="hidden lg:flex w-full lg:w-1/2 items-center justify-center bg-[#FAFAFA] p-5">
-        <div className="relative w-[585px] h-[698px] rounded-3xl overflow-hidden bg-white p-5">
+      <div className="hidden lg:flex w-full lg:w-1/2 lg:h-full items-center justify-center overflow-hidden bg-[#FAFAFA] p-5">
+        <div className="relative w-full max-w-[585px] h-full max-h-[698px] rounded-3xl overflow-hidden bg-white p-5">
           <div className="relative w-full h-full">
             {CAROUSEL_IMAGES.map((image, index) => (
               <div
@@ -281,7 +287,7 @@ export default function Login() {
             ))}
           </div>
 
-          <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex gap-2 z-20">
+          <div className="absolute bottom-12 left-1/2 -translate-x-1/2 flex gap-2 z-20">
             {CAROUSEL_IMAGES.map((_, index) => (
               <button
                 key={index}

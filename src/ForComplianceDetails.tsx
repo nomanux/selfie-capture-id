@@ -68,18 +68,18 @@ export default function ForComplianceDetails() {
 
           <div className="overflow-x-auto rounded-lg border border-gray-200">
             <table className="w-full min-w-[1200px] border-collapse text-sm">
-              <thead>
-                <tr className="bg-gray-50 text-left text-gray-500">
-                  <th className="px-4 py-3 font-medium">Primary Seller Name</th>
-                  <th className="px-4 py-3 font-medium">Commission Payout Plan</th>
-                  <th className="px-4 py-3 font-medium">Sales Representative</th>
-                  <th className="px-4 py-3 font-medium">Commission Document Compliance</th>
-                  <th className="px-4 py-3 font-medium">Payment Percentage</th>
-                  <th className="px-4 py-3 font-medium">Payment Percentage Remarks</th>
-                  <th className="px-4 py-3 font-medium">Milestone</th>
-                  <th className="px-4 py-3 font-medium">PDC Allocation</th>
-                  <th className="px-4 py-3 font-medium">DOU Compliance</th>
-                  <th className="px-4 py-3 font-medium">Sales Group Name</th>
+              <thead className="sticky top-0 z-10 bg-gray-50 [&_th]:text-xs [&_th]:font-semibold">
+                <tr className="shadow-[inset_0_-1px_0_0_#e5e7eb] bg-gray-50 text-left text-gray-500">
+                  <th className="px-4 py-3">Primary Seller Name</th>
+                  <th className="px-4 py-3">Commission Payout Plan</th>
+                  <th className="px-4 py-3">Sales Representative</th>
+                  <th className="px-4 py-3">Commission Document Compliance</th>
+                  <th className="px-4 py-3">Payment Percentage</th>
+                  <th className="px-4 py-3">Payment Percentage Remarks</th>
+                  <th className="px-4 py-3">Milestone</th>
+                  <th className="px-4 py-3">PDC Allocation</th>
+                  <th className="px-4 py-3">DOU Compliance</th>
+                  <th className="px-4 py-3">Sales Group Name</th>
                 </tr>
               </thead>
               <tbody>

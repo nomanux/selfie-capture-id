@@ -41,10 +41,10 @@ const BUTTON_SIZES: { size: ButtonSize; label: string; iconClasses: string }[] =
 
 function SizeHeaderRow() {
   return (
-    <tr>
-      <th className="w-24 px-2 py-2 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">State</th>
+    <tr className="shadow-[inset_0_-1px_0_0_#e5e7eb] bg-gray-50 text-left text-gray-500">
+      <th className="w-24 px-2 py-2">State</th>
       {BUTTON_SIZES.map((s) => (
-        <th key={s.size} className="px-3 py-2 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">
+        <th key={s.size} className="px-3 py-2">
           {s.label}
         </th>
       ))}
@@ -56,7 +56,7 @@ function ButtonVariantTable({ variant }: { variant: ButtonVariant }) {
   return (
     <div className="overflow-x-auto">
       <table className="border-collapse text-sm">
-        <thead>
+        <thead className="sticky top-0 z-10 bg-gray-50 [&_th]:text-xs [&_th]:font-semibold">
           <SizeHeaderRow />
         </thead>
         <tbody>
@@ -83,7 +83,7 @@ function IconOnlyButtonTable() {
   return (
     <div className="overflow-x-auto">
       <table className="border-collapse text-sm">
-        <thead>
+        <thead className="sticky top-0 z-10 bg-gray-50 [&_th]:text-xs [&_th]:font-semibold">
           <SizeHeaderRow />
         </thead>
         <tbody>
@@ -109,7 +109,7 @@ function SecondaryIconButtonTable() {
   return (
     <div className="overflow-x-auto">
       <table className="border-collapse text-sm">
-        <thead>
+        <thead className="sticky top-0 z-10 bg-gray-50 [&_th]:text-xs [&_th]:font-semibold">
           <SizeHeaderRow />
         </thead>
         <tbody>

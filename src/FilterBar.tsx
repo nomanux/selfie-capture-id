@@ -91,7 +91,14 @@ const WRAP_COLUMNS_CLASSES: Record<number, string> = {
 };
 
 export type FilterField =
-  | { kind: "select"; label: string; labelAccent?: string; placeholder: string; value?: string }
+  | {
+      kind: "select";
+      label: string;
+      labelAccent?: string;
+      placeholder: string;
+      value?: string;
+      options?: { value: string; label: string }[];
+    }
   | { kind: "text"; label: string; labelAccent?: string; placeholder: string }
   | { kind: "date-range"; label: string; labelAccent?: string }
   | {

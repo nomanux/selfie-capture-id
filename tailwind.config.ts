@@ -9,6 +9,15 @@ const config: Config = {
   theme: {
     extend: {
       fontFamily: {
+        // Header clock/date (Layout.tsx) is specced in Ubuntu Sans.
+        "ubuntu-sans": [
+          '"Ubuntu Sans"',
+          "Ubuntu",
+          "Inter",
+          "-apple-system",
+          "BlinkMacSystemFont",
+          "sans-serif",
+        ],
         sans: [
           "Inter",
           "-apple-system",
