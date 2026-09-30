@@ -178,17 +178,25 @@ export default function RegularCommissionList() {
       row.sellerGroup.toLowerCase().includes(query);
     const matchesClientName =
       clientNameFilter.trim() === "" ||
-      row.clientName.toLowerCase().includes(clientNameFilter.trim().toLowerCase());
+      row.clientName
+        .toLowerCase()
+        .includes(clientNameFilter.trim().toLowerCase());
     const matchesSellerName =
       sellerNameFilter.trim() === "" ||
-      row.primarySellerName.toLowerCase().includes(sellerNameFilter.trim().toLowerCase());
-    const matchesAccounts = accountsFilter === "" || row.accounts === accountsFilter;
+      row.primarySellerName
+        .toLowerCase()
+        .includes(sellerNameFilter.trim().toLowerCase());
+    const matchesAccounts =
+      accountsFilter === "" || row.accounts === accountsFilter;
     const matchesContractStatus =
-      contractStatusFilter === "" || row.contractStatus === contractStatusFilter;
+      contractStatusFilter === "" ||
+      row.contractStatus === contractStatusFilter;
     const matchesCommissionStatus =
-      commissionStatusFilter === "" || row.commissionStatus === commissionStatusFilter;
+      commissionStatusFilter === "" ||
+      row.commissionStatus === commissionStatusFilter;
     const matchesReservationDate =
-      (reservationDateStart === "" || row.reservationDate >= reservationDateStart) &&
+      (reservationDateStart === "" ||
+        row.reservationDate >= reservationDateStart) &&
       (reservationDateEnd === "" || row.reservationDate <= reservationDateEnd);
     return (
       matchesSearch &&
@@ -255,7 +263,7 @@ export default function RegularCommissionList() {
 
         <div className="flex min-h-0 flex-1 flex-col px-5 pb-3 pt-2">
           <div className="flex w-full flex-1 flex-col overflow-hidden rounded-xl border border-gray-200 bg-white shadow-[0_1px_2px_rgba(10,13,18,0.05)]">
-            <div className="flex flex-wrap items-center justify-between gap-3 border-b border-gray-200 px-4 py-3">
+            <div className="flex flex-wrap items-center justify-between gap-3 border-b border-gray-200 px-4 pt-1">
               <RecordTabs
                 tabs={["My commission", "Teams Commission"]}
                 active={tab}
@@ -278,7 +286,10 @@ export default function RegularCommissionList() {
               </div>
             </div>
             <div className="flex-1 min-h-0 overflow-auto [scrollbar-gutter:stable]">
-              <table className="w-full min-w-[1040px] border-collapse" style={{ fontSize: "13px" }}>
+              <table
+                className="w-full min-w-[1040px] border-collapse"
+                style={{ fontSize: "13px" }}
+              >
                 <thead className="sticky top-0 z-10 bg-gray-50 [&_th]:text-xs [&_th]:font-semibold">
                   <tr className="shadow-[inset_0_-1px_0_0_#e5e7eb] bg-gray-50 text-left text-gray-500">
                     <th className="w-8 px-3 py-1">

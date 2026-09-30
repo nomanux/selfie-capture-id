@@ -4,7 +4,7 @@ import DatePicker from "./DatePicker";
 import Select, { type SelectOption } from "./Select";
 import Button from "./Button";
 import IconButton from "./IconButton";
-import { LinkIcon, MoreHorizontalIcon, PlusIcon } from "./icons";
+import { LinkIcon, MoreHorizontalIcon, PlusIcon, RotateCcwIcon, ListIcon, FileDownIcon, EyeIcon } from "./icons";
 import { useNavigation } from "./NavigationContext";
 
 /**
@@ -148,6 +148,26 @@ export default function ComputationSheet() {
               </div>
             </div>
           </div>
+        </div>
+
+        {/* Bottom action bar */}
+        <div className="flex w-full flex-wrap items-center justify-end gap-3 border-t border-gray-200 bg-white px-5 py-3">
+          <Button variant="tertiary" size="sm">
+            <RotateCcwIcon className="h-4 w-4" />
+            Reset
+          </Button>
+          <Button variant="secondary" size="sm">
+            <ListIcon className="h-4 w-4" />
+            List
+          </Button>
+          <Button variant="secondary" size="sm">
+            <FileDownIcon className="h-4 w-4" />
+            Export as PDF
+          </Button>
+          <Button variant="primary" size="sm">
+            <EyeIcon className="h-4 w-4" />
+            Preview
+          </Button>
         </div>
       </div>
     </Layout>

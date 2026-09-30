@@ -464,8 +464,8 @@ export default function CaptureSelfieTrack() {
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
     ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+    // Stay in full screen (if open) so the user can review and confirm the shot
     setCapturedImage(canvas.toDataURL("image/png"));
-    setIsExpanded(false);
   };
   const handleCaptureRef = useRef(handleCapture);
   handleCaptureRef.current = handleCapture;
@@ -508,8 +508,8 @@ export default function CaptureSelfieTrack() {
 
   return (
     <div className="flex flex-col h-screen w-full bg-gray-50 font-sans overflow-hidden">
-      <header className="bg-white border-b border-gray-200 flex justify-center px-16">
-        <div className="w-full max-w-[1280px] h-[72px] flex items-center justify-between px-8">
+      <header className="bg-white border-b border-gray-200 flex justify-center">
+        <div className="w-full max-w-[1280px] h-[72px] flex items-center justify-between">
           <div className="flex items-center">
             <img
               className="h-8 w-auto"
@@ -540,7 +540,7 @@ export default function CaptureSelfieTrack() {
         </div>
 
         <aside className="hidden md:flex items-center flex-shrink-0 min-h-0 w-[240px]">
-          <div className="bg-gray-100 border border-gray-200 rounded-xl px-5 py-8 flex flex-col gap-1 w-full self-start">
+          <div className="  rounded-xl  py-8 flex flex-col gap-1 w-full self-start">
             <div className="px-3 mb-1">
               <p className="text-xs font-medium text-gray-400 m-0">
                 Step {CURRENT_STEP} of {TOTAL_STEPS}
@@ -606,7 +606,7 @@ export default function CaptureSelfieTrack() {
           </div>
         </aside>
 
-        <main className="w-full md:w-[1024px] min-h-0 flex justify-center px-3 overflow-y-auto pb-24 bg-gray-50">
+        <main className="w-full md:w-[1024px] min-h-0 flex justify-center  overflow-y-auto pb-24 bg-gray-50">
           <section className="w-full h-fit max-h-full bg-white rounded-[16px] shadow-sm overflow-hidden flex flex-col">
             <div className="px-4 md:px-6 py-3 md:py-5 flex flex-col items-center text-center flex-shrink-0">
               <h1 className="m-0 pb-1.5 md:pb-3 text-lg md:text-2xl leading-6 md:leading-8 font-bold text-[#07389d]">
@@ -619,7 +619,7 @@ export default function CaptureSelfieTrack() {
             </div>
 
             <div
-              className="px-3 md:px-5 flex flex-col gap-2 min-h-0"
+              className="px-3 md:px-8 flex flex-col gap-2 min-h-0"
               style={{ paddingTop: "6px", paddingBottom: "10px" }}
             >
               <div className="grid grid-cols-1 md:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)] gap-6 md:gap-12 min-h-0">
@@ -942,60 +942,51 @@ export default function CaptureSelfieTrack() {
                   </div>
                 </div>
 
-                <div className="hidden md:flex flex-col">
-                  <div className="bg-white border border-gray-300 rounded-[12px] p-6 flex flex-col gap-5">
-                    <div className="flex flex-col gap-5">
-                      <div className="flex flex-col gap-4">
-                        <p className="m-0 text-sm leading-5 font-semibold text-gray-500">
-                          Your uploaded ID
-                        </p>
-                        <div
-                          className="w-full rounded-lg overflow-hidden"
-                          style={{ aspectRatio: "303/194" }}
+                {/* Offset by the desktop tab bar (40px) + column gap (12px) so the card lines up with the camera frame */}
+                <div className="hidden md:flex flex-col md:pt-[52px]">
+                  <div className="bg-white border border-gray-300 rounded-[12px] p-4 flex flex-col gap-3">
+                    <div className="flex items-center justify-between gap-3">
+                      <p className="m-0 text-sm leading-5 font-semibold text-gray-700">
+                        Your uploaded ID
+                      </p>
+                      <span className="inline-flex items-center gap-1 rounded-full bg-green-50 px-2 py-0.5 text-xs leading-4 font-semibold text-green-600">
+                        <svg
+                          width="16"
+                          height="16"
+                          viewBox="0 0 16 16"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="w-3.5 h-3.5"
                         >
-                          <img
-                            className="w-full h-full object-cover block"
-                            src={idCardImageUrl}
-                            alt="Uploaded government issued ID"
+                          <path
+                            d="M13.3327 4L5.99935 11.3333L2.66602 8"
+                            stroke="#059669"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
                           />
-                        </div>
-                        <div className="flex gap-3 items-start">
-                          <div className="w-[18px] h-[18px] flex-shrink-0 flex items-center justify-center">
-                            <LockIcon />
-                          </div>
-                          <p className="m-0 text-xs leading-4 font-normal text-gray-400">
-                            Uploaded earlier and locked for this session. It is
-                            used only to check against your live selfie.
-                          </p>
-                        </div>
+                        </svg>
+                        Verified
+                      </span>
+                    </div>
+                    <div
+                      className="w-full rounded-lg overflow-hidden"
+                      style={{ aspectRatio: "303/194" }}
+                    >
+                      <img
+                        className="w-full h-full object-cover block"
+                        src={idCardImageUrl}
+                        alt="Uploaded government issued ID"
+                      />
+                    </div>
+                    <div className="flex gap-2 items-start">
+                      <div className="w-4 h-4 shrink-0 flex items-center justify-center">
+                        <LockIcon />
                       </div>
-                      <div className="h-px bg-gray-300 m-0"></div>
-                      <div className="flex justify-between items-center gap-10">
-                        <p className="m-0 text-sm leading-5 font-normal text-gray-500">
-                          Government-issued ID
-                        </p>
-                        <div className="flex items-center gap-1.5">
-                          <svg
-                            width="16"
-                            height="16"
-                            viewBox="0 0 16 16"
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
-                            className="w-4 h-4 text-green-600"
-                          >
-                            <path
-                              d="M13.3327 4L5.99935 11.3333L2.66602 8"
-                              stroke="#059669"
-                              strokeWidth="2"
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                            />
-                          </svg>
-                          <span className="text-xs leading-4 font-semibold text-green-600">
-                            Verified
-                          </span>
-                        </div>
-                      </div>
+                      <p className="m-0 text-xs leading-4 font-normal text-gray-400">
+                        Government-issued ID, locked for this session. Used only
+                        to check against your live selfie.
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -1054,7 +1045,11 @@ export default function CaptureSelfieTrack() {
           </div>
 
           <div className="flex w-full max-w-5xl items-center justify-between gap-3">
-            {showLiveVideoExpanded ? (
+            {capturedImage ? (
+              <span className="text-sm font-medium text-white/90">
+                Is your face and ID clearly visible?
+              </span>
+            ) : showLiveVideoExpanded ? (
               <span className="flex items-center gap-1 text-xs font-medium text-white/80">
                 <kbd className="rounded border border-white/40 bg-white/15 px-1.5 py-1 font-sans text-[10px] font-semibold leading-none shadow-[0_2px_0_rgba(255,255,255,0.3)]">
                   Ctrl
@@ -1087,6 +1082,14 @@ export default function CaptureSelfieTrack() {
                   >
                     <TrashIcon className="h-4 w-4" />
                     Delete
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setIsExpanded(false)}
+                    className="flex h-10 cursor-pointer items-center gap-1.5 rounded-full bg-green-600 px-4 text-sm font-semibold text-white transition-all duration-150 hover:bg-green-700 active:scale-95"
+                  >
+                    <CircleCheckIcon className="h-4 w-4" />
+                    Use this photo
                   </button>
                 </>
               ) : showLiveVideoExpanded ? (

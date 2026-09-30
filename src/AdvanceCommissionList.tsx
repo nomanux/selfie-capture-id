@@ -379,7 +379,7 @@ export default function AdvanceCommissionList() {
               rightSlot={<DownloadPdfButton />}
             />
 
-            <div className="flex flex-wrap items-center gap-3 border-b border-gray-100 py-2">
+            <div className="flex flex-wrap items-center gap-3 border-b border-gray-100 pt-2">
               <RecordTabs
                 tabs={["My commission", "Teams Commission"]}
                 active={tab}

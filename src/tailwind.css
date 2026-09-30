@@ -400,3 +400,78 @@
     box-shadow: 0 0 0 2px rgb(10 77 224 / 0.12);
   }
 }
+
+/*
+ * Live selfie frame (CaptureSelfieTrack.tsx) — a gradient ring whose colors
+ * slowly rotate around the camera view, plus a soft halo. Switches to green
+ * once a face is detected. Also the pulsing "LIVE" dot.
+ */
+@property --selfie-glow-angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
+@layer components {
+  .selfie-frame {
+    --selfie-c1: #0a4dd7;
+    --selfie-c2: #7c5cff;
+    --selfie-c3: #38bdf8;
+    position: relative;
+    isolation: isolate;
+    padding: 3px;
+    border-radius: 22px;
+    background: conic-gradient(
+      from var(--selfie-glow-angle),
+      var(--selfie-c1),
+      var(--selfie-c2),
+      var(--selfie-c3),
+      var(--selfie-c1)
+    );
+    animation: selfie-glow-spin 5s linear infinite;
+  }
+
+  .selfie-frame::before {
+    content: "";
+    position: absolute;
+    inset: 4px;
+    z-index: -1;
+    border-radius: inherit;
+    background: inherit;
+    filter: blur(18px);
+    opacity: 0.55;
+  }
+
+  .selfie-frame[data-ready="true"] {
+    --selfie-c1: #12b76a;
+    --selfie-c2: #6ce9a6;
+    --selfie-c3: #0a4dd7;
+  }
+
+  .selfie-live-dot {
+    animation: selfie-live-pulse 1.6s ease-in-out infinite;
+  }
+}
+
+@keyframes selfie-glow-spin {
+  to {
+    --selfie-glow-angle: 360deg;
+  }
+}
+
+@keyframes selfie-live-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgb(240 68 56 / 0.7);
+  }
+  50% {
+    box-shadow: 0 0 0 5px rgb(240 68 56 / 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .selfie-frame,
+  .selfie-live-dot {
+    animation: none;
+  }
+}
