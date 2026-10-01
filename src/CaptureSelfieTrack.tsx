@@ -94,6 +94,14 @@ function ExpandIcon({ className }: IconProps) {
   );
 }
 
+function ChevronDownIcon({ className }: IconProps) {
+  return (
+    <svg className={className} {...lucideProps}>
+      <path d="m6 9 6 6 6-6" />
+    </svg>
+  );
+}
+
 function CloseIcon({ className }: IconProps) {
   return (
     <svg className={className} {...lucideProps}>
@@ -433,6 +441,15 @@ export default function CaptureSelfieTrack() {
     }
   }, [isExpanded]);
 
+  useEffect(() => {
+    if (!isExpanded) return;
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setIsExpanded(false);
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [isExpanded]);
+
   const handleModeChange = (mode: CaptureMode) => {
     setCaptureMode(mode);
     setCapturedImage(null);
@@ -667,31 +684,43 @@ export default function CaptureSelfieTrack() {
                   </div>
 
                   <div
-                    className="relative rounded-[16px] w-full aspect-video md:aspect-video overflow-hidden border-2 border-[#0a4dd7]"
+                    className={
+                      "relative rounded-[16px] w-full aspect-video md:aspect-video overflow-hidden border-2 transition-[border-color,box-shadow] duration-500 " +
+                      (showLiveVideoCompact && faceDetected
+                        ? "border-emerald-500"
+                        : "border-[#0a4dd7]")
+                    }
                     style={{
                       borderStyle:
                         captureMode === "upload" ? "dashed" : "solid",
-                      boxShadow:
-                        showLiveVideoCompact && !showLiveVideoExpanded
-                          ? "0 0 12px rgba(10, 77, 224, 0.4)"
-                          : "none",
+                      boxShadow: showLiveVideoCompact
+                        ? faceDetected
+                          ? "0 0 0 4px rgba(16, 185, 129, 0.15), 0 8px 24px rgba(16, 185, 129, 0.25)"
+                          : "0 0 0 4px rgba(10, 77, 224, 0.12), 0 8px 24px rgba(10, 77, 224, 0.2)"
+                        : "none",
                       minHeight: "200px",
                     }}
                   >
                     {capturedImage ? (
-                      <img
-                        className="w-full h-full object-cover block"
-                        src={capturedImage}
-                        alt="Captured selfie holding ID"
-                      />
+                      <>
+                        <img
+                          className="w-full h-full object-cover block"
+                          src={capturedImage}
+                          alt="Captured selfie holding ID"
+                        />
+                        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-1/3 bg-linear-to-t from-black/55 to-transparent" />
+                      </>
                     ) : showLiveVideoCompact ? (
-                      <video
-                        ref={videoRef}
-                        className="w-full h-full object-cover block bg-black"
-                        autoPlay
-                        playsInline
-                        muted
-                      />
+                      <>
+                        <video
+                          ref={videoRef}
+                          className="w-full h-full object-cover block bg-black"
+                          autoPlay
+                          playsInline
+                          muted
+                        />
+                        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-1/3 bg-linear-to-t from-black/55 to-transparent" />
+                      </>
                     ) : showLiveVideoExpanded ? (
                       <div className="flex h-full w-full flex-col items-center justify-center gap-2 bg-gray-100 text-center text-xs text-gray-600">
                         <ExpandIcon className="h-5 w-5" />
@@ -740,7 +769,7 @@ export default function CaptureSelfieTrack() {
                       <button
                         type="button"
                         onClick={handleRetake}
-                        className="group absolute bottom-2.5 left-1/2 flex h-[30px] -translate-x-1/2 cursor-pointer items-center gap-1.5 rounded-full border border-gray-300 bg-white px-3 text-xs font-semibold text-gray-700 shadow-[0_2px_6px_rgba(10,13,18,0.15)] transition-all duration-150 hover:border-blue-600 hover:text-blue-600 hover:shadow-[0_4px_10px_rgba(10,13,18,0.2)] active:scale-95"
+                        className="group absolute bottom-[22px] left-1/2 flex h-9 -translate-x-1/2 cursor-pointer items-center gap-1.5 rounded-full border border-white/25 bg-black/40 px-4 text-xs font-semibold text-white shadow-[0_4px_16px_rgba(0,0,0,0.25)] backdrop-blur-md transition-all duration-200 hover:bg-black/60 hover:border-white/40 active:scale-95"
                       >
                         <RotateCcwIcon className="h-3.5 w-3.5 transition-transform duration-300 group-hover:-rotate-180" />
                         Retake
@@ -751,9 +780,9 @@ export default function CaptureSelfieTrack() {
                         aria-label="Capture selfie (Ctrl + Space)"
                         title="Capture selfie (Ctrl + Space)"
                         onClick={handleCapture}
-                        className="absolute bottom-2.5 left-1/2 -translate-x-1/2 w-16 h-16 flex items-center justify-center rounded-full bg-brand-400 shadow-lg hover:shadow-xl cursor-pointer border-none text-white transition-all duration-200 hover:scale-105 active:scale-95"
+                        className="group absolute bottom-3 left-1/2 flex h-14 w-14 -translate-x-1/2 cursor-pointer items-center justify-center rounded-full border-[3px] border-white/90 bg-transparent p-1 shadow-[0_6px_20px_rgba(0,0,0,0.35)] transition-transform duration-200 hover:scale-105 active:scale-95"
                       >
-                        <CameraIcon className="h-8 w-8" />
+                        <span className="h-full w-full rounded-full bg-white transition-transform duration-150 group-active:scale-90" />
                       </button>
                     ) : null}
 
@@ -765,11 +794,13 @@ export default function CaptureSelfieTrack() {
                             ? "Collapse preview"
                             : "Expand preview to full screen"
                         }
-                        title="Full screen"
                         onClick={() => setIsExpanded((v) => !v)}
-                        className="absolute bottom-3 right-3 flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg border border-gray-300 bg-white text-gray-700 transition-all duration-150 hover:border-blue-600 hover:text-blue-600 active:scale-90"
+                        className="group absolute bottom-[22px] right-3 flex h-9 cursor-pointer items-center rounded-full border border-white/25 bg-black/35 px-2.5 text-white shadow-[0_4px_16px_rgba(0,0,0,0.25)] backdrop-blur-md transition-all duration-300 ease-out hover:bg-black/55 hover:border-white/40 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white active:scale-95"
                       >
-                        <ExpandIcon className="h-4 w-4" />
+                        <ExpandIcon className="h-4 w-4 shrink-0 transition-transform duration-300 ease-out group-hover:scale-110" />
+                        <span className="max-w-0 overflow-hidden whitespace-nowrap text-xs font-semibold opacity-0 transition-all duration-300 ease-out group-hover:ml-1.5 group-hover:max-w-[80px] group-hover:opacity-100 group-focus-visible:ml-1.5 group-focus-visible:max-w-[80px] group-focus-visible:opacity-100">
+                          Full screen
+                        </span>
                       </button>
                     )}
                   </div>
@@ -781,7 +812,7 @@ export default function CaptureSelfieTrack() {
                         aria-label="Delete captured photo"
                         title="Delete photo"
                         onClick={handleDelete}
-                        className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg border border-error-500/40 bg-white text-error-500 transition-all duration-150 hover:bg-red-600 hover:text-white active:scale-90"
+                        className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg border border-error-500/40 bg-white text-error-500 transition-all duration-150 hover:bg-error-600 hover:text-white active:scale-90"
                       >
                         <TrashIcon className="h-4 w-4" />
                       </button>
@@ -918,8 +949,8 @@ export default function CaptureSelfieTrack() {
                           <span
                             className={`text-[10px] md:text-xs font-medium text-center ${
                               attempt.status === "accepted"
-                                ? "text-green-600"
-                                : "text-red-600"
+                                ? "text-emerald-600"
+                                : "text-error-600"
                             }`}
                           >
                             {attempt.id === "attempt-1"
@@ -949,7 +980,7 @@ export default function CaptureSelfieTrack() {
                       <p className="m-0 text-sm leading-5 font-semibold text-gray-700">
                         Your uploaded ID
                       </p>
-                      <span className="inline-flex items-center gap-1 rounded-full bg-green-50 px-2 py-0.5 text-xs leading-4 font-semibold text-green-600">
+                      <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2 py-0.5 text-xs leading-4 font-semibold text-emerald-600">
                         <svg
                           width="16"
                           height="16"
@@ -1021,56 +1052,96 @@ export default function CaptureSelfieTrack() {
       </footer>
 
       {isExpanded && (
-        <div className="fixed inset-0 z-50 flex flex-col items-center justify-center gap-4 bg-black/85 p-6">
-          <div className="relative aspect-video w-full max-w-5xl overflow-hidden rounded-xl bg-black border-2 border-white">
-            {capturedImage ? (
-              <img
-                className="h-full w-full object-cover"
-                src={capturedImage}
-                alt="Captured selfie holding ID"
-              />
-            ) : showLiveVideoExpanded ? (
-              <video
-                ref={videoRef}
-                className="h-full w-full object-cover"
-                autoPlay
-                playsInline
-                muted
-              />
-            ) : (
-              <div className="flex h-full w-full items-center justify-center text-sm text-white/70">
-                No live preview
-              </div>
-            )}
+        <div
+          className="fixed inset-0 z-50 bg-black"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Full screen selfie camera"
+        >
+          {capturedImage ? (
+            <img
+              className="absolute inset-0 h-full w-full object-contain"
+              src={capturedImage}
+              alt="Captured selfie holding ID"
+            />
+          ) : showLiveVideoExpanded ? (
+            <video
+              ref={videoRef}
+              className="absolute inset-0 h-full w-full object-contain"
+              autoPlay
+              playsInline
+              muted
+            />
+          ) : (
+            <div className="absolute inset-0 flex items-center justify-center text-sm text-white/70">
+              No live preview
+            </div>
+          )}
+
+          {/* Scrims keep the controls readable over bright video */}
+          <div className="pointer-events-none absolute inset-x-0 top-0 h-28 bg-linear-to-b from-black/50 to-transparent" />
+          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-56 bg-linear-to-t from-black/70 to-transparent" />
+
+          {/* Top bar: detection status, collapse, close */}
+          <div className="absolute inset-x-0 top-0 flex items-start justify-between gap-3 p-4 md:p-5">
+            <div className="flex flex-wrap items-center gap-2">
+              {showLiveVideoExpanded && (
+                <>
+                  <span className="border border-white/20 bg-black/40 text-white backdrop-blur-md inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-semibold">
+                    <span
+                      className={
+                        "h-2 w-2 rounded-full " +
+                        (faceDetected ? "bg-emerald-400" : "bg-amber-400")
+                      }
+                    />
+                    Face {faceDetected ? "detected" : "not detected"}
+                  </span>
+                  <span className="border border-white/20 bg-black/40 text-white backdrop-blur-md inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-semibold">
+                    <span
+                      className={
+                        "h-2 w-2 rounded-full " +
+                        (idHeld ? "bg-emerald-400" : "bg-amber-400")
+                      }
+                    />
+                    ID {idHeld ? "held" : "not held"}
+                  </span>
+                </>
+              )}
+            </div>
+
+            <button
+              type="button"
+              aria-label="Exit full screen"
+              title="Exit full screen"
+              onClick={() => setIsExpanded(false)}
+              className="absolute left-1/2 top-3 flex h-8 w-12 -translate-x-1/2 cursor-pointer items-center justify-center rounded-full text-white/90 transition-all duration-200 hover:bg-white/15 hover:text-white active:scale-90"
+            >
+              <ChevronDownIcon className="h-6 w-6" />
+            </button>
+
+            <button
+              type="button"
+              aria-label="Close full screen (Esc)"
+              title="Close (Esc)"
+              onClick={() => setIsExpanded(false)}
+              className="border border-white/20 bg-black/40 text-white backdrop-blur-md flex h-11 w-11 shrink-0 cursor-pointer items-center justify-center rounded-full transition-all duration-200 hover:rotate-90 hover:bg-black/60 active:scale-90"
+            >
+              <CloseIcon className="h-5 w-5" />
+            </button>
           </div>
 
-          <div className="flex w-full max-w-5xl items-center justify-between gap-3">
+          {/* Bottom controls */}
+          <div className="absolute inset-x-0 bottom-0 flex flex-col items-center gap-4 p-6 md:pb-8">
             {capturedImage ? (
-              <span className="text-sm font-medium text-white/90">
-                Is your face and ID clearly visible?
-              </span>
-            ) : showLiveVideoExpanded ? (
-              <span className="flex items-center gap-1 text-xs font-medium text-white/80">
-                <kbd className="rounded border border-white/40 bg-white/15 px-1.5 py-1 font-sans text-[10px] font-semibold leading-none shadow-[0_2px_0_rgba(255,255,255,0.3)]">
-                  Ctrl
-                </kbd>
-                +
-                <kbd className="rounded border border-white/40 bg-white/15 px-1.5 py-1 font-sans text-[10px] font-semibold leading-none shadow-[0_2px_0_rgba(255,255,255,0.3)]">
-                  Space
-                </kbd>
-                to capture
-              </span>
-            ) : (
-              <span />
-            )}
-
-            <div className="flex items-center gap-3">
-              {capturedImage ? (
-                <>
+              <>
+                <p className="m-0 text-sm font-medium text-white/90">
+                  Is your face and ID clearly visible?
+                </p>
+                <div className="flex flex-wrap items-center justify-center gap-3">
                   <button
                     type="button"
                     onClick={handleRetake}
-                    className="group flex h-10 cursor-pointer items-center gap-1.5 rounded-full border border-white/30 bg-white/10 px-4 text-sm font-semibold text-white transition-all duration-150 hover:bg-white/20 active:scale-95"
+                    className="border border-white/20 bg-black/40 text-white backdrop-blur-md group flex h-11 cursor-pointer items-center gap-2 rounded-full px-5 text-sm font-semibold transition-all duration-200 hover:bg-black/60 active:scale-95"
                   >
                     <RotateCcwIcon className="h-4 w-4 transition-transform duration-300 group-hover:-rotate-180" />
                     Retake
@@ -1078,7 +1149,7 @@ export default function CaptureSelfieTrack() {
                   <button
                     type="button"
                     onClick={handleDelete}
-                    className="flex h-10 cursor-pointer items-center gap-1.5 rounded-full bg-red-600/90 px-4 text-sm font-semibold text-white transition-all duration-150 hover:bg-red-600 active:scale-95"
+                    className="flex h-11 cursor-pointer items-center gap-2 rounded-full bg-error-600/90 px-5 text-sm font-semibold text-white backdrop-blur-md transition-all duration-200 hover:bg-error-600 active:scale-95"
                   >
                     <TrashIcon className="h-4 w-4" />
                     Delete
@@ -1086,34 +1157,37 @@ export default function CaptureSelfieTrack() {
                   <button
                     type="button"
                     onClick={() => setIsExpanded(false)}
-                    className="flex h-10 cursor-pointer items-center gap-1.5 rounded-full bg-green-600 px-4 text-sm font-semibold text-white transition-all duration-150 hover:bg-green-700 active:scale-95"
+                    className="flex h-11 cursor-pointer items-center gap-2 rounded-full bg-emerald-600 px-5 text-sm font-semibold text-white shadow-[0_6px_20px_rgba(5,150,105,0.4)] transition-all duration-200 hover:bg-emerald-700 active:scale-95"
                   >
                     <CircleCheckIcon className="h-4 w-4" />
                     Use this photo
                   </button>
-                </>
-              ) : showLiveVideoExpanded ? (
+                </div>
+              </>
+            ) : showLiveVideoExpanded ? (
+              <>
                 <button
                   type="button"
                   aria-label="Capture selfie (Ctrl + Space)"
                   title="Capture selfie (Ctrl + Space)"
                   onClick={handleCapture}
-                  className="flex h-14 w-14 cursor-pointer items-center justify-center rounded-full bg-brand-400 shadow-lg hover:shadow-xl text-white transition-all duration-200 hover:scale-105 active:scale-95"
+                  className="group flex h-20 w-20 cursor-pointer items-center justify-center rounded-full border-4 border-white/90 bg-transparent p-1.5 shadow-[0_8px_30px_rgba(0,0,0,0.45)] transition-transform duration-200 hover:scale-105 active:scale-95"
                 >
-                  <CameraIcon className="h-6 w-6" />
+                  <span className="h-full w-full rounded-full bg-white transition-transform duration-150 group-active:scale-90" />
                 </button>
-              ) : null}
-
-              <button
-                type="button"
-                aria-label="Close full screen"
-                title="Close full screen"
-                onClick={() => setIsExpanded(false)}
-                className="flex h-14 w-14 cursor-pointer items-center justify-center rounded-full border-none bg-white/15 text-white transition-all duration-150 hover:rotate-90 hover:bg-white/25 active:scale-90"
-              >
-                <CloseIcon className="h-6 w-6" />
-              </button>
-            </div>
+                <span className="flex flex-wrap items-center justify-center gap-1 text-xs font-medium text-white/75">
+                  Hold your ID beside your face &middot;
+                  <kbd className="ml-1 rounded border border-white/30 bg-white/10 px-1.5 py-0.5 font-sans text-[10px] font-semibold leading-none">
+                    Ctrl
+                  </kbd>
+                  +
+                  <kbd className="rounded border border-white/30 bg-white/10 px-1.5 py-0.5 font-sans text-[10px] font-semibold leading-none">
+                    Space
+                  </kbd>
+                  to capture
+                </span>
+              </>
+            ) : null}
           </div>
         </div>
       )}

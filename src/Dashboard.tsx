@@ -124,7 +124,7 @@ export default function Dashboard() {
           </button>
           <button
             onClick={() => navigate({ screen: "capture-selfie-step" })}
-            className="px-4 py-2 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700 transition-colors"
+            className="px-4 py-2 bg-emerald-600 text-white rounded-lg font-semibold hover:bg-emerald-700 transition-colors"
           >
             Selfie Capture
           </button>

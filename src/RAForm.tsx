@@ -152,7 +152,7 @@ const RAForm = () => {
         <div className="grid grid-cols-3 gap-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1.5">
-              Buyer Type <span className="text-red-500">*</span>
+              Buyer Type <span className="text-error-500">*</span>
             </label>
             <Select
               placeholder="Select buyer type"
@@ -167,7 +167,7 @@ const RAForm = () => {
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1.5">
-              Buyer Classification <span className="text-red-500">*</span>
+              Buyer Classification <span className="text-error-500">*</span>
             </label>
             <Select
               placeholder="Select one"
@@ -436,7 +436,7 @@ const RAForm = () => {
           <div className="grid grid-cols-3 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1.5">
-                Prefix <span className="text-red-500">*</span>
+                Prefix <span className="text-error-500">*</span>
               </label>
               <Select
                 placeholder="Select prefix"
@@ -452,7 +452,7 @@ const RAForm = () => {
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1.5">
-                First Name <span className="text-red-500">*</span>
+                First Name <span className="text-error-500">*</span>
               </label>
               <Input
                 placeholder="Enter first name"
@@ -464,7 +464,7 @@ const RAForm = () => {
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1.5">
-                Last Name <span className="text-red-500">*</span>
+                Last Name <span className="text-error-500">*</span>
               </label>
               <Input
                 placeholder="Enter last name"
@@ -480,7 +480,7 @@ const RAForm = () => {
           <div className="grid grid-cols-3 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1.5">
-                Email <span className="text-red-500">*</span>
+                Email <span className="text-error-500">*</span>
               </label>
               <Input
                 placeholder="Enter email"
@@ -493,7 +493,7 @@ const RAForm = () => {
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1.5">
-                Phone <span className="text-red-500">*</span>
+                Phone <span className="text-error-500">*</span>
               </label>
               <Input
                 placeholder="Enter phone"
@@ -505,7 +505,7 @@ const RAForm = () => {
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1.5">
-                Citizenship <span className="text-red-500">*</span>
+                Citizenship <span className="text-error-500">*</span>
               </label>
               <Select
                 placeholder="Select citizenship"
@@ -525,7 +525,7 @@ const RAForm = () => {
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1.5">
-                ID Type <span className="text-red-500">*</span>
+                ID Type <span className="text-error-500">*</span>
               </label>
               <Select
                 placeholder="Select ID type"
@@ -541,7 +541,7 @@ const RAForm = () => {
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1.5">
-                ID Number <span className="text-red-500">*</span>
+                ID Number <span className="text-error-500">*</span>
               </label>
               <Input
                 placeholder="Enter ID number"

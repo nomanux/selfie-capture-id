@@ -9,28 +9,28 @@ import Button from "./Button";
 
 // Pill colors match Figma "Badge / Pill color" (file NcMe5sSgPs65q3Ed2rV1Kv):
 // Brand = node 9:12758 (bg #f0f5ff, border primary-50 #d4e1fc, text primary-500 #07389d)
-// Success = node 9:12770 (bg #ecfdf3, border #abefc6, text #067647)
+// Success = Tailwind emerald (bg emerald-50, border emerald-200, text emerald-700)
 // Gray = node 9:12824 (bg gray-50 #f9fafb, border gray-200 #e5e7eb, text gray-700 #374151)
 // Warning/Error statuses aren't in the referenced nodes, so they keep their prior colors.
 const STATUS_STYLES: Record<string, string> = {
   "On Hold": "bg-warning-100 text-warning-800",
   Available: "border border-primary-50 bg-[#f0f5ff] text-primary-500",
-  Sold: "border border-[#abefc6] bg-[#ecfdf3] text-[#067647]",
-  "Ready for Occupancy": "border border-[#abefc6] bg-[#ecfdf3] text-[#067647]",
+  Sold: "border border-emerald-200 bg-emerald-50 text-emerald-700",
+  "Ready for Occupancy": "border border-emerald-200 bg-emerald-50 text-emerald-700",
   "Ongoing Construction": "bg-warning-100 text-warning-800",
   "Under Review": "border border-primary-50 bg-[#f0f5ff] text-primary-500",
   "Pending Approval": "bg-warning-100 text-warning-800",
-  Approved: "border border-[#abefc6] bg-[#ecfdf3] text-[#067647]",
-  Completed: "border border-[#abefc6] bg-[#ecfdf3] text-[#067647]",
+  Approved: "border border-emerald-200 bg-emerald-50 text-emerald-700",
+  Completed: "border border-emerald-200 bg-emerald-50 text-emerald-700",
   "On Hold ": "bg-warning-100 text-warning-800",
   Cancelled: "bg-error-50 text-error-700",
   Postponed: "border border-gray-200 bg-gray-50 text-gray-700",
-  Active: "border border-[#abefc6] bg-[#ecfdf3] text-[#067647]",
+  Active: "border border-emerald-200 bg-emerald-50 text-emerald-700",
   "On Queue": "bg-warning-100 text-warning-800",
   Closed: "border border-gray-200 bg-gray-50 text-gray-700",
   Expired: "bg-error-50 text-error-700",
   Confirmed: "border border-primary-50 bg-[#f0f5ff] text-primary-500",
-  Pass: "border border-[#abefc6] bg-[#ecfdf3] text-[#067647]",
+  Pass: "border border-emerald-200 bg-emerald-50 text-emerald-700",
   "Not Qualified": "bg-error-50 text-error-700",
 };
 
