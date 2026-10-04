@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import Layout from "./Layout";
-import { RotateCcwIcon, SearchIcon, XIcon, FilterIcon } from "./icons";
+import { RotateCcwIcon, XIcon } from "./icons";
 import { useNavigation } from "./NavigationContext";
 import { useCountdown } from "./useCountdown";
 import RightDrawer from "./RightDrawer";

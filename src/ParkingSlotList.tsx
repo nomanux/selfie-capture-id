@@ -184,12 +184,9 @@ export default function ParkingSlotList() {
                         <div className="flex items-center justify-center">
                           <RowActionButton
                             aria-label={`View ${row.code} details`}
-                            onClick={() =>
-                              navigate({
-                                screen: "parking-slot-details",
-                                itemId: row.code,
-                              })
-                            }
+                            onClick={() => {
+                              // TODO: Implement parking-slot-details screen
+                            }}
                             icon={<EyeIcon className="h-6 w-6" />}
                             label="View"
                           />
