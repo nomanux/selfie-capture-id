@@ -1,0 +1,4 @@
+# npm writes LF on every OS; keep these LF everywhere so installs on
+# macOS and Windows do not rewrite every line.
+package.json text eol=lf
+package-lock.json text eol=lf
