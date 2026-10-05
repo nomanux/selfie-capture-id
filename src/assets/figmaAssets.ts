@@ -87,3 +87,34 @@ export const thumbnailPhoto1Url = thumbnailPhoto1Png;
 export const thumbnailPhoto2Url = thumbnailPhoto2Png;
 export const thumbnailPhoto3Url = thumbnailPhoto3Png;
 export const thumbnailPhoto4Url = thumbnailPhoto4Png;
+
+// Client/Company Representative step (node 167635:167887) icons, saved
+// locally from the Figma export: co-buyer/PEP section icon, red trash-02
+// (remove entry), brand + white "plus" (upload circle / add buttons) and the
+// 4px dot between the upload box's file-type and size limits.
+export { default as coBuyerIconUrl } from "./co-buyer-icon.svg";
+export { default as trashIconUrl } from "./trash-02.svg";
+export { default as plusBrandIconUrl } from "./plus-brand.svg";
+export { default as plusWhiteIconUrl } from "./plus-white.svg";
+export { default as dotSeparatorUrl } from "./dot-separator.svg";
+
+// Identity Verification step (node 167635:167877). The four example-ID
+// thumbnails are flattened 1x crops of the frame render (each is ~190 pattern
+// layers in Figma, and instance children can't be exported on their own);
+// used as captioned good/bad examples under the upload area.
+export { default as idExampleTiltedUrl } from "./id-example-tilted.png";
+export { default as idExampleHandUrl } from "./id-example-hand.png";
+export { default as idExampleBlurryUrl } from "./id-example-blurry.png";
+export { default as idExampleGoodUrl } from "./id-example-good.png";
+
+// Data Privacy step (node 167635:167885): clock beside each signer's "Signed on" time.
+export { default as clockIconUrl } from "./clock.svg";
+
+// Review & Submit step (node 167635:167900): sub-section arrow, Submit's send
+// icon, and the sample ID / selfie / passport photos shown until the review
+// is wired to the real uploads from steps 3-4.
+export { default as arrowSquareRightIconUrl } from "./arrow-square-right.svg";
+export { default as sendIconUrl } from "./send-01.svg";
+export { default as reviewSampleIdUrl } from "./review-sample-id.png";
+export { default as reviewSampleSelfieUrl } from "./review-sample-selfie.png";
+export { default as reviewSamplePassportUrl } from "./review-sample-passport.png";

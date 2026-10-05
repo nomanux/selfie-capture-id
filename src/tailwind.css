@@ -188,6 +188,40 @@
     @apply border-primary-500;
   }
 
+  /*
+   * Client-facing form scale (CRF/RA steps, e.g. BuyerDetailsStep). The
+   * Figma "Input field" / "Input dropdown" there are white, 8px radius,
+   * 14px text (compact) with a gray-500 placeholder and shadow-xs — larger than the
+   * admin portal's compact fields above, so it's opt-in via `.form-lg` on the
+   * form root rather than a change to the shared classes.
+   */
+  .form-lg .input-field,
+  .form-lg .select-trigger,
+  .form-lg .date-picker-trigger {
+    @apply rounded-lg bg-white text-sm shadow-xs placeholder:text-gray-500;
+  }
+
+  /* Calendar icon leads the date text in this form's design. */
+  .form-lg .date-picker-trigger {
+    @apply flex-row-reverse justify-end;
+  }
+
+  .form-lg .input-field:disabled {
+    @apply cursor-not-allowed bg-gray-50 text-gray-500;
+  }
+
+  /* The white fill above out-ranks the triggers' own disabled:bg-gray-50, so restate it. */
+  .form-lg .select-trigger:disabled,
+  .form-lg .date-picker-trigger:disabled {
+    @apply bg-gray-50;
+  }
+
+  .form-lg .select-trigger > [class~="text-gray-400"],
+  .form-lg .date-picker-trigger > [class~="text-gray-400"] {
+    /* Attribute selector + plain CSS: a .text-gray-400 class selector here makes Tailwind treat it as a definition of that utility, which breaks every @apply of it (circular). */
+    color: theme("colors.gray.500");
+  }
+
   .date-picker-sm {
     @apply h-8;
   }
@@ -475,4 +509,17 @@
   .selfie-live-dot {
     animation: none;
   }
+}
+
+/* Identity Verification: scan line sweeping the ID while it's being read. */
+@keyframes id-scan {
+  0% { top: 0; }
+  50% { top: calc(100% - 2px); }
+  100% { top: 0; }
+}
+.id-scanline {
+  animation: id-scan 1.8s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .id-scanline { animation: none; top: 50%; }
 }
