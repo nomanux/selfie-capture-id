@@ -523,3 +523,16 @@
 @media (prefers-reduced-motion: reduce) {
   .id-scanline { animation: none; top: 50%; }
 }
+
+/* Live selfie: each countdown number pops in. */
+@keyframes selfie-countdown-pop {
+  0% { transform: scale(1.6); opacity: 0; }
+  30% { transform: scale(1); opacity: 1; }
+  100% { transform: scale(0.92); opacity: 1; }
+}
+.selfie-countdown {
+  animation: selfie-countdown-pop 1s ease-out both;
+}
+@media (prefers-reduced-motion: reduce) {
+  .selfie-countdown { animation: none; }
+}

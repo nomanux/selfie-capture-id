@@ -248,7 +248,9 @@ function SectionHeading({
       <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
         <h3
           className={`m-0 font-semibold text-brand-500 ${
-            size === "lg" ? "text-lg leading-7" : "text-base leading-6"
+            size === "lg"
+              ? "text-base leading-6 md:text-lg md:leading-7"
+              : "text-base leading-6"
           }`}
         >
           {title}
@@ -623,8 +625,12 @@ function UploadIdCard({
   };
 
   return (
-    <div className={"flex flex-col gap-4 rounded-2xl p-4 text-sm " + className}>
-      <h4 className="m-0 text-lg font-semibold leading-7 text-gray-900">
+    <div
+      className={
+        "flex flex-col gap-4 rounded-2xl px-2 py-3 md:p-4 " + className
+      }
+    >
+      <h4 className="m-0 text-base font-semibold leading-6 text-gray-900">
         {title}
       </h4>
       <div
@@ -691,7 +697,7 @@ function EntryCard({
   const [expanded, setExpanded] = useState(true);
 
   return (
-    <div className="rounded-xl border border-gray-200 bg-white px-4 md:px-5">
+    <div className="rounded-xl border border-gray-200 bg-white px-2 md:px-5">
       <div
         className={`flex items-center justify-between gap-4 py-5 ${expanded ? "border-b border-gray-200" : ""}`}
       >
@@ -724,7 +730,7 @@ function EntryCard({
           </button>
         </div>
       </div>
-      {expanded && <div className="flex flex-col gap-8 py-5">{children}</div>}
+      {expanded && <div className="flex flex-col gap-6 py-5">{children}</div>}
     </div>
   );
 }
@@ -740,11 +746,11 @@ function GroupPanel({
   children: ReactNode;
 }) {
   return (
-    <div className="flex flex-col gap-6 rounded-xl bg-gray-50 p-4 md:p-5">
+    <div className="-mx-2 md:mx-0 flex flex-col gap-6 rounded-xl bg-gray-50 px-2 py-4 md:p-5">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-3">
           <img src={coBuyerIconUrl} alt="" width={24} height={24} />
-          <h3 className="m-0 text-lg font-semibold leading-7 text-brand-500">
+          <h3 className="m-0 text-base leading-6 md:text-lg md:leading-7 font-semibold text-brand-500">
             {title}
           </h3>
         </div>
@@ -1055,7 +1061,7 @@ function OfficeAddressPanel({ className }: { className: string }) {
   return (
     <div
       className={
-        "flex flex-col gap-5 rounded-xl border border-gray-100 p-4 md:p-5 " +
+        "flex flex-col gap-5 rounded-xl border border-gray-100 px-2 py-4 md:p-5 " +
         className
       }
     >
@@ -1106,7 +1112,7 @@ function OccupationFields({
   const whose = subject === "spouse" ? "your spouse's" : "your";
 
   return (
-    <div className="flex flex-col gap-8">
+    <div className="flex flex-col gap-6">
       <SectionHeading
         title="Occupation Information"
         description={`Identify the client's ${subject === "spouse" ? "spouse's " : ""}employment status or profession.`}
@@ -1129,7 +1135,13 @@ function OccupationFields({
 
       {hasEmployer && (
         <>
-          <div className="flex flex-col gap-5 rounded-xl border border-brand-100 bg-brand-25 p-4 md:p-5">
+          <div
+            className={
+              "flex flex-col gap-5 rounded-xl border border-brand-100 bg-brand-25 px-2 py-4 md:p-5 " +
+              // On the white card, sit 8px from its edge on phones (like the spouse box).
+              (onGrayBackground ? "" : "-mx-2 md:mx-0")
+            }
+          >
             <SectionHeading
               title="Business and Employment Information."
               size="md"
@@ -1190,7 +1202,9 @@ function OccupationFields({
             </div>
           </div>
           <OfficeAddressPanel
-            className={onGrayBackground ? "bg-white" : "bg-gray-50"}
+            className={
+              onGrayBackground ? "bg-white" : "bg-gray-50 -mx-2 md:mx-0"
+            }
           />
         </>
       )}
@@ -1203,14 +1217,14 @@ function SpouseInformation({ onWhiteCard = false }: { onWhiteCard?: boolean }) {
   const [expanded, setExpanded] = useState(true);
 
   return (
-    <div className="flex flex-col gap-6 rounded-xl bg-gray-50 p-4 md:p-5">
+    <div className="-mx-2 md:mx-0 flex flex-col gap-6 rounded-xl bg-gray-50 px-2 py-4 md:p-5">
       <button
         type="button"
         aria-expanded={expanded}
         onClick={() => setExpanded((e) => !e)}
         className="flex w-full cursor-pointer items-center justify-between border-0 bg-transparent p-0 text-left"
       >
-        <span className="text-lg font-semibold leading-7 text-brand-500">
+        <span className="text-base leading-6 md:text-lg md:leading-7 font-semibold text-brand-500">
           Spouse Information
         </span>
         <span className="flex h-8 w-8 items-center justify-center text-brand-700">
@@ -1305,8 +1319,9 @@ function RepresentativeDetails() {
   return (
     <div className="flex flex-col gap-3">
       <SectionHeading title="Representative Details" />
-      <div className="rounded-xl border border-gray-200 bg-gray-50">
-        <div className="p-4 md:p-5 md:pr-0">
+      {/* Phones: 8px from the card edge, 8px inside, square corners — like the co-buyer box. */}
+      <div className="-mx-2 md:mx-0 rounded-xl border border-gray-200 bg-gray-50">
+        <div className="px-2 py-4 md:p-5 md:pr-0">
           <SelectField
             label="Type of Representative"
             required
@@ -1314,7 +1329,7 @@ function RepresentativeDetails() {
             className="md:w-[338px]"
           />
         </div>
-        <div className="flex flex-col gap-8 border-t border-gray-200 p-4 md:p-5">
+        <div className="flex flex-col gap-6 border-t border-gray-200 px-2 py-4 md:p-5">
           <div className="flex flex-col gap-3">
             <SectionHeading title="Personal Details" size="md" />
             <PersonalDetailsFields
@@ -1454,9 +1469,11 @@ function PepEntryFields() {
 }
 
 /** Adds/removes numbered entries; ids stay stable so removing #1 keeps #2's typed values. */
-function useEntryList() {
-  const [ids, setIds] = useState([1]);
-  const nextId = useRef(2);
+function useEntryList(initialCount = 1) {
+  const [ids, setIds] = useState(() =>
+    Array.from({ length: initialCount }, (_, i) => i + 1),
+  );
+  const nextId = useRef(initialCount + 1);
   const add = () => setIds((prev) => [...prev, nextId.current++]);
   const remove = (id: number) => setIds((prev) => prev.filter((i) => i !== id));
   return { ids, add, remove };
@@ -1476,16 +1493,18 @@ export default function BuyerDetailsStep() {
   const [clientType, setClientType] = useState<"individual" | "company">(
     "individual",
   );
-  const [civilStatus, setCivilStatus] = useState("Married");
+  // Optional parts (spouse, co-buyers, representative, PEP) start hidden and
+  // appear only once the buyer chooses Married / Yes / Add Co-buyer.
+  const [civilStatus, setCivilStatus] = useState<string>();
   const [ownership, setOwnership] = useState<string>();
   const [mailingSource, setMailingSource] = useState("primary");
   const [mailingAddress, setMailingAddress] = useState("home");
   const [mailingMethod, setMailingMethod] = useState("courier");
   const [reasons, setReasons] = useState<string[]>([]);
   const [awareness, setAwareness] = useState<string[]>([]);
-  const [hasRepresentative, setHasRepresentative] = useState("yes");
-  const [isPep, setIsPep] = useState("yes");
-  const coBuyers = useEntryList();
+  const [hasRepresentative, setHasRepresentative] = useState("");
+  const [isPep, setIsPep] = useState("");
+  const coBuyers = useEntryList(0);
   const pepEntries = useEntryList();
 
   const toggleAwareness = (source: string) =>
@@ -1535,7 +1554,7 @@ export default function BuyerDetailsStep() {
   ];
 
   return (
-    <section className="form-lg w-full h-full min-h-[480px] bg-white rounded-[16px] flex flex-col border border-[#e4e8f0]">
+    <section className="form-lg w-full h-fit bg-white rounded-none md:rounded-[16px] flex flex-col border border-[#e4e8f0]">
       <StepHeader
         title="Client/Company Representative"
         className="px-4 md:px-8 pt-6 pb-6"
@@ -1543,28 +1562,27 @@ export default function BuyerDetailsStep() {
         Enter your personal information as it appears on your official records.
       </StepHeader>
 
-      {/* Only the card body scrolls; the title stays put. */}
-      <div className="flex-1 min-h-0 overflow-y-auto">
-      <div className="px-4 md:px-8 pb-6 flex flex-col gap-10">
+      <div className="px-4 md:px-8 pb-6 flex flex-col gap-8">
         {/* Client Type Selection */}
         <div
           role="radiogroup"
           aria-label="Client type"
-          className="flex flex-col md:flex-row gap-3 md:gap-8 md:items-stretch"
+          className="flex flex-col md:flex-row gap-2 md:gap-8 md:items-stretch"
         >
           {CLIENT_TYPES.map((type, index) => {
             const selected = clientType === type.value;
             return (
               <div key={type.value} className="contents">
                 {index > 0 && (
-                  <p className="m-0 text-base text-gray-400 self-center">or</p>
+                  // Radios already say "pick one", so the "or" only earns its row on desktop.
+                  <p className="m-0 hidden md:block text-base text-gray-400 self-center">or</p>
                 )}
                 <button
                   type="button"
                   role="radio"
                   aria-checked={selected}
                   onClick={() => setClientType(type.value)}
-                  className={`flex-1 flex gap-3 items-start text-left border rounded-xl p-4 cursor-pointer transition-colors ${
+                  className={`flex-1 flex gap-3 items-start text-left border rounded-xl p-3 md:p-4 cursor-pointer transition-colors ${
                     selected
                       ? "bg-brand-25 border-brand-500"
                       : "bg-white border-gray-300 hover:bg-gray-50"
@@ -1599,7 +1617,7 @@ export default function BuyerDetailsStep() {
           })}
         </div>
 
-        <div className="flex flex-col gap-8">
+        <div className="flex flex-col gap-6">
           {/* Personal Details */}
           <div className="flex flex-col gap-3">
             <SectionHeading title="Personal Details" />
@@ -1753,19 +1771,26 @@ export default function BuyerDetailsStep() {
                 <span className="text-brand-600">*</span>
               </p>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-x-5 gap-y-2 md:items-center">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-x-4 md:gap-x-5 gap-y-1 md:gap-y-2 items-center">
               {AWARENESS_SOURCES.map((row, rowIndex) => (
                 <div key={rowIndex} className="contents">
                   {row.map((source) => (
                     <CheckboxField
                       key={source}
                       label={source}
-                      className="py-2 md:py-3 font-medium"
+                      className="py-1.5 md:py-3 font-medium"
                       checked={awareness.includes(source)}
                       onChange={() => toggleAwareness(source)}
                     />
                   ))}
-                  <div className="mb-2 sm:col-span-2 md:col-span-1 md:mb-0">
+                  {/* Each row's last option has a "specify" field. Phones show it only
+                      once that option is ticked; desktop keeps it (disabled) in place. */}
+                  <div
+                    className={
+                      "col-span-2 md:col-span-1 mb-1 md:mb-0 " +
+                      (awareness.includes(row[row.length - 1]) ? "" : "hidden md:block")
+                    }
+                  >
                     {awarenessDetail[rowIndex]}
                   </div>
                 </div>
@@ -1811,7 +1836,7 @@ export default function BuyerDetailsStep() {
               description="Please provide details if you have an Attorney-in-Fact or Financer involved in this transaction."
             />
             <div className="flex flex-col gap-2 rounded-xl bg-gray-50 p-4 md:p-5">
-              <p className="m-0 text-base font-medium leading-6 text-gray-700">
+              <p className="m-0 text-sm font-medium leading-6 text-gray-700">
                 Do you have an Attorney-in-Fact / a Financer?
               </p>
               <RadioGroup
@@ -1832,7 +1857,7 @@ export default function BuyerDetailsStep() {
               description="Have you or any of your immediate family members or close associates ever held an elected or appointed government position?"
             />
             <div className="flex flex-col gap-2 rounded-xl bg-gray-50 p-4 md:p-5">
-              <p className="m-0 text-base font-medium leading-6 text-gray-700">
+              <p className="m-0 md:text-base text-sm font-medium leading-6 text-gray-700">
                 Have you or any of your immediate family members or close
                 associates ever held, or are currently holding, an elected or
                 appointed government position in the Philippines or any other
@@ -1867,7 +1892,6 @@ export default function BuyerDetailsStep() {
             </GroupPanel>
           )}
         </div>
-      </div>
       </div>
     </section>
   );

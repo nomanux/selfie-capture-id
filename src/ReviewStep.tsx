@@ -176,10 +176,10 @@ const PEP_CONNECTION: Pair[] = [
 /** Label : value list, two pairs per row on desktop. `wide` = one pair per row. */
 function Pairs({ pairs, wide = false }: { pairs: Pair[]; wide?: boolean }) {
   return (
-    <dl className={`m-0 grid grid-cols-1 gap-x-6 gap-y-3 ${wide ? "" : "md:grid-cols-2"}`}>
+    <dl className={`m-0 grid grid-cols-1 gap-x-6 gap-y-2 ${wide ? "" : "md:grid-cols-2"}`}>
       {pairs.map(([label, value]) => (
         <div key={label} className="flex min-w-0 gap-2 text-sm leading-5">
-          <dt className="w-[150px] shrink-0 font-semibold text-gray-500">{label}</dt>
+          <dt className="w-[116px] md:w-[150px] shrink-0 font-semibold text-gray-500">{label}</dt>
           <span aria-hidden="true" className="text-gray-500">
             :
           </span>
@@ -192,8 +192,8 @@ function Pairs({ pairs, wide = false }: { pairs: Pair[]; wide?: boolean }) {
 
 function SubSection({ title, children }: { title: string; children: ReactNode }) {
   return (
-    <div className="flex flex-col gap-3">
-      <h4 className="m-0 flex items-center gap-3 text-lg font-semibold leading-7 text-brand-500">
+    <div className="flex flex-col gap-2">
+      <h4 className="m-0 flex items-center gap-3 text-base leading-6 md:text-lg md:leading-7 font-semibold text-brand-500">
         <img src={arrowSquareRightIconUrl} alt="" width={24} height={24} />
         {title}
       </h4>
@@ -203,7 +203,7 @@ function SubSection({ title, children }: { title: string; children: ReactNode })
 }
 
 function MinorHeading({ children }: { children: ReactNode }) {
-  return <h5 className="m-0 text-sm font-medium leading-5 text-brand-500">{children}</h5>;
+  return <h5 className="m-0 mt-2 text-sm font-medium leading-5 text-brand-500">{children}</h5>;
 }
 
 function EditButton({ label, onClick }: { label: string; onClick: () => void }) {
@@ -212,7 +212,7 @@ function EditButton({ label, onClick }: { label: string; onClick: () => void }) 
       type="button"
       aria-label={"Edit " + label}
       onClick={onClick}
-      className="inline-flex h-9 cursor-pointer items-center rounded-lg border border-brand-600 bg-white px-3 text-sm font-semibold text-brand-600 hover:bg-brand-25"
+      className="inline-flex h-8 md:h-9 cursor-pointer items-center rounded-lg border border-brand-600 bg-white px-3 text-sm font-semibold text-brand-600 hover:bg-brand-25"
     >
       Edit
     </button>
@@ -232,10 +232,10 @@ function SectionCard({
   children: ReactNode;
 }) {
   return (
-    <section className="flex flex-col gap-6 rounded-xl border border-gray-200 bg-gray-50 p-4 md:p-5">
+    <section className="flex flex-col gap-5 -mx-2 md:mx-0 rounded-xl border border-gray-200 bg-gray-50 px-2 py-4 md:p-5">
       <div className="flex flex-wrap items-center gap-3">
         {icon && <img src={coBuyerIconUrl} alt="" width={24} height={24} />}
-        <h3 className="m-0 text-xl font-semibold leading-[30px] text-brand-500">{title}</h3>
+        <h3 className="m-0 text-base leading-6 md:text-xl md:leading-[30px] font-semibold text-brand-500">{title}</h3>
         {onEdit && <EditButton label={title} onClick={onEdit} />}
       </div>
       {children}
@@ -247,9 +247,9 @@ function SectionCard({
 function EntryCard({ title, onEdit, children }: { title?: string; onEdit?: () => void; children: ReactNode }) {
   const [open, setOpen] = useState(true);
   return (
-    <div className="rounded-xl border border-gray-200 bg-white px-4 md:px-5">
+    <div className="rounded-xl border border-gray-200 bg-white px-2 md:px-5">
       {title && (
-        <div className={`flex items-center justify-between gap-3 py-5 ${open ? "border-b border-gray-200" : ""}`}>
+        <div className={`flex items-center justify-between gap-3 py-3 md:py-4 ${open ? "border-b border-gray-200" : ""}`}>
           <div className="flex items-center gap-3">
             <h4 className="m-0 text-base font-semibold leading-6 text-brand-500">{title}</h4>
             {onEdit && <EditButton label={title} onClick={onEdit} />}
@@ -265,7 +265,7 @@ function EntryCard({ title, onEdit, children }: { title?: string; onEdit?: () =>
           </button>
         </div>
       )}
-      {open && <div className="flex flex-col gap-8 py-5">{children}</div>}
+      {open && <div className="flex flex-col gap-5 py-4">{children}</div>}
     </div>
   );
 }
@@ -273,7 +273,7 @@ function EntryCard({ title, onEdit, children }: { title?: string; onEdit?: () =>
 /** Pairs on the left, document thumbnails in a narrow column on the right. */
 function WithPhotos({ photos, children }: { photos: { label: string; src: string; alt: string }[]; children: ReactNode }) {
   return (
-    <div className="flex flex-col gap-6 md:flex-row md:items-start">
+    <div className="flex flex-col gap-4 md:flex-row md:items-start">
       <div className="min-w-0 flex-1">{children}</div>
       <div className="flex flex-row gap-4 md:w-[144px] md:flex-col">
         {photos.map((photo) => (
@@ -293,7 +293,7 @@ function WithPhotos({ photos, children }: { photos: { label: string; src: string
 
 function SpouseBanner() {
   return (
-    <h4 className="m-0 rounded-md bg-brand-50 px-2 py-1 text-xl font-semibold leading-[30px] text-brand-500">
+    <h4 className="m-0 rounded-md bg-brand-50 px-2 py-1 text-base leading-6 md:text-xl md:leading-[30px] font-semibold text-brand-500">
       Spouse information
     </h4>
   );
@@ -346,10 +346,10 @@ function ReadOnlyCheck({ children }: { children: ReactNode }) {
 function AgreementPreview({ title, agreement, children }: { title: string; agreement: string; children: ReactNode }) {
   const [expanded, setExpanded] = useState(false);
   return (
-    <section className="flex flex-col gap-4 rounded-xl border border-gray-200 bg-gray-50 p-4 md:p-5">
-      <h3 className="m-0 text-xl font-semibold leading-[30px] text-brand-500">{title}</h3>
+    <section className="flex flex-col gap-4 -mx-2 md:mx-0 rounded-xl border border-gray-200 bg-gray-50 px-2 py-4 md:p-5">
+      <h3 className="m-0 text-base leading-6 md:text-xl md:leading-[30px] font-semibold text-brand-500">{title}</h3>
       <div
-        className={`relative text-sm md:text-base leading-6 text-gray-600 ${expanded ? "" : "max-h-[160px] overflow-hidden"}`}
+        className={`relative text-sm leading-5 text-gray-600 ${expanded ? "" : "max-h-[112px] overflow-hidden"}`}
       >
         {children}
         {!expanded && (
@@ -392,14 +392,14 @@ export default function ReviewStep({
   }, [confirmed, onReadyChange]);
 
   return (
-    <section className="w-full h-full min-h-[480px] bg-white rounded-[16px] flex flex-col border border-[#e4e8f0]">
+    <section className="w-full md:h-full md:min-h-[480px] bg-white rounded-none md:rounded-[16px] flex flex-col border border-[#e4e8f0]">
       <StepHeader title="Review & Submit" className="px-4 md:px-8 pt-6 pb-6">
         Review the details below to ensure they are correct and up to date before submission.
       </StepHeader>
 
       {/* Only the card body scrolls; the title stays put. */}
-      <div className="flex-1 min-h-0 overflow-y-auto">
-      <div className="px-4 md:px-8 pb-6 flex flex-col gap-8">
+      <div className="md:flex-1 md:min-h-0 md:overflow-y-auto">
+      <div className="px-4 md:px-8 pb-6 flex flex-col gap-6">
         <SectionCard title="Buyer & Property Information" onEdit={() => onEdit(1)}>
           <Pairs pairs={BUYER_PROPERTY} />
         </SectionCard>
@@ -590,8 +590,8 @@ export default function ReviewStep({
           <PrivacyPolicyText />
         </AgreementPreview>
 
-        <section className="flex flex-col gap-4 rounded-xl border border-gray-200 bg-gray-50 p-4 md:p-5">
-          <h3 className="m-0 text-xl font-semibold leading-[30px] text-brand-500">
+        <section className="flex flex-col gap-4 -mx-2 md:mx-0 rounded-xl border border-gray-200 bg-gray-50 px-2 py-4 md:p-5">
+          <h3 className="m-0 text-base leading-6 md:text-xl md:leading-[30px] font-semibold text-brand-500">
             Customer Acceptance Policy &amp; Client Consent
           </h3>
           <ConsentPolicyText />

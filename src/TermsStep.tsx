@@ -146,7 +146,7 @@ export default function TermsStep({
 
   // Fills the visible area so only the text panel scrolls (one scrollbar), not the page too.
   return (
-    <section className="w-full h-full min-h-[480px] bg-white rounded-[16px] flex flex-col border border-[#e4e8f0]">
+    <section className="w-full md:h-full md:min-h-[480px] bg-white rounded-none md:rounded-[16px] flex flex-col border border-[#e4e8f0]">
       <StepHeader title="Terms and Conditions" className="px-4 md:px-8 pt-6 pb-6">
         Please read the terms and conditions carefully before proceeding next step.
       </StepHeader>
@@ -157,7 +157,7 @@ export default function TermsStep({
           tabIndex={0}
           role="region"
           aria-label="Terms and conditions text"
-          className="flex-1 min-h-0 overflow-y-auto rounded-xl bg-gray-50 px-4 py-5 md:px-6 md:py-6 text-sm md:text-base leading-6 text-gray-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500"
+          className="max-h-[60vh] md:max-h-none md:flex-1 md:min-h-0 overflow-y-auto rounded-xl bg-gray-50 px-4 py-5 md:px-6 md:py-6 text-sm md:text-base leading-6 text-gray-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500"
         >
           <TermsAgreementText />
         </div>

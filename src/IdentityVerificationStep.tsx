@@ -231,7 +231,7 @@ export default function IdentityVerificationStep({
   const panelQuiet = phase !== "done";
 
   return (
-    <section className="form-lg w-full h-full min-h-[480px] bg-white rounded-[16px] flex flex-col border border-[#e4e8f0]">
+    <section className="form-lg w-full md:h-full md:min-h-[480px] bg-white rounded-none md:rounded-[16px] flex flex-col border border-[#e4e8f0]">
       <StepHeader title="Upload your government ID" className="px-4 md:px-8 pt-6 pb-6">
         Upload the front of your ID. We read your details from the card and fill in the form for you.{" "}
         <a href="#" className="font-semibold text-brand-600 underline hover:text-brand-700">
@@ -240,7 +240,7 @@ export default function IdentityVerificationStep({
       </StepHeader>
 
       {/* Only the card body scrolls; the title stays put. */}
-      <div className="flex-1 min-h-0 overflow-y-auto">
+      <div className="md:flex-1 md:min-h-0 md:overflow-y-auto">
       <div className="px-4 md:px-8 pb-6 flex flex-col gap-6">
 
       <div className="grid grid-cols-1 md:grid-cols-[minmax(0,1.35fr)_minmax(0,1fr)] gap-4 md:gap-5">

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type CSSProperties } from "react";
+import { useEffect, useId, useRef, useState, type CSSProperties } from "react";
 import Button from "./Button";
 import BuyerDetailsStep from "./BuyerDetailsStep";
 import BuyerPropertyStep from "./BuyerPropertyStep";
@@ -305,40 +305,244 @@ function loadFaceApi(): Promise<void> {
   return faceApiReadyPromise;
 }
 
-function detectCardLikelyHeld(
+/** A guide frame, as fractions (0–1) of the 16:9 camera box. */
+interface GuideRect {
+  left: number;
+  top: number;
+  width: number;
+  height: number;
+}
+
+// Single source for where the guides are drawn AND where the checks look,
+// in SCREEN coordinates (the preview is mirrored): ID card on the left, face
+// oval on the right.
+const FACE_GUIDE: GuideRect = { left: 0.52, top: 0.1, width: 0.28, height: 0.7 };
+const CARD_GUIDE: GuideRect = { left: 0.1, top: 0.38, width: 0.32, height: 0.36 };
+
+// Mirrors the live preview (and its frames). The saved photo is not mirrored,
+// so the text on the ID stays readable for verification.
+const MIRROR_STYLE = { transform: "scaleX(-1)" };
+
+/** A screen-space guide as it falls on the camera's raw (un-mirrored) pixels. */
+const inCameraSpace = (g: GuideRect): GuideRect => ({ ...g, left: 1 - g.left - g.width });
+
+const toPercent = (g: GuideRect) => ({
+  left: g.left * 100 + "%",
+  top: g.top * 100 + "%",
+  width: g.width * 100 + "%",
+  height: g.height * 100 + "%",
+});
+
+/**
+ * The part of the camera image the 16:9 preview shows (object-cover crops a
+ * 4:3 camera top and bottom), in video pixels. Guide fractions map onto this.
+ */
+function visibleVideoArea(video: HTMLVideoElement) {
+  const vw = video.videoWidth;
+  const vh = video.videoHeight;
+  const aspect = 16 / 9;
+  if (vw / vh > aspect) {
+    const w = vh * aspect;
+    return { x: (vw - w) / 2, y: 0, w, h: vh };
+  }
+  const h = vw / aspect;
+  return { x: 0, y: (vh - h) / 2, w: vw, h };
+}
+
+type FaceFit = "none" | "ok" | "outside";
+
+/**
+ * How the best face relates to the oval. The detector's box is much bigger
+ * than the visible face (it takes in hair, ears and margin — about 1.3× the
+ * face width), so it's shrunk to the face itself first. "ok" when at least
+ * 78% of that face area sits inside the oval: a face filling the oval passes,
+ * one spilling past its sides (too close or off-centre) does not.
+ */
+function checkFaceFit(
   video: HTMLVideoElement,
-  canvas: HTMLCanvasElement | null,
-): boolean {
-  if (!canvas || video.videoWidth === 0 || video.videoHeight === 0)
-    return false;
-  const w = 96;
-  const h = 54;
+  boxes: { x: number; y: number; width: number; height: number }[],
+): FaceFit {
+  if (boxes.length === 0) return "none";
+  const area = visibleVideoArea(video);
+  const face = inCameraSpace(FACE_GUIDE);
+  const cx = face.left + face.width / 2;
+  const cy = face.top + face.height / 2;
+  const rx = face.width / 2;
+  const ry = face.height / 2;
+  const inOval = (x: number, y: number) => ((x - cx) / rx) ** 2 + ((y - cy) / ry) ** 2 <= 1;
+
+  // Judge the largest face — the person, not the photo on their ID.
+  const box = boxes.reduce((a, b) => (b.width * b.height > a.width * a.height ? b : a));
+  const midX = (box.x + box.width / 2 - area.x) / area.w;
+  const midY = (box.y + box.height / 2 - area.y) / area.h;
+  const w = (box.width / area.w) * 0.75;
+  const h = (box.height / area.h) * 0.8;
+
+  // Share of the face area inside the oval, sampled on a grid.
+  const steps = 20;
+  let inside = 0;
+  for (let i = 0; i < steps; i++) {
+    for (let j = 0; j < steps; j++) {
+      const x = midX - w / 2 + (w * (i + 0.5)) / steps;
+      const y = midY - h / 2 + (h * (j + 0.5)) / steps;
+      if (inOval(x, y)) inside++;
+    }
+  }
+  return inside / (steps * steps) >= 0.78 ? "ok" : "outside";
+}
+
+/**
+ * Heuristic check that an ID card is held inside the card frame: looks only
+ * at that region (plus a small margin) for a card outline — long straight
+ * horizontal and vertical edges — with printed detail inside. A real
+ * document detector can replace this later; the call site stays the same.
+ */
+function isCardInGuide(video: HTMLVideoElement, canvas: HTMLCanvasElement | null): boolean {
+  if (!canvas || video.videoWidth === 0 || video.videoHeight === 0) return false;
+  const area = visibleVideoArea(video);
+  const margin = 0.12;
+  const card = inCameraSpace(CARD_GUIDE);
+  const sx = area.x + (card.left - card.width * margin) * area.w;
+  const sy = area.y + (card.top - card.height * margin) * area.h;
+  const sw = card.width * (1 + 2 * margin) * area.w;
+  const sh = card.height * (1 + 2 * margin) * area.h;
+
+  const w = 120;
+  const h = Math.max(24, Math.round((w * sh) / sw));
   canvas.width = w;
   canvas.height = h;
-  const ctx = canvas.getContext("2d", {
-    willReadFrequently: true,
-  } as CanvasRenderingContext2DSettings);
+  const ctx = canvas.getContext("2d", { willReadFrequently: true } as CanvasRenderingContext2DSettings);
   if (!ctx) return false;
-  ctx.drawImage(video, 0, 0, w, h);
+  ctx.drawImage(video, sx, sy, sw, sh, 0, 0, w, h);
   const { data } = ctx.getImageData(0, 0, w, h);
-
-  const startY = Math.floor(h * 0.35);
-  let edgeSum = 0;
-  let sampleCount = 0;
-  const lumAt = (x: number, y: number) => {
+  const lum = (x: number, y: number) => {
     const i = (y * w + x) * 4;
     return 0.299 * data[i] + 0.587 * data[i + 1] + 0.114 * data[i + 2];
   };
-  for (let y = startY; y < h - 1; y++) {
+
+  const EDGE = 22;
+  const rowHits = new Array(h).fill(0); // strong vertical-gradient pixels per row (horizontal lines)
+  const colHits = new Array(w).fill(0); // strong horizontal-gradient pixels per column (vertical lines)
+  let edgeSum = 0;
+  let n = 0;
+  for (let y = 1; y < h - 1; y++) {
     for (let x = 1; x < w - 1; x++) {
-      const lum = lumAt(x, y);
-      edgeSum +=
-        Math.abs(lum - lumAt(x + 1, y)) + Math.abs(lum - lumAt(x, y + 1));
-      sampleCount++;
+      const gx = Math.abs(lum(x + 1, y) - lum(x - 1, y));
+      const gy = Math.abs(lum(x, y + 1) - lum(x, y - 1));
+      if (gy > EDGE) rowHits[y]++;
+      if (gx > EDGE) colHits[x]++;
+      edgeSum += gx + gy;
+      n++;
     }
   }
-  const avgEdge = sampleCount > 0 ? edgeSum / sampleCount : 0;
-  return avgEdge > 18;
+  // A card edge spans most of the frame's width / height.
+  const longHorizontal = rowHits.filter((c) => c > w * 0.45).length;
+  const longVertical = colHits.filter((c) => c > h * 0.45).length;
+  const detail = n > 0 ? edgeSum / n : 0;
+  return longHorizontal >= 1 && longVertical >= 1 && detail > 12;
+}
+
+const COUNTDOWN_FROM = 3;
+/** How long the face and ID must stay in their frames before the countdown starts. */
+const COUNTDOWN_DELAY_MS = 2000;
+
+/**
+ * Face oval + ID card frame drawn over the live camera. Each frame turns
+ * green once that check passes; when both pass, the 3-2-1 countdown shows in
+ * the middle and the photo is taken automatically at the end of it.
+ * Positions come from FACE_GUIDE / CARD_GUIDE, the same regions the
+ * checks inspect.
+ */
+function CaptureGuides({
+  faceFit,
+  idOk,
+  countdown,
+  large = false,
+}: {
+  faceFit: FaceFit;
+  idOk: boolean;
+  countdown: number | null;
+  large?: boolean;
+}) {
+  const faceOk = faceFit === "ok";
+  const faceHints: Record<FaceFit, string> = {
+    none: "Place your face inside the oval",
+    outside: "Move so your whole face is inside the oval",
+    ok: "",
+  };
+  const hint =
+    countdown !== null
+      ? "Hold still…"
+      : !faceOk
+        ? faceHints[faceFit]
+        : !idOk
+          ? "Hold your ID inside the card frame"
+          : "Hold still…";
+  const frame = (ok: boolean) =>
+    "absolute border border-dashed transition-colors duration-300 " +
+    (ok ? "border-emerald-400" : "border-white/85");
+  const tag = (ok: boolean) =>
+    "absolute -top-7 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full px-2 py-0.5 text-[11px] font-semibold " +
+    (ok ? "bg-emerald-500 text-white" : "bg-black/50 text-white");
+
+  const maskId = useId();
+  const f = FACE_GUIDE;
+  const c = CARD_GUIDE;
+
+  return (
+    <div className="pointer-events-none absolute inset-0">
+      {/* Dims everything except the face oval and the card frame. Drawn in a
+          0–100 box stretched over the camera, so the cut-outs line up with the
+          percentage-positioned frames below. */}
+      <svg aria-hidden="true" className="absolute inset-0 h-full w-full" viewBox="0 0 100 100" preserveAspectRatio="none">
+        <defs>
+          <mask id={maskId}>
+            <rect width="100" height="100" fill="white" />
+            <ellipse
+              cx={(f.left + f.width / 2) * 100}
+              cy={(f.top + f.height / 2) * 100}
+              rx={(f.width / 2) * 100}
+              ry={(f.height / 2) * 100}
+              fill="black"
+            />
+            <rect x={c.left * 100} y={c.top * 100} width={c.width * 100} height={c.height * 100} rx="1" fill="black" />
+          </mask>
+        </defs>
+        <rect width="100" height="100" fill="rgba(0,0,0,0.1)" mask={`url(#${maskId})`} />
+      </svg>
+
+      {/* Not shown on screen (the frame tags say enough); kept for screen readers. */}
+      <p aria-live="polite" className="sr-only">
+        {hint}
+      </p>
+
+      {/* Face oval */}
+      <div className={frame(faceOk) + " rounded-[50%]"} style={toPercent(FACE_GUIDE)}>
+        <span className={tag(faceOk)}>{faceOk ? "Face ✓" : "Your face"}</span>
+      </div>
+
+      {/* ID card frame (ID-1 card proportions) */}
+      <div className={frame(idOk) + " rounded-lg"} style={toPercent(CARD_GUIDE)}>
+        <span className={tag(idOk)}>{idOk ? "ID ✓" : "ID here"}</span>
+      </div>
+
+      {countdown !== null && (
+        <div className="absolute inset-0 flex items-center justify-center">
+          <span
+            key={countdown}
+            role="status"
+            aria-label={"Capturing in " + countdown}
+            className={
+              "selfie-countdown flex items-center justify-center rounded-full bg-black/45 font-bold text-white shadow-[0_0_0_4px_rgba(16,185,129,0.8)] " +
+              (large ? "h-32 w-32 text-7xl" : "h-20 w-20 text-5xl")
+            }
+          >
+            {countdown}
+          </span>
+        </div>
+      )}
+    </div>
+  );
 }
 
 export default function CaptureSelfieTrack() {
@@ -347,7 +551,8 @@ export default function CaptureSelfieTrack() {
   const [cameraError, setCameraError] = useState<string | null>(null);
   const [retryToken, setRetryToken] = useState(0);
   const [isExpanded, setIsExpanded] = useState(false);
-  const [faceDetected, setFaceDetected] = useState(false);
+  const [faceFit, setFaceFit] = useState<FaceFit>("none");
+  const faceDetected = faceFit === "ok";
   const [idHeld, setIdHeld] = useState(false);
   const [currentStep, setCurrentStep] = useState(SELFIE_STEP);
   // Step 3 reports when the uploaded ID has been read; Next waits for it.
@@ -436,13 +641,13 @@ export default function CaptureSelfieTrack() {
       capturedImage ||
       cameraError
     ) {
-      setFaceDetected(false);
+      setFaceFit("none");
       setIdHeld(false);
       return;
     }
 
     let cancelled = false;
-    setFaceDetected(false);
+    setFaceFit("none");
     setIdHeld(false);
 
     let intervalId: number | undefined;
@@ -456,20 +661,29 @@ export default function CaptureSelfieTrack() {
 
           try {
             const faceapi = window.faceapi;
-            const result = await faceapi.detectSingleFace(
+            // All faces, so the small photo printed on the ID can't stand
+            // in for the person's own face.
+            const results = await faceapi.detectAllFaces(
               video,
               new faceapi.TinyFaceDetectorOptions({
                 inputSize: 224,
                 scoreThreshold: 0.5,
               }),
             );
-            if (!cancelled) setFaceDetected(!!result);
+            if (!cancelled) {
+              setFaceFit(
+                checkFaceFit(
+                  video,
+                  (results ?? []).map((d: { box: { x: number; y: number; width: number; height: number } }) => d.box),
+                ),
+              );
+            }
           } catch {
             // transient decode/timing errors are fine to ignore
           }
 
           if (!cancelled) {
-            setIdHeld(detectCardLikelyHeld(video, detectionCanvasRef.current));
+            setIdHeld(isCardInGuide(video, detectionCanvasRef.current));
           }
         }, 500);
       })
@@ -538,6 +752,45 @@ export default function CaptureSelfieTrack() {
   const handleCaptureRef = useRef(handleCapture);
   handleCaptureRef.current = handleCapture;
 
+  // Auto capture: once the face and ID are both in frame, count 3-2-1 and
+  // take the photo. Detection runs every 500ms and can miss a single frame,
+  // so a lost match only cancels the countdown after a short grace period.
+  const readyToCapture =
+    onSelfieStep &&
+    captureMode === "selfie" &&
+    !capturedImage &&
+    !cameraError &&
+    faceDetected &&
+    idHeld;
+  const readyRef = useRef(readyToCapture);
+  readyRef.current = readyToCapture;
+  const [countdown, setCountdown] = useState<number | null>(null);
+
+  useEffect(() => {
+    if (readyToCapture) {
+      // Give the person a moment to settle: the face and ID must stay in
+      // place for COUNTDOWN_DELAY_MS before 3-2-1 begins.
+      const t = window.setTimeout(() => setCountdown((c) => c ?? COUNTDOWN_FROM), COUNTDOWN_DELAY_MS);
+      return () => window.clearTimeout(t);
+    }
+    const t = window.setTimeout(() => setCountdown(null), 700);
+    return () => window.clearTimeout(t);
+  }, [readyToCapture]);
+
+  useEffect(() => {
+    if (countdown === null) return;
+    const t = window.setTimeout(() => {
+      if (countdown > 1) {
+        setCountdown(countdown - 1);
+        return;
+      }
+      setCountdown(null);
+      // Only shoot if the face and ID are still in frame at the last moment.
+      if (readyRef.current) handleCaptureRef.current();
+    }, 1000);
+    return () => window.clearTimeout(t);
+  }, [countdown]);
+
   const handleRetake = () => {
     setCapturedImage(null);
   };
@@ -583,10 +836,14 @@ export default function CaptureSelfieTrack() {
     return { id, name, status: status as "completed" | "current" | "pending" };
   });
 
+  const mainRef = useRef<HTMLElement>(null);
   const goToStep = (step: number) => {
     if (!STEPS_WITH_CONTENT.includes(step)) return;
     setIsExpanded(false);
     setCurrentStep(step);
+    // Each step opens at its top (on phones the page scrolls, so Next is
+    // pressed from the bottom of the previous step).
+    mainRef.current?.scrollTo({ top: 0 });
   };
   const stepPosition = STEPS_WITH_CONTENT.indexOf(currentStep);
   const previousStep = STEPS_WITH_CONTENT[stepPosition - 1];
@@ -605,6 +862,18 @@ export default function CaptureSelfieTrack() {
               ? "Confirm your details to submit"
               : null;
   const nextBlocked = nextBlockedHint !== null;
+  const handlePrevious = () => goToStep(previousStep);
+  const handleNext = () =>
+    currentStep === REVIEW_STEP ? setSubmitted(true) : nextStep !== undefined && goToStep(nextStep);
+  const nextLabel =
+    currentStep === REVIEW_STEP ? (
+      <>
+        <img src={sendIconUrl} alt="" width={16} height={16} />
+        {submitted ? "Submitted" : "Submit"}
+      </>
+    ) : (
+      "Next"
+    );
 
   return (
     <div
@@ -612,7 +881,7 @@ export default function CaptureSelfieTrack() {
       style={{ "--footer-h": footerHeight + "px" } as CSSProperties}
     >
       <header className="bg-white border-b border-gray-200 flex justify-center">
-        <div className="w-full max-w-[1280px] h-[72px] flex items-center justify-between">
+        <div className="w-full max-w-[1280px] h-[72px] px-4 md:px-0 flex items-center justify-between">
           <div className="flex items-center">
             <img
               className="h-8 w-auto"
@@ -623,18 +892,17 @@ export default function CaptureSelfieTrack() {
         </div>
       </header>
 
-      <div className="flex-1 min-h-0 flex flex-col md:flex-row justify-center items-start gap-4 md:px-4 md:py-3">
-        <div className="md:hidden w-full bg-white border-b border-gray-200 px-4 py-2.5 mb-1">
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-xs font-semibold text-gray-900">
-              {currentStep}/{TOTAL_STEPS} steps
-            </span>
-          </div>
-          <div className="flex gap-1 w-full">
+      <div className="flex-1 min-h-0 flex flex-col md:flex-row justify-center items-start gap-0 md:gap-4 md:px-4 md:py-3">
+        {/* Phones: label and segments on one line, thin segments. */}
+        <div className="md:hidden w-full bg-white border-b border-gray-200 px-4 py-2 flex items-center gap-3">
+          <span className="shrink-0 text-xs font-semibold text-gray-900">
+            {currentStep}/{TOTAL_STEPS} steps
+          </span>
+          <div className="flex flex-1 gap-1">
             {Array.from({ length: TOTAL_STEPS }).map((_, idx) => (
               <div
                 key={idx}
-                className={`flex-1 h-2 rounded-full transition-all duration-300 ${
+                className={`flex-1 h-1 rounded-full transition-all duration-300 ${
                   idx < currentStep ? "bg-brand-400" : "bg-gray-200"
                 }`}
               />
@@ -720,7 +988,8 @@ export default function CaptureSelfieTrack() {
         {/* self-stretch (and flex-1 when stacked on mobile) pins main to the
             viewport height so long steps scroll inside it; under the row's
             items-start it would otherwise grow to its content and get clipped. */}
-        <main className="w-full md:w-[1024px] min-h-0 max-md:flex-1 self-stretch flex justify-center items-start overflow-y-auto pb-[calc(var(--footer-h)+4px)] md:pb-[var(--footer-h)]">
+        <main ref={mainRef} className="w-full md:w-[1024px] min-h-0 max-md:flex-1 self-stretch flex justify-center items-start overflow-y-auto pb-[var(--footer-h)]">
+          <div className="w-full md:h-full flex flex-col">
           {currentStep === BUYER_PROPERTY_STEP ? (
             <BuyerPropertyStep />
           ) : currentStep === BUYER_DETAILS_STEP ? (
@@ -736,7 +1005,7 @@ export default function CaptureSelfieTrack() {
           ) : currentStep === REVIEW_STEP ? (
             <ReviewStep onEdit={goToStep} onReadyChange={setReviewReady} />
           ) : (
-            <section className="w-full h-full min-h-[480px] bg-white rounded-[16px] overflow-hidden flex flex-col border border-[#e4e8f0]">
+            <section className="w-full md:h-full md:min-h-[480px] bg-white rounded-none md:rounded-[16px] overflow-hidden flex flex-col border border-[#e4e8f0]">
               <StepHeader
                 title="Capture Live Selfie with ID"
                 className="px-4 md:px-8 pt-6 pb-6 flex-shrink-0"
@@ -746,7 +1015,7 @@ export default function CaptureSelfieTrack() {
               </StepHeader>
 
               {/* Only the card body scrolls; the title stays put. */}
-              <div className="flex-1 min-h-0 overflow-y-auto">
+              <div className="md:flex-1 md:min-h-0 md:overflow-y-auto">
               <div className="px-4 md:px-8 pb-6 flex flex-col gap-2 min-h-0">
                 <div className="grid grid-cols-1 md:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)] gap-6 md:gap-12 min-h-0">
                   <div className="flex flex-col gap-4">
@@ -825,11 +1094,13 @@ export default function CaptureSelfieTrack() {
                           <video
                             ref={videoRef}
                             className="w-full h-full object-cover block bg-black"
+                            style={MIRROR_STYLE}
                             autoPlay
                             playsInline
                             muted
                           />
                           <div className="pointer-events-none absolute inset-x-0 bottom-0 h-1/3 bg-linear-to-t from-black/55 to-transparent" />
+                          <CaptureGuides faceFit={faceFit} idOk={idHeld} countdown={countdown} />
                         </>
                       ) : showLiveVideoExpanded ? (
                         <div className="flex h-full w-full flex-col items-center justify-center gap-2 bg-gray-100 text-center text-xs text-gray-600">
@@ -890,7 +1161,7 @@ export default function CaptureSelfieTrack() {
                           aria-label="Capture selfie (Ctrl + Space)"
                           title="Capture selfie (Ctrl + Space)"
                           onClick={handleCapture}
-                          className="group absolute bottom-3 left-1/2 flex h-14 w-14 -translate-x-1/2 cursor-pointer items-center justify-center rounded-full border-[3px] border-white/90 bg-transparent p-1 shadow-[0_6px_20px_rgba(0,0,0,0.35)] transition-transform duration-200 hover:scale-105 active:scale-95"
+                          className="group absolute bottom-3 left-1/2 flex h-11 w-11 -translate-x-1/2 cursor-pointer items-center justify-center rounded-full border-2 border-white/90 bg-transparent p-[3px] shadow-[0_6px_20px_rgba(0,0,0,0.35)] transition-transform duration-200 hover:scale-105 active:scale-95"
                         >
                           <span className="h-full w-full rounded-full bg-white transition-transform duration-150 group-active:scale-90" />
                         </button>
@@ -1136,17 +1407,32 @@ export default function CaptureSelfieTrack() {
               </div>
             </section>
           )}
+          {/* Phones: actions sit at the end of the step (scroll down to reach
+              them); desktop uses the fixed footer instead. */}
+          <div className="md:hidden flex flex-col gap-3 border-x border-b border-[#e4e8f0] bg-white px-4 pb-6 pt-2">
+            {nextBlocked && <p className="m-0 text-center text-xs text-gray-500">{nextBlockedHint}</p>}
+            <Button variant="tertiary" size="md" className="w-full">
+              Save as draft
+            </Button>
+            <Button variant="secondary" size="md" className="w-full" disabled={previousStep === undefined} onClick={handlePrevious}>
+              Previous
+            </Button>
+            <Button variant="primary" size="md" className="w-full" disabled={nextBlocked || submitted} onClick={handleNext}>
+              {nextLabel}
+            </Button>
+          </div>
+          </div>
         </main>
       </div>
 
-      <footer ref={footerRef} className="fixed bottom-0 left-0 right-0 z-40 border-t border-gray-200 bg-white shadow-[-2px_-2px_8px_rgba(10,13,18,0.08)] flex items-center justify-center p-0 flex-wrap gap-0 flex-shrink-0 h-auto">
+      <footer ref={footerRef} className="fixed bottom-0 left-0 right-0 z-40 border-t border-gray-200 bg-white shadow-[-2px_-2px_8px_rgba(10,13,18,0.08)] hidden md:flex items-center justify-center p-0 flex-wrap gap-0 flex-shrink-0 h-auto">
         <div className="w-full max-w-[1280px] flex flex-col md:flex-row md:items-center md:justify-between py-3 md:py-3 gap-2 md:gap-3 px-4 md:px-0">
           <Button
             variant="secondary"
             size="sm"
             className="w-full md:w-24"
             disabled={previousStep === undefined}
-            onClick={() => goToStep(previousStep)}
+            onClick={handlePrevious}
           >
             Previous
           </Button>
@@ -1168,20 +1454,9 @@ export default function CaptureSelfieTrack() {
               size="sm"
               className={`flex-1 md:flex-none ${currentStep === REVIEW_STEP ? "md:w-32" : "md:w-24"}`}
               disabled={nextBlocked || submitted}
-              onClick={() =>
-                currentStep === REVIEW_STEP
-                  ? setSubmitted(true)
-                  : nextStep !== undefined && goToStep(nextStep)
-              }
+              onClick={handleNext}
             >
-              {currentStep === REVIEW_STEP ? (
-                <>
-                  <img src={sendIconUrl} alt="" width={16} height={16} />
-                  {submitted ? "Submitted" : "Submit"}
-                </>
-              ) : (
-                "Next"
-              )}
+              {nextLabel}
             </Button>
           </div>
         </div>
@@ -1201,13 +1476,21 @@ export default function CaptureSelfieTrack() {
               alt="Captured selfie holding ID"
             />
           ) : showLiveVideoExpanded ? (
-            <video
-              ref={videoRef}
-              className="absolute inset-0 h-full w-full object-contain"
-              autoPlay
-              playsInline
-              muted
-            />
+            <>
+              <video
+                ref={videoRef}
+                className="absolute inset-0 h-full w-full object-contain"
+                style={MIRROR_STYLE}
+                autoPlay
+                playsInline
+                muted
+              />
+              <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
+                <div className="relative aspect-video w-[min(100vw,calc(100vh*16/9))]">
+                  <CaptureGuides faceFit={faceFit} idOk={idHeld} countdown={countdown} large />
+                </div>
+              </div>
+            </>
           ) : (
             <div className="absolute inset-0 flex items-center justify-center text-sm text-white/70">
               No live preview

@@ -120,7 +120,7 @@ export default function Dashboard() {
             onClick={() => navigate({ screen: "ra-form" })}
             className="px-4 py-2 bg-primary-500 text-white rounded-lg font-semibold hover:bg-primary-600 transition-colors"
           >
-            RA Form (8-Step)
+            RA Form (legacy)
           </button>
           <button
             onClick={() => navigate({ screen: "capture-selfie-step" })}
@@ -132,7 +132,7 @@ export default function Dashboard() {
             onClick={() => navigate({ screen: "capture-selfie-track" })}
             className="px-4 py-2 bg-orange-600 text-white rounded-lg font-semibold hover:bg-orange-700 transition-colors"
           >
-            Selfie Capture 2
+            RA Form
           </button>
         </div>
 

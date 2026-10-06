@@ -50,13 +50,13 @@ export default function BuyerPropertyStep() {
   const [reservationDate, setReservationDate] = useState<string>();
 
   return (
-    <section className="form-lg w-full h-full min-h-[480px] bg-white rounded-[16px] flex flex-col border border-[#e4e8f0]">
+    <section className="form-lg w-full md:h-full md:min-h-[480px] bg-white rounded-none md:rounded-[16px] flex flex-col border border-[#e4e8f0]">
       <StepHeader title="Buyer & Property Information" className="px-4 md:px-8 pt-6 pb-6">
         Review and confirm buyer type and property details for this reservation.
       </StepHeader>
 
       {/* Only the card body scrolls; the title stays put. */}
-      <div className="flex-1 min-h-0 overflow-y-auto">
+      <div className="md:flex-1 md:min-h-0 md:overflow-y-auto">
       <div className="px-4 md:px-8 pb-6 flex flex-col gap-8">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-x-5 gap-y-3 items-start">
           <Field label="Buyer Type" required>

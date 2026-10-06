@@ -29,13 +29,13 @@ export default function ConsentStep({
   }, [ready, onReadyChange]);
 
   return (
-    <section className="w-full h-full min-h-[480px] bg-white rounded-[16px] flex flex-col border border-[#e4e8f0]">
+    <section className="w-full md:h-full md:min-h-[480px] bg-white rounded-none md:rounded-[16px] flex flex-col border border-[#e4e8f0]">
       <StepHeader title="Customer Acceptance Policy & Client Consent" className="px-4 md:px-8 pt-6 pb-6">
         Please review the Customer Acceptance Policy and provide your consent before proceeding to the next step.
       </StepHeader>
 
       {/* Only the card body scrolls; the title stays put. */}
-      <div className="flex-1 min-h-0 overflow-y-auto">
+      <div className="md:flex-1 md:min-h-0 md:overflow-y-auto">
       <div className="px-4 md:px-8 pb-6 flex flex-col gap-4">
         <div className="rounded-lg bg-gray-50 p-4 md:p-6">
           <ConsentPolicyText />
@@ -61,7 +61,7 @@ export default function ConsentStep({
 /** The AMLA policy paragraph — shared with the Review & Submit step. */
 export function ConsentPolicyText() {
   return (
-    <p className="m-0 text-sm md:text-base leading-6 text-gray-600">
+    <p className="m-0 text-sm font-normal leading-5 text-gray-600">
       In compliance with the Anti-Money Laundering Act (AMLA), DMCI Homes is required to verify each client’s
       identity before proceeding with any official transaction. This includes collecting valid government-issued
       IDs and contact information. Additional supporting documents, such as proof of income and/ or business

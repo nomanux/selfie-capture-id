@@ -83,14 +83,18 @@ const SCREEN_PATHS: Record<Screen, string> = {
   "lottery-registration": "/lottery/registration",
   "lottery-unit-picker": "/lottery/unit-picker",
   "payment-method": "/payment-method",
-  "ra-form": "/ra-form",
+  // The 8-step CRF/RA track lives at /ra-form; the older single-file RA form
+  // moved to /ra-form-legacy.
+  "ra-form": "/ra-form-legacy",
   "capture-selfie-step": "/capture-selfie-step",
-  "capture-selfie-track": "/capture-selfie-track",
+  "capture-selfie-track": "/ra-form",
 };
 
-const PATH_TO_SCREEN: Record<string, Screen> = Object.fromEntries(
-  Object.entries(SCREEN_PATHS).map(([screen, path]) => [path, screen])
-) as Record<string, Screen>;
+const PATH_TO_SCREEN: Record<string, Screen> = {
+  ...(Object.fromEntries(Object.entries(SCREEN_PATHS).map(([screen, path]) => [path, screen])) as Record<string, Screen>),
+  // Old bookmarks: opens the track and the URL is rewritten to /ra-form.
+  "/capture-selfie-track": "capture-selfie-track",
+};
 
 function routeToUrl(route: Route): string {
   const path = SCREEN_PATHS[route.screen] ?? SCREEN_PATHS.login;

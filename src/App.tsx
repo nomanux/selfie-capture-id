@@ -95,7 +95,7 @@ export default function App() {
   const getInitialRoute = () => {
     if (typeof window !== "undefined") {
       const path = window.location.pathname;
-      if (path === "/capture-selfie-track") {
+      if (path === "/ra-form" || path === "/capture-selfie-track") {
         return { screen: "capture-selfie-track" as const };
       }
     }
