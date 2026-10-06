@@ -50,7 +50,7 @@ export default function BuyerPropertyStep() {
   const [reservationDate, setReservationDate] = useState<string>();
 
   return (
-    <section className="form-lg w-full md:h-full md:min-h-[480px] bg-white rounded-none md:rounded-[16px] flex flex-col border border-[#e4e8f0]">
+    <section className="form-lg w-full md:max-h-full bg-white rounded-none md:rounded-[16px] flex flex-col border border-[#e4e8f0]">
       <StepHeader title="Buyer & Property Information" className="px-4 md:px-8 pt-6 pb-6">
         Review and confirm buyer type and property details for this reservation.
       </StepHeader>

@@ -392,7 +392,7 @@ export default function ReviewStep({
   }, [confirmed, onReadyChange]);
 
   return (
-    <section className="w-full md:h-full md:min-h-[480px] bg-white rounded-none md:rounded-[16px] flex flex-col border border-[#e4e8f0]">
+    <section className="w-full md:max-h-full bg-white rounded-none md:rounded-[16px] flex flex-col border border-[#e4e8f0]">
       <StepHeader title="Review & Submit" className="px-4 md:px-8 pt-6 pb-6">
         Review the details below to ensure they are correct and up to date before submission.
       </StepHeader>

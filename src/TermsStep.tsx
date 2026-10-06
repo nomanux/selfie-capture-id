@@ -146,7 +146,7 @@ export default function TermsStep({
 
   // Fills the visible area so only the text panel scrolls (one scrollbar), not the page too.
   return (
-    <section className="w-full md:h-full md:min-h-[480px] bg-white rounded-none md:rounded-[16px] flex flex-col border border-[#e4e8f0]">
+    <section className="w-full md:max-h-full bg-white rounded-none md:rounded-[16px] flex flex-col border border-[#e4e8f0]">
       <StepHeader title="Terms and Conditions" className="px-4 md:px-8 pt-6 pb-6">
         Please read the terms and conditions carefully before proceeding next step.
       </StepHeader>

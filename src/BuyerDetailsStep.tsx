@@ -3,8 +3,6 @@ import {
   useId,
   useRef,
   useState,
-  type ChangeEvent,
-  type DragEvent,
   type InputHTMLAttributes,
   type ReactNode,
   type TextareaHTMLAttributes,
@@ -15,11 +13,11 @@ import DatePicker from "./DatePicker";
 import Input from "./Input";
 import Select, { type SelectOption } from "./Select";
 import StepHeader from "./StepHeader";
+import { SelfieCamera } from "./selfieCapture";
+import { IdUploadPanel } from "./IdentityVerificationStep";
 import { ChevronDownIcon, ChevronUpIcon, XIcon } from "./icons";
 import {
   coBuyerIconUrl,
-  dotSeparatorUrl,
-  plusBrandIconUrl,
   plusWhiteIconUrl,
   trashIconUrl,
 } from "./assets/figmaAssets";
@@ -603,83 +601,27 @@ function MultiSelect({
   );
 }
 
-function UploadIdCard({
+/**
+ * "<Person> ID (Front Side)" box: the same upload → read → review flow as
+ * the Identity Verification step (IdUploadPanel).
+ */
+function IdUploadCard({
   title,
   className = "bg-white",
+  onReadyChange,
+  compact = false,
 }: {
   title: string;
   className?: string;
+  /** Upload only — no ID details panel, privacy note or example photos (co-buyers). */
+  compact?: boolean;
+  /** True once the ID has been read (the co-buyer selfie opens then). */
+  onReadyChange?: (ready: boolean) => void;
 }) {
-  const [fileName, setFileName] = useState<string>();
-  const [dragging, setDragging] = useState(false);
-  const inputRef = useRef<HTMLInputElement>(null);
-
-  const acceptFile = (file?: File) => {
-    if (file) setFileName(file.name);
-  };
-
-  const onDrop = (event: DragEvent<HTMLDivElement>) => {
-    event.preventDefault();
-    setDragging(false);
-    acceptFile(event.dataTransfer.files[0]);
-  };
-
   return (
-    <div
-      className={
-        "flex flex-col gap-4 rounded-2xl px-2 py-3 md:p-4 " + className
-      }
-    >
-      <h4 className="m-0 text-base font-semibold leading-6 text-gray-900">
-        {title}
-      </h4>
-      <div
-        onDragOver={(e) => {
-          e.preventDefault();
-          setDragging(true);
-        }}
-        onDragLeave={() => setDragging(false)}
-        onDrop={onDrop}
-        className={`flex flex-col items-center justify-center gap-3 rounded-xl border border-dashed px-6 py-4 text-center transition-colors ${
-          dragging
-            ? "border-brand-400 bg-brand-100"
-            : "border-[#6293f8] bg-brand-25"
-        }`}
-      >
-        <span className="flex h-10 w-10 items-center justify-center rounded-full bg-brand-50">
-          <img src={plusBrandIconUrl} alt="" width={20} height={20} />
-        </span>
-        <div className="flex flex-col gap-1">
-          <p className="m-0 text-lg font-semibold leading-7 text-gray-900">
-            {fileName ?? "Drag and drop your ID here"}
-          </p>
-          <p className="m-0 text-sm leading-5 text-gray-600">
-            Or{" "}
-            <button
-              type="button"
-              onClick={() => inputRef.current?.click()}
-              className="cursor-pointer border-0 bg-transparent p-0 text-sm text-brand-400 underline hover:text-brand-600"
-            >
-              browse files
-            </button>{" "}
-            from your computer
-          </p>
-        </div>
-        <p className="m-0 mt-2 flex items-center gap-2 text-sm font-medium leading-5 text-gray-700">
-          JPEG, JPG or PNG
-          <img src={dotSeparatorUrl} alt="" width={4} height={4} />
-          Max 5 MB
-        </p>
-        <input
-          ref={inputRef}
-          type="file"
-          accept="image/jpeg,image/png"
-          className="hidden"
-          onChange={(e: ChangeEvent<HTMLInputElement>) =>
-            acceptFile(e.target.files?.[0])
-          }
-        />
-      </div>
+    <div className={"flex flex-col gap-4 rounded-2xl px-2 py-3 md:p-4 " + className}>
+      <h4 className="m-0 text-base font-semibold leading-6 text-gray-900">{title}</h4>
+      <IdUploadPanel onReadyChange={onReadyChange} onGray={className.includes("bg-gray")} compact={compact} />
     </div>
   );
 }
@@ -1251,7 +1193,7 @@ function SpouseInformation({ onWhiteCard = false }: { onWhiteCard?: boolean }) {
               ]}
             />
           </div>
-          <UploadIdCard title="Spouse ID (Front Side)" />
+          <IdUploadCard title="Spouse ID (Front Side)" />
           <div className="flex flex-col gap-3">
             <SectionHeading title="Birth Place Information" size="md" />
             <BirthPlaceFields />
@@ -1268,8 +1210,131 @@ function SpouseInformation({ onWhiteCard = false }: { onWhiteCard?: boolean }) {
   );
 }
 
+/**
+ * "Co-Buyer #N Selfie with Valid ID" — shown once that co-buyer's ID is
+ * uploaded. Upload a photo, or take a live selfie with the same guided
+ * auto-capture camera as the Live Selfie step.
+ */
+function CoBuyerSelfie({ index }: { index: number }) {
+  const [method, setMethod] = useState<"upload" | "camera">("camera");
+  const [photo, setPhoto] = useState<string | null>(null);
+  const fileRef = useRef<HTMLInputElement>(null);
+
+  const readFile = (file?: File) => {
+    if (!file || !file.type.startsWith("image/")) return;
+    const reader = new FileReader();
+    reader.onload = () => setPhoto(reader.result as string);
+    reader.readAsDataURL(file);
+  };
+
+  const choose = (next: "upload" | "camera") => {
+    setPhoto(null);
+    setMethod(next);
+  };
+
+  // Same segmented switch as the Live Selfie step.
+  const methodButton = (value: "upload" | "camera", label: string, icon: ReactNode) => (
+    <button
+      type="button"
+      role="tab"
+      aria-selected={method === value}
+      onClick={() => choose(value)}
+      className={`flex flex-1 md:flex-none items-center justify-center gap-2 rounded-lg border-none px-4 md:px-3.5 py-2.5 md:py-1.5 text-sm font-semibold leading-5 cursor-pointer transition-all duration-200 ${
+        method === value
+          ? "bg-white text-[#052b78] shadow-[0_1px_2px_-1px_rgba(10,12.67,18,0.1),0_1px_3px_rgba(10,12.67,18,0.1)]"
+          : "bg-transparent text-gray-700 hover:bg-blue-50"
+      }`}
+    >
+      {icon}
+      {label}
+    </button>
+  );
+
+  return (
+    <div className="flex flex-col gap-4 rounded-2xl bg-gray-50 px-2 py-3 md:p-4">
+      <h4 className="m-0 flex gap-1 text-base font-semibold leading-6 text-gray-900">
+        Co-Buyer #{index} Selfie with Valid ID
+        <span className="text-brand-600">*</span>
+      </h4>
+
+      <p className="m-0 flex gap-3 rounded-lg border-l-4 border-brand-500 bg-brand-25 px-4 py-3 text-sm font-medium italic leading-5 text-brand-600">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" className="mt-0.5 shrink-0">
+          <rect x="3" y="5" width="18" height="14" rx="2" />
+          <circle cx="9" cy="11" r="2" />
+          <path d="M14 10h4M14 14h4M6 16h6" />
+        </svg>
+        Please submit a selfie while holding the same valid government-issued ID that has been uploaded. Ensure that
+        the face and ID details are visible and readable.
+      </p>
+
+      <div className="flex flex-col gap-0.5">
+        <p className="m-0 text-sm font-semibold leading-5 text-gray-900">How would you like to submit your picture?</p>
+        <p className="m-0 text-xs leading-[18px] text-gray-500">Choose a method to continue</p>
+      </div>
+
+      <div role="tablist" aria-label="Selfie method" className="flex w-full md:w-fit gap-0 rounded-[12px] bg-gray-100 p-1">
+        {methodButton(
+          "camera",
+          "Take Selfie",
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            <path d="M4 8h3l2-3h6l2 3h3v11H4z" />
+            <circle cx="12" cy="13" r="3.5" />
+          </svg>,
+        )}
+        {methodButton(
+          "upload",
+          "Upload Photo",
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            <path d="M12 15V4M7 9l5-5 5 5M4 15v4h16v-4" />
+          </svg>,
+        )}
+      </div>
+
+      {photo ? (
+        <div className="flex flex-col gap-2">
+          <img
+            src={photo}
+            alt={`Co-buyer #${index} selfie holding their ID`}
+            className="block aspect-video w-full rounded-xl object-cover"
+          />
+          <button
+            type="button"
+            onClick={() => (method === "upload" ? fileRef.current?.click() : setPhoto(null))}
+            className="w-fit cursor-pointer border-0 bg-transparent p-0 text-sm font-semibold text-brand-600 hover:text-brand-700"
+          >
+            {method === "upload" ? "Choose a different photo" : "Retake selfie"}
+          </button>
+        </div>
+      ) : method === "camera" ? (
+        <SelfieCamera onCapture={setPhoto} />
+      ) : method === "upload" ? (
+        <button
+          type="button"
+          onClick={() => fileRef.current?.click()}
+          className="flex aspect-video w-full cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-[#6293f8] bg-brand-25 text-center"
+        >
+          <span className="text-sm font-semibold text-gray-900">Upload your selfie with your ID</span>
+          <span className="text-xs text-gray-500">JPEG, JPG or PNG • Max 5 MB</span>
+        </button>
+      ) : null}
+
+      <input
+        ref={fileRef}
+        type="file"
+        accept="image/jpeg,image/png"
+        className="hidden"
+        onChange={(e) => {
+          readFile(e.target.files?.[0]);
+          e.target.value = "";
+        }}
+      />
+    </div>
+  );
+}
+
 function CoBuyerFields({ index }: { index: number }) {
   const [civilStatus, setCivilStatus] = useState<string>();
+  const [idUploaded, setIdUploaded] = useState(false);
   return (
     <>
       <div className="flex flex-col gap-3">
@@ -1289,10 +1354,13 @@ function CoBuyerFields({ index }: { index: number }) {
           onCivilStatusChange={setCivilStatus}
         />
       </div>
-      <UploadIdCard
+      <IdUploadCard
         title={`Co-Buyer #${index} ID (Front Side)`}
         className="bg-gray-50"
+        onReadyChange={setIdUploaded}
+        compact
       />
+      {idUploaded && <CoBuyerSelfie index={index} />}
       <div className="flex flex-col gap-3">
         <SectionHeading title="Birth Place Information" size="md" />
         <BirthPlaceFields />

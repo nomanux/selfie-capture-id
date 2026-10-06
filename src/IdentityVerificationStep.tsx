@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type DragEvent, type ReactNode } from "react";
+import { useId, useEffect, useRef, useState, type DragEvent, type ReactNode } from "react";
 import Checkbox from "./Checkbox";
 import DatePicker from "./DatePicker";
 import Input from "./Input";
@@ -161,12 +161,24 @@ function ButtonLike({
 /* Step                                                                */
 /* ------------------------------------------------------------------ */
 
-export default function IdentityVerificationStep({
+/**
+ * ID upload → read → review flow (drop zone / take a photo, scan, preview with
+ * Replace/Remove, auto-filled ID details, example photos). Used by step 3 and
+ * by the spouse / co-buyer ID boxes in step 2.
+ */
+export function IdUploadPanel({
   onReadyChange,
+  onGray = false,
+  compact = false,
 }: {
-  /** Fires with true once the ID has been read, false otherwise — gates the shell's Next button. */
+  /** Fires with true once the ID has been read, false otherwise. */
   onReadyChange?: (ready: boolean) => void;
+  /** Sitting on a grey box: give the empty details panel a white fill so it still reads as a panel. */
+  onGray?: boolean;
+  /** Upload + read + preview only — no ID details panel, privacy note or example photos (step 2 ID boxes). */
+  compact?: boolean;
 }) {
+  const uid = useId();
   const [phase, setPhase] = useState<Phase>("empty");
   const [preview, setPreview] = useState(idCardImageUrl);
   const [fileMeta, setFileMeta] = useState("umid-front.png · 211 KB");
@@ -231,19 +243,9 @@ export default function IdentityVerificationStep({
   const panelQuiet = phase !== "done";
 
   return (
-    <section className="form-lg w-full md:h-full md:min-h-[480px] bg-white rounded-none md:rounded-[16px] flex flex-col border border-[#e4e8f0]">
-      <StepHeader title="Upload your government ID" className="px-4 md:px-8 pt-6 pb-6">
-        Upload the front of your ID. We read your details from the card and fill in the form for you.{" "}
-        <a href="#" className="font-semibold text-brand-600 underline hover:text-brand-700">
-          See accepted IDs
-        </a>
-      </StepHeader>
+    <div className="flex flex-col gap-6">
 
-      {/* Only the card body scrolls; the title stays put. */}
-      <div className="md:flex-1 md:min-h-0 md:overflow-y-auto">
-      <div className="px-4 md:px-8 pb-6 flex flex-col gap-6">
-
-      <div className="grid grid-cols-1 md:grid-cols-[minmax(0,1.35fr)_minmax(0,1fr)] gap-4 md:gap-5">
+      <div className={`grid grid-cols-1 gap-4 md:gap-5 ${compact ? "" : "md:grid-cols-[minmax(0,1.35fr)_minmax(0,1fr)]"}`}>
         {/* Left: upload / reading / preview */}
         {/* Box fills the row so it matches the ID details panel height. */}
         <section aria-label="ID photo" className="flex flex-col">
@@ -360,14 +362,15 @@ export default function IdentityVerificationStep({
         </section>
 
         {/* Right: ID details */}
+        {!compact && (
         <section
-          aria-labelledby="id-details-title"
+          aria-labelledby={uid + "-details"}
           className={`flex flex-col gap-4 rounded-xl border p-4 md:p-5 transition-colors ${
-            panelQuiet ? "border-gray-100 bg-gray-50" : "border-gray-200 bg-white"
+            panelQuiet && !onGray ? "border-gray-100 bg-gray-50" : "border-gray-200 bg-white"
           }`}
         >
           <div className="flex flex-col gap-0.5">
-            <h2 id="id-details-title" className="m-0 text-base font-semibold leading-6 text-gray-900">
+            <h2 id={uid + "-details"} className="m-0 text-base font-semibold leading-6 text-gray-900">
               ID details
             </h2>
             <p className="m-0 text-xs leading-[18px] text-gray-600">{PANEL_HINTS[phase]}</p>
@@ -382,7 +385,7 @@ export default function IdentityVerificationStep({
           ) : (
             <form className="flex flex-col gap-4" noValidate onSubmit={(e) => e.preventDefault()}>
               <div className="flex flex-col gap-1.5">
-                <FieldHead id="id-type-label" label="ID type" edited={edited.idType} />
+                <FieldHead id={uid + "-type"} label="ID type" edited={edited.idType} />
                 <Select
                   size="sm"
                   aria-label="ID type"
@@ -397,9 +400,9 @@ export default function IdentityVerificationStep({
               </div>
 
               <div className="flex flex-col gap-1.5">
-                <FieldHead htmlFor="id-number" label={idTypeInfo.numberLabel} edited={edited.idNumber} />
+                <FieldHead htmlFor={uid + "-number"} label={idTypeInfo.numberLabel} edited={edited.idNumber} />
                 <Input
-                  id="id-number"
+                  id={uid + "-number"}
                   size="sm"
                   placeholder={idTypeInfo.format}
                   value={idNumber}
@@ -439,18 +442,21 @@ export default function IdentityVerificationStep({
             </form>
           )}
         </section>
+        )}
       </div>
 
       {/* Below both boxes so it doesn't make the left column taller than the panel. */}
-      <p className="m-0 -mt-3 flex items-center gap-2 text-xs leading-[18px] text-gray-500">
-        <LockIcon />
-        Your ID stays encrypted. DMCI uses it only to verify who you are.
-      </p>
+      {!compact && (
+        <p className="m-0 -mt-3 flex items-center gap-2 text-xs leading-[18px] text-gray-500">
+          <LockIcon />
+          Your ID stays encrypted. DMCI uses it only to verify who you are.
+        </p>
+      )}
 
       {/* Example photos — upload guidance, so hidden once the ID has been read */}
-      {phase !== "done" && (
-        <section aria-labelledby="id-tips-title" className="flex flex-col gap-3 border-t border-gray-200 pt-5">
-          <h2 id="id-tips-title" className="m-0 text-sm font-semibold leading-5 text-gray-900">
+      {!compact && phase !== "done" && (
+        <section aria-labelledby={uid + "-tips"} className="flex flex-col gap-3 border-t border-gray-200 pt-5">
+          <h2 id={uid + "-tips"} className="m-0 text-sm font-semibold leading-5 text-gray-900">
             Get the details read right the first time
           </h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
@@ -478,7 +484,30 @@ export default function IdentityVerificationStep({
           </div>
         </section>
       )}
-      </div>
+    </div>
+  );
+}
+
+export default function IdentityVerificationStep({
+  onReadyChange,
+}: {
+  /** Fires with true once the ID has been read, false otherwise — gates the shell's Next button. */
+  onReadyChange?: (ready: boolean) => void;
+}) {
+  return (
+    <section className="form-lg w-full md:max-h-full bg-white rounded-none md:rounded-[16px] flex flex-col border border-[#e4e8f0]">
+      <StepHeader title="Upload your government ID" className="px-4 md:px-8 pt-6 pb-6">
+        Upload the front of your ID. We read your details from the card and fill in the form for you.{" "}
+        <a href="#" className="font-semibold text-brand-600 underline hover:text-brand-700">
+          See accepted IDs
+        </a>
+      </StepHeader>
+
+      {/* Only the card body scrolls; the title stays put. */}
+      <div className="md:flex-1 md:min-h-0 md:overflow-y-auto">
+        <div className="px-4 md:px-8 pb-6">
+          <IdUploadPanel onReadyChange={onReadyChange} />
+        </div>
       </div>
     </section>
   );
