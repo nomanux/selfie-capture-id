@@ -17,8 +17,12 @@ export default function StepHeader({
 }) {
   return (
     <div className={"flex flex-col gap-1 " + className}>
-      <h1 className="m-0 text-lg md:text-2xl leading-7 md:leading-8 font-bold text-gray-900">{title}</h1>
-      {children && <p className="m-0 text-sm leading-5 text-gray-600">{children}</p>}
+      <h1 className="m-0 text-lg md:text-2xl leading-7 md:leading-8 font-bold text-brand-800">
+        {title}
+      </h1>
+      {children && (
+        <p className="m-0 text-sm leading-5 text-gray-600">{children}</p>
+      )}
     </div>
   );
 }

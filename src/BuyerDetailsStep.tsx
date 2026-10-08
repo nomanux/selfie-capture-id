@@ -619,9 +619,19 @@ function IdUploadCard({
   onReadyChange?: (ready: boolean) => void;
 }) {
   return (
-    <div className={"flex flex-col gap-4 rounded-2xl px-2 py-3 md:p-4 " + className}>
-      <h4 className="m-0 text-base font-semibold leading-6 text-gray-900">{title}</h4>
-      <IdUploadPanel onReadyChange={onReadyChange} onGray={className.includes("bg-gray")} compact={compact} />
+    <div
+      className={
+        "flex flex-col gap-4 rounded-2xl px-2 py-3 md:p-4 " + className
+      }
+    >
+      <h4 className="m-0 text-base font-semibold leading-6 text-gray-900">
+        {title}
+      </h4>
+      <IdUploadPanel
+        onReadyChange={onReadyChange}
+        onGray={className.includes("bg-gray")}
+        compact={compact}
+      />
     </div>
   );
 }
@@ -1233,13 +1243,18 @@ function CoBuyerSelfie({ index }: { index: number }) {
   };
 
   // Same segmented switch as the Live Selfie step.
-  const methodButton = (value: "upload" | "camera", label: string, icon: ReactNode) => (
+  const methodButton = (
+    value: "upload" | "camera",
+    label: string,
+    icon: ReactNode,
+  ) => (
     <button
       type="button"
       role="tab"
       aria-selected={method === value}
       onClick={() => choose(value)}
-      className={`flex flex-1 md:flex-none items-center justify-center gap-2 rounded-lg border-none px-4 md:px-3.5 py-2.5 md:py-1.5 text-sm font-semibold leading-5 cursor-pointer transition-all duration-200 ${
+      // Phones: 32px-tall segments with 16px icons; desktop keeps the roomier padding.
+      className={`flex h-8 md:h-auto flex-1 md:flex-none items-center justify-center gap-1.5 md:gap-2 rounded-md md:rounded-lg border-none px-3 md:px-3.5 md:py-1.5 text-[13px] md:text-sm font-semibold leading-5 cursor-pointer transition-all duration-200 [&>svg]:h-4 [&>svg]:w-4 md:[&>svg]:h-5 md:[&>svg]:w-5 ${
         method === value
           ? "bg-white text-[#052b78] shadow-[0_1px_2px_-1px_rgba(10,12.67,18,0.1),0_1px_3px_rgba(10,12.67,18,0.1)]"
           : "bg-transparent text-gray-700 hover:bg-blue-50"
@@ -1258,25 +1273,55 @@ function CoBuyerSelfie({ index }: { index: number }) {
       </h4>
 
       <p className="m-0 flex gap-3 rounded-lg border-l-4 border-brand-500 bg-brand-25 px-4 py-3 text-sm font-medium italic leading-5 text-brand-600">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" className="mt-0.5 shrink-0">
+        <svg
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth={2}
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          aria-hidden="true"
+          className="mt-0.5 shrink-0"
+        >
           <rect x="3" y="5" width="18" height="14" rx="2" />
           <circle cx="9" cy="11" r="2" />
           <path d="M14 10h4M14 14h4M6 16h6" />
         </svg>
-        Please submit a selfie while holding the same valid government-issued ID that has been uploaded. Ensure that
-        the face and ID details are visible and readable.
+        Please submit a selfie while holding the same valid government-issued ID
+        that has been uploaded. Ensure that the face and ID details are visible
+        and readable.
       </p>
 
       <div className="flex flex-col gap-0.5">
-        <p className="m-0 text-sm font-semibold leading-5 text-gray-900">How would you like to submit your picture?</p>
-        <p className="m-0 text-xs leading-[18px] text-gray-500">Choose a method to continue</p>
+        <p className="m-0 text-sm font-semibold leading-5 text-gray-900">
+          How would you like to submit your picture?
+        </p>
+        <p className="m-0 text-xs leading-[18px] text-gray-500">
+          Choose a method to continue
+        </p>
       </div>
 
-      <div role="tablist" aria-label="Selfie method" className="flex w-full md:w-fit gap-0 rounded-[12px] bg-gray-100 p-1">
+      <div
+        role="tablist"
+        aria-label="Selfie method"
+        className="flex w-full md:w-fit gap-0 rounded-lg md:rounded-[12px] bg-gray-100 p-0.5 md:p-1"
+      >
         {methodButton(
           "camera",
           "Take Selfie",
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+          <svg
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth={2}
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden="true"
+          >
             <path d="M4 8h3l2-3h6l2 3h3v11H4z" />
             <circle cx="12" cy="13" r="3.5" />
           </svg>,
@@ -1284,7 +1329,17 @@ function CoBuyerSelfie({ index }: { index: number }) {
         {methodButton(
           "upload",
           "Upload Photo",
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+          <svg
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth={2}
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden="true"
+          >
             <path d="M12 15V4M7 9l5-5 5 5M4 15v4h16v-4" />
           </svg>,
         )}
@@ -1299,7 +1354,9 @@ function CoBuyerSelfie({ index }: { index: number }) {
           />
           <button
             type="button"
-            onClick={() => (method === "upload" ? fileRef.current?.click() : setPhoto(null))}
+            onClick={() =>
+              method === "upload" ? fileRef.current?.click() : setPhoto(null)
+            }
             className="w-fit cursor-pointer border-0 bg-transparent p-0 text-sm font-semibold text-brand-600 hover:text-brand-700"
           >
             {method === "upload" ? "Choose a different photo" : "Retake selfie"}
@@ -1313,8 +1370,12 @@ function CoBuyerSelfie({ index }: { index: number }) {
           onClick={() => fileRef.current?.click()}
           className="flex aspect-video w-full cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-[#6293f8] bg-brand-25 text-center"
         >
-          <span className="text-sm font-semibold text-gray-900">Upload your selfie with your ID</span>
-          <span className="text-xs text-gray-500">JPEG, JPG or PNG • Max 5 MB</span>
+          <span className="text-sm font-semibold text-gray-900">
+            Upload your selfie with your ID
+          </span>
+          <span className="text-xs text-gray-500">
+            JPEG, JPG or PNG • Max 5 MB
+          </span>
         </button>
       ) : null}
 
@@ -1643,7 +1704,9 @@ export default function BuyerDetailsStep() {
               <div key={type.value} className="contents">
                 {index > 0 && (
                   // Radios already say "pick one", so the "or" only earns its row on desktop.
-                  <p className="m-0 hidden md:block text-base text-gray-400 self-center">or</p>
+                  <p className="m-0 hidden md:block text-base text-gray-400 self-center">
+                    or
+                  </p>
                 )}
                 <button
                   type="button"
@@ -1856,7 +1919,9 @@ export default function BuyerDetailsStep() {
                   <div
                     className={
                       "col-span-2 md:col-span-1 mb-1 md:mb-0 " +
-                      (awareness.includes(row[row.length - 1]) ? "" : "hidden md:block")
+                      (awareness.includes(row[row.length - 1])
+                        ? ""
+                        : "hidden md:block")
                     }
                   >
                     {awarenessDetail[rowIndex]}
