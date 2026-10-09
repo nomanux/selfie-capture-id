@@ -299,12 +299,17 @@ export function CaptureGuides({
   );
 }
 
-/** A touch device whose short side is phone-sized (tablets keep the inline camera). */
+/**
+ * Mobile layout (narrower than `md`, same breakpoint as the page), or a touch
+ * device whose short side is phone-sized, which keeps a sideways phone wider
+ * than 768px counted as a phone. Tablets in landscape keep the inline camera.
+ */
 const isPhoneNow = () =>
-  window.matchMedia("(pointer: coarse)").matches && Math.min(window.screen.width, window.screen.height) < 600;
+  window.innerWidth < 768 ||
+  (window.matchMedia("(pointer: coarse)").matches && Math.min(window.screen.width, window.screen.height) < 600);
 const isPortraitNow = () => window.matchMedia("(orientation: portrait)").matches;
 
-function usePhoneOrientation() {
+export function usePhoneOrientation() {
   const [isPhone, setIsPhone] = useState(isPhoneNow);
   const [isPortrait, setIsPortrait] = useState(isPortraitNow);
   useEffect(() => {
@@ -327,7 +332,7 @@ function usePhoneOrientation() {
  * Turns the screen to landscape for the user (Android Chrome: needs full
  * screen first). Resolves false where the browser can't (iPhone Safari).
  */
-async function lockLandscape(): Promise<boolean> {
+export async function lockLandscape(): Promise<boolean> {
   const orientation = screen.orientation as ScreenOrientation & { lock?: (o: string) => Promise<void> };
   if (!orientation?.lock || !document.documentElement.requestFullscreen) return false;
   try {
@@ -340,7 +345,7 @@ async function lockLandscape(): Promise<boolean> {
   }
 }
 
-function releaseLandscape() {
+export function releaseLandscape() {
   try {
     screen.orientation?.unlock?.();
   } catch {
@@ -353,7 +358,7 @@ function releaseLandscape() {
  * Shown instead of the camera on an upright phone (the 16:9 frame is too
  * small there to fit face + ID), or after the full-screen camera is closed.
  */
-function RotateToLandscapePrompt({
+export function RotateToLandscapePrompt({
   cameraClosed,
   rotateFailed,
   onRotate,

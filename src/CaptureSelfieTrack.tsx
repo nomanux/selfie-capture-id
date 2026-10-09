@@ -13,9 +13,13 @@ import {
   COUNTDOWN_FROM,
   CaptureGuides,
   MIRROR_STYLE,
+  RotateToLandscapePrompt,
   checkFaceFit,
   isCardInGuide,
   loadFaceApi,
+  lockLandscape,
+  releaseLandscape,
+  usePhoneOrientation,
   type FaceFit,
 } from "./selfieCapture";
 import {
@@ -287,6 +291,13 @@ export default function CaptureSelfieTrack() {
   const [submitted, setSubmitted] = useState(false);
   const onSelfieStep = currentStep === SELFIE_STEP;
 
+  // Phones: the live camera only runs full screen in landscape (an upright
+  // 16:9 frame is too small to fit face + ID). Upright, or after closing the
+  // full-screen view, a rotate / open-camera prompt replaces it.
+  const { isPhone, isPortrait } = usePhoneOrientation();
+  const [rotateFailed, setRotateFailed] = useState(false);
+  const phoneCameraBlocked = isPhone && (isPortrait || !isExpanded);
+
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const detectionCanvasRef = useRef<HTMLCanvasElement>(null);
@@ -311,7 +322,7 @@ export default function CaptureSelfieTrack() {
   };
 
   useEffect(() => {
-    if (!onSelfieStep || captureMode !== "selfie" || capturedImage) {
+    if (!onSelfieStep || captureMode !== "selfie" || capturedImage || phoneCameraBlocked) {
       stopStream();
       return;
     }
@@ -351,14 +362,15 @@ export default function CaptureSelfieTrack() {
       stopStream();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [onSelfieStep, captureMode, capturedImage, retryToken]);
+  }, [onSelfieStep, captureMode, capturedImage, retryToken, phoneCameraBlocked]);
 
   useEffect(() => {
     if (
       !onSelfieStep ||
       captureMode !== "selfie" ||
       capturedImage ||
-      cameraError
+      cameraError ||
+      phoneCameraBlocked
     ) {
       setFaceFit("none");
       setIdHeld(false);
@@ -414,13 +426,32 @@ export default function CaptureSelfieTrack() {
       cancelled = true;
       if (intervalId) window.clearInterval(intervalId);
     };
-  }, [onSelfieStep, captureMode, capturedImage, cameraError, retryToken]);
+  }, [onSelfieStep, captureMode, capturedImage, cameraError, retryToken, phoneCameraBlocked]);
 
   useEffect(() => {
     if (videoRef.current && streamRef.current) {
       videoRef.current.srcObject = streamRef.current;
     }
   }, [isExpanded]);
+
+  // Phones: turning sideways opens the full-screen camera, turning upright
+  // closes it. (Closing with ✕ while sideways stays closed: isExpanded isn't a
+  // dependency, so this only re-runs on a real change.)
+  useEffect(() => {
+    if (!isPhone || !onSelfieStep || captureMode !== "selfie" || capturedImage) return;
+    setIsExpanded(!isPortrait);
+  }, [isPhone, isPortrait, onSelfieStep, captureMode, capturedImage]);
+
+  // Hand rotation back once the full-screen view closes (in case "Rotate
+  // screen" locked it to landscape).
+  useEffect(() => {
+    if (!isExpanded) releaseLandscape();
+  }, [isExpanded]);
+
+  const openPhoneCamera = async () => {
+    if (isPortrait) setRotateFailed(!(await lockLandscape()));
+    else setIsExpanded(true);
+  };
 
   useEffect(() => {
     if (!isExpanded) return;
@@ -443,7 +474,8 @@ export default function CaptureSelfieTrack() {
       onSelfieStep &&
       captureMode === "selfie" &&
       !capturedImage &&
-      !cameraError;
+      !cameraError &&
+      !phoneCameraBlocked;
     if (!canCapture) return;
 
     const onKeyDown = (event: KeyboardEvent) => {
@@ -454,7 +486,7 @@ export default function CaptureSelfieTrack() {
     };
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
-  }, [onSelfieStep, captureMode, capturedImage, cameraError]);
+  }, [onSelfieStep, captureMode, capturedImage, cameraError, phoneCameraBlocked]);
 
   const handleCapture = () => {
     const video = videoRef.current;
@@ -479,6 +511,7 @@ export default function CaptureSelfieTrack() {
     captureMode === "selfie" &&
     !capturedImage &&
     !cameraError &&
+    !phoneCameraBlocked &&
     faceDetected &&
     idHeld;
   const readyRef = useRef(readyToCapture);
@@ -532,7 +565,9 @@ export default function CaptureSelfieTrack() {
   };
 
   const showLiveVideoCompact =
-    captureMode === "selfie" && !capturedImage && !cameraError && !isExpanded;
+    captureMode === "selfie" && !capturedImage && !cameraError && !isExpanded && !isPhone;
+  const showPhonePrompt =
+    isPhone && captureMode === "selfie" && !capturedImage && !isExpanded;
   const showLiveVideoExpanded =
     captureMode === "selfie" && !capturedImage && !cameraError && isExpanded;
   const steps = [
@@ -784,6 +819,13 @@ export default function CaptureSelfieTrack() {
                       </button>
                     </div>
 
+                    {showPhonePrompt ? (
+                      <RotateToLandscapePrompt
+                        cameraClosed={!isPortrait}
+                        rotateFailed={rotateFailed}
+                        onRotate={openPhoneCamera}
+                      />
+                    ) : (
                     <div
                       className={
                         "relative rounded-xl w-full aspect-video md:aspect-video overflow-hidden transition-[border-color,outline-color,box-shadow] duration-500 " +
@@ -908,6 +950,7 @@ export default function CaptureSelfieTrack() {
                         </button>
                       )}
                     </div>
+                    )}
 
                     <div className="hidden md:flex min-h-8 items-center justify-between gap-2 mt-1">
                       {capturedImage && (
@@ -1209,7 +1252,7 @@ export default function CaptureSelfieTrack() {
                 muted
               />
               <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
-                <div className="relative aspect-video w-[min(100vw,calc(100vh*16/9))]">
+                <div className="relative aspect-video w-[min(100vw,calc(100dvh*16/9))]">
                   <CaptureGuides faceFit={faceFit} idOk={idHeld} countdown={countdown} large />
                 </div>
               </div>
@@ -1306,7 +1349,7 @@ export default function CaptureSelfieTrack() {
                   </button>
                 </div>
               </>
-            ) : showLiveVideoExpanded ? (
+            ) : showLiveVideoExpanded && !isPhone ? (
               <>
                 <button
                   type="button"
@@ -1331,6 +1374,18 @@ export default function CaptureSelfieTrack() {
               </>
             ) : null}
           </div>
+
+          {/* Landscape phone: shutter on the right edge, like a camera app (clear of the face oval). */}
+          {showLiveVideoExpanded && isPhone && (
+            <button
+              type="button"
+              aria-label="Capture selfie"
+              onClick={handleCapture}
+              className="group absolute right-4 top-1/2 flex h-16 w-16 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full border-4 border-white/90 bg-transparent p-1 shadow-[0_8px_30px_rgba(0,0,0,0.45)] transition-transform duration-200 active:scale-95"
+            >
+              <span className="h-full w-full rounded-full bg-white transition-transform duration-150 group-active:scale-90" />
+            </button>
+          )}
         </div>
       )}
     </div>
