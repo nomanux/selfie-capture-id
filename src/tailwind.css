@@ -536,3 +536,16 @@
 @media (prefers-reduced-motion: reduce) {
   .selfie-countdown { animation: none; }
 }
+
+/* Co-buyer selfie on an upright phone: the phone icon tips over to landscape and back. */
+@keyframes rotate-phone-hint {
+  0%, 20% { transform: rotate(0deg); }
+  45%, 75% { transform: rotate(-90deg); }
+  100% { transform: rotate(0deg); }
+}
+.rotate-phone-hint {
+  animation: rotate-phone-hint 2.4s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .rotate-phone-hint { animation: none; transform: rotate(-90deg); }
+}

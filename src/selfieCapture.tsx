@@ -1,4 +1,5 @@
 import { useEffect, useId, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 
 /**
  * Shared live-selfie capture pieces: face-api loading, the face-oval and
@@ -298,13 +299,199 @@ export function CaptureGuides({
   );
 }
 
+/** A touch device whose short side is phone-sized (tablets keep the inline camera). */
+const isPhoneNow = () =>
+  window.matchMedia("(pointer: coarse)").matches && Math.min(window.screen.width, window.screen.height) < 600;
+const isPortraitNow = () => window.matchMedia("(orientation: portrait)").matches;
+
+function usePhoneOrientation() {
+  const [isPhone, setIsPhone] = useState(isPhoneNow);
+  const [isPortrait, setIsPortrait] = useState(isPortraitNow);
+  useEffect(() => {
+    const update = () => {
+      setIsPhone(isPhoneNow());
+      setIsPortrait(isPortraitNow());
+    };
+    const portraitQuery = window.matchMedia("(orientation: portrait)");
+    portraitQuery.addEventListener("change", update);
+    window.addEventListener("resize", update);
+    return () => {
+      portraitQuery.removeEventListener("change", update);
+      window.removeEventListener("resize", update);
+    };
+  }, []);
+  return { isPhone, isPortrait };
+}
+
 /**
- * Self-contained live selfie camera with the same face-oval / ID-card guides,
- * 2s settle and 3-2-1 auto-capture as the Live Selfie step. Calls onCapture
- * with a JPEG data URL (not mirrored, so the ID text stays readable). The
- * round button captures straight away.
+ * Turns the screen to landscape for the user (Android Chrome: needs full
+ * screen first). Resolves false where the browser can't (iPhone Safari).
+ */
+async function lockLandscape(): Promise<boolean> {
+  const orientation = screen.orientation as ScreenOrientation & { lock?: (o: string) => Promise<void> };
+  if (!orientation?.lock || !document.documentElement.requestFullscreen) return false;
+  try {
+    if (!document.fullscreenElement) await document.documentElement.requestFullscreen();
+    await orientation.lock("landscape");
+    return true;
+  } catch {
+    if (document.fullscreenElement) document.exitFullscreen().catch(() => {});
+    return false;
+  }
+}
+
+function releaseLandscape() {
+  try {
+    screen.orientation?.unlock?.();
+  } catch {
+    // nothing was locked
+  }
+  if (document.fullscreenElement) document.exitFullscreen().catch(() => {});
+}
+
+/**
+ * Shown instead of the camera on an upright phone (the 16:9 frame is too
+ * small there to fit face + ID), or after the full-screen camera is closed.
+ */
+function RotateToLandscapePrompt({
+  cameraClosed,
+  rotateFailed,
+  onRotate,
+}: {
+  cameraClosed: boolean;
+  rotateFailed: boolean;
+  onRotate: () => void;
+}) {
+  return (
+    <div
+      role="status"
+      className="flex flex-col items-center justify-center gap-3 rounded-xl border border-dashed border-brand-400 bg-brand-25 px-4 py-6 text-center"
+    >
+      <svg
+        width="40"
+        height="40"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth={1.75}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        aria-hidden="true"
+        className="rotate-phone-hint text-brand-600"
+      >
+        <rect x="7" y="2" width="10" height="20" rx="2" />
+        <path d="M11 18h2" />
+      </svg>
+      <div className="flex flex-col gap-1">
+        <p className="m-0 text-sm font-semibold leading-5 text-gray-900">
+          {cameraClosed ? "Camera closed" : "Turn your phone sideways"}
+        </p>
+        <p className="m-0 text-xs leading-[18px] text-gray-600">
+          {cameraClosed
+            ? "Tap the button below to open it again."
+            : "The camera opens in landscape so your face and ID both fit in the frame."}
+        </p>
+      </div>
+      <button
+        type="button"
+        onClick={onRotate}
+        className="flex h-11 w-full max-w-[260px] cursor-pointer items-center justify-center gap-2 rounded-lg border-0 bg-brand-600 px-4 text-sm font-semibold text-white shadow-xs hover:bg-brand-700 active:bg-brand-800"
+      >
+        <svg
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth={2}
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          aria-hidden="true"
+        >
+          {cameraClosed ? (
+            <>
+              <path d="M4 8h3l2-3h6l2 3h3v11H4z" />
+              <circle cx="12" cy="13" r="3.5" />
+            </>
+          ) : (
+            <>
+              <path d="M21 12a9 9 0 1 1-3-6.7" />
+              <path d="M21 4v5h-5" />
+            </>
+          )}
+        </svg>
+        {cameraClosed ? "Open camera" : "Rotate screen"}
+      </button>
+      {rotateFailed && !cameraClosed && (
+        <p className="m-0 rounded-lg border border-yellow-300 bg-yellow-50 px-3 py-2 text-left text-xs leading-[18px] text-yellow-900">
+          Your phone can't turn the screen by itself. Please hold your phone sideways. If the screen
+          still doesn't turn, switch off <span className="font-semibold">Rotation Lock</span> in your
+          phone's quick settings.
+        </p>
+      )}
+    </div>
+  );
+}
+
+/**
+ * Live selfie camera for the co-buyer selfie. On a phone it only runs in
+ * landscape, full screen (16:9 fits the short landscape viewport there);
+ * upright, it shows a rotate prompt and can't capture. Desktop and tablets
+ * get the inline camera.
  */
 export function SelfieCamera({ onCapture }: { onCapture: (dataUrl: string) => void }) {
+  const { isPhone, isPortrait } = usePhoneOrientation();
+  // Closed with ✕ while still sideways; turning upright again starts over.
+  const [closed, setClosed] = useState(false);
+  const [rotateFailed, setRotateFailed] = useState(false);
+  useEffect(() => {
+    if (isPortrait) setClosed(false);
+  }, [isPortrait]);
+
+  if (!isPhone) return <CameraView onCapture={onCapture} />;
+
+  const openCamera = async () => {
+    setClosed(false);
+    // Once the screen turns, the orientation listener swaps in the camera.
+    if (isPortrait) setRotateFailed(!(await lockLandscape()));
+  };
+
+  if (isPortrait || closed) {
+    return (
+      <RotateToLandscapePrompt
+        cameraClosed={closed && !isPortrait}
+        rotateFailed={rotateFailed}
+        onRotate={openCamera}
+      />
+    );
+  }
+  return (
+    <>
+      {/* Holds the card's space while the camera is up full screen. */}
+      <div className="aspect-video w-full rounded-xl bg-black" />
+      {createPortal(
+        <CameraView onCapture={onCapture} fullscreen onClose={() => setClosed(true)} />,
+        document.body,
+      )}
+    </>
+  );
+}
+
+/**
+ * Camera with the same face-oval / ID-card guides, 2s settle and 3-2-1
+ * auto-capture as the Live Selfie step. Calls onCapture with a JPEG data URL
+ * (not mirrored, so the ID text stays readable). The round button captures
+ * straight away.
+ */
+function CameraView({
+  onCapture,
+  fullscreen = false,
+  onClose,
+}: {
+  onCapture: (dataUrl: string) => void;
+  fullscreen?: boolean;
+  onClose?: () => void;
+}) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const detectionCanvasRef = useRef<HTMLCanvasElement>(null);
   const [error, setError] = useState<string | null>(null);
@@ -420,8 +607,28 @@ export function SelfieCamera({ onCapture }: { onCapture: (dataUrl: string) => vo
     return () => window.clearTimeout(t);
   }, [countdown]);
 
-  return (
-    <div className="relative aspect-video w-full overflow-hidden rounded-xl border border-dashed border-brand-400 bg-black">
+  // Full screen: keep the page behind from scrolling under the camera. On
+  // close or capture, hand rotation back (in case "Rotate screen" locked it).
+  useEffect(() => {
+    if (!fullscreen) return;
+    const previous = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = previous;
+      releaseLandscape();
+    };
+  }, [fullscreen]);
+
+  const camera = (
+    <div
+      className={
+        "relative aspect-video overflow-hidden bg-black " +
+        (fullscreen
+          ? // Largest 16:9 box that fits the landscape screen.
+            "w-[min(100vw,calc(100dvh*16/9))]"
+          : "w-full rounded-xl border border-dashed border-brand-400")
+      }
+    >
       {error ? (
         <div className="flex h-full w-full flex-col items-center justify-center gap-2 bg-yellow-50 p-4 text-center text-xs leading-4 text-yellow-900">
           <span>{error}</span>
@@ -441,13 +648,44 @@ export function SelfieCamera({ onCapture }: { onCapture: (dataUrl: string) => vo
             type="button"
             aria-label="Capture selfie"
             onClick={capture}
-            className="group absolute bottom-3 left-1/2 flex h-11 w-11 -translate-x-1/2 cursor-pointer items-center justify-center rounded-full border-2 border-white/90 bg-transparent p-[3px] shadow-[0_6px_20px_rgba(0,0,0,0.35)] transition-transform duration-200 hover:scale-105 active:scale-95"
+            className={
+              "group absolute flex cursor-pointer items-center justify-center rounded-full border-2 border-white/90 bg-transparent p-[3px] shadow-[0_6px_20px_rgba(0,0,0,0.35)] transition-transform duration-200 hover:scale-105 active:scale-95 " +
+              (fullscreen
+                ? // Landscape phone: right edge, centred, like a camera app's shutter (clear of the face oval).
+                  "right-4 top-1/2 h-14 w-14 -translate-y-1/2"
+                : "bottom-3 left-1/2 h-11 w-11 -translate-x-1/2")
+            }
           >
             <span className="h-full w-full rounded-full bg-white transition-transform duration-150 group-active:scale-90" />
           </button>
         </>
       )}
       <canvas ref={detectionCanvasRef} className="hidden" />
+    </div>
+  );
+
+  if (!fullscreen) return camera;
+  return (
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-label="Take selfie with your ID"
+      className="fixed inset-0 z-[100] flex items-center justify-center bg-black"
+    >
+      {camera}
+      {/* Way out when the screen is locked sideways and turning the phone won't close it. */}
+      {onClose && (
+        <button
+          type="button"
+          aria-label="Close camera"
+          onClick={onClose}
+          className="absolute left-4 top-4 flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border-0 bg-black/55 text-white hover:bg-black/70"
+        >
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.25} strokeLinecap="round" aria-hidden="true">
+            <path d="M6 6l12 12M18 6L6 18" />
+          </svg>
+        </button>
+      )}
     </div>
   );
 }
