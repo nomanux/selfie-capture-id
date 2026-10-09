@@ -269,7 +269,12 @@ const REVIEW_STEP = 8;
 const STEPS_WITH_CONTENT = [BUYER_PROPERTY_STEP, BUYER_DETAILS_STEP, IDENTITY_STEP, SELFIE_STEP, TERMS_STEP, PRIVACY_STEP, CONSENT_STEP, REVIEW_STEP];
 
 export default function CaptureSelfieTrack() {
-  const [captureMode, setCaptureMode] = useState<CaptureMode>("selfie");
+  // Phones: the live camera only runs full screen in landscape (an upright
+  // 16:9 frame is too small to fit face + ID), so they start on Upload.
+  // Upright, or after closing the full-screen view, a rotate / open-camera
+  // prompt replaces the camera.
+  const { isPhone, isPortrait } = usePhoneOrientation();
+  const [captureMode, setCaptureMode] = useState<CaptureMode>(isPhone ? "upload" : "selfie");
   const [capturedImage, setCapturedImage] = useState<string | null>(null);
   const [cameraError, setCameraError] = useState<string | null>(null);
   const [retryToken, setRetryToken] = useState(0);
@@ -291,10 +296,6 @@ export default function CaptureSelfieTrack() {
   const [submitted, setSubmitted] = useState(false);
   const onSelfieStep = currentStep === SELFIE_STEP;
 
-  // Phones: the live camera only runs full screen in landscape (an upright
-  // 16:9 frame is too small to fit face + ID). Upright, or after closing the
-  // full-screen view, a rotate / open-camera prompt replaces it.
-  const { isPhone, isPortrait } = usePhoneOrientation();
   const [rotateFailed, setRotateFailed] = useState(false);
   const phoneCameraBlocked = isPhone && (isPortrait || !isExpanded);
 
@@ -467,6 +468,8 @@ export default function CaptureSelfieTrack() {
     setCapturedImage(null);
     setCameraError(null);
     setIsExpanded(false);
+    // Phones: "Take Selfie" goes straight to the sideways camera, same as "Rotate screen".
+    if (mode === "selfie" && isPhone) openPhoneCamera();
   };
 
   useEffect(() => {
@@ -800,15 +803,8 @@ export default function CaptureSelfieTrack() {
                       </button>
                     </div>
 
+                    {/* Phones: Upload Photo first (the default), Take Selfie on the right. */}
                     <div className="md:hidden flex gap-0 p-1 bg-gray-100 rounded-[12px] w-full">
-                      <button
-                        type="button"
-                        onClick={() => handleModeChange("selfie")}
-                        className={`flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg border-none ${captureMode === "selfie" ? "bg-white text-[#052b78] shadow-[0_1px_2px_-1px_rgba(10,12.67,18,0.1),0_1px_3px_rgba(10,12.67,18,0.1)]" : "bg-transparent text-gray-700 hover:bg-blue-50"} text-sm font-semibold leading-5 cursor-pointer transition-all duration-200`}
-                      >
-                        <CameraIcon className="h-5 w-5 flex-shrink-0" />
-                        <span>Take Selfie</span>
-                      </button>
                       <button
                         type="button"
                         onClick={() => handleModeChange("upload")}
@@ -816,6 +812,14 @@ export default function CaptureSelfieTrack() {
                       >
                         <UploadIcon className="h-5 w-5 flex-shrink-0" />
                         <span>Upload Photo</span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleModeChange("selfie")}
+                        className={`flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg border-none ${captureMode === "selfie" ? "bg-white text-[#052b78] shadow-[0_1px_2px_-1px_rgba(10,12.67,18,0.1),0_1px_3px_rgba(10,12.67,18,0.1)]" : "bg-transparent text-gray-700 hover:bg-blue-50"} text-sm font-semibold leading-5 cursor-pointer transition-all duration-200`}
+                      >
+                        <CameraIcon className="h-5 w-5 flex-shrink-0" />
+                        <span>Take Selfie</span>
                       </button>
                     </div>
 

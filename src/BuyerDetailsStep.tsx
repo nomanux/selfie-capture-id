@@ -13,7 +13,7 @@ import DatePicker from "./DatePicker";
 import Input from "./Input";
 import Select, { type SelectOption } from "./Select";
 import StepHeader from "./StepHeader";
-import { SelfieCamera } from "./selfieCapture";
+import { SelfieCamera, usePhoneOrientation } from "./selfieCapture";
 import { IdUploadPanel } from "./IdentityVerificationStep";
 import { ChevronDownIcon, ChevronUpIcon, XIcon } from "./icons";
 import {
@@ -1226,7 +1226,11 @@ function SpouseInformation({ onWhiteCard = false }: { onWhiteCard?: boolean }) {
  * auto-capture camera as the Live Selfie step.
  */
 function CoBuyerSelfie({ index }: { index: number }) {
-  const [method, setMethod] = useState<"upload" | "camera">("camera");
+  // Phones start on Upload (the camera there needs the phone turned sideways).
+  const { isPhone } = usePhoneOrientation();
+  const [method, setMethod] = useState<"upload" | "camera">(isPhone ? "upload" : "camera");
+  // Remounts the camera on every "Take Selfie" tap, so a phone turns sideways again.
+  const [cameraKey, setCameraKey] = useState(0);
   const [photo, setPhoto] = useState<string | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
 
@@ -1240,6 +1244,7 @@ function CoBuyerSelfie({ index }: { index: number }) {
   const choose = (next: "upload" | "camera") => {
     setPhoto(null);
     setMethod(next);
+    if (next === "camera") setCameraKey((k) => k + 1);
   };
 
   // Same segmented switch as the Live Selfie step.
@@ -1263,6 +1268,25 @@ function CoBuyerSelfie({ index }: { index: number }) {
       {icon}
       {label}
     </button>
+  );
+
+  const takeSelfieTab = methodButton(
+    "camera",
+    "Take Selfie",
+    <svg
+      width="20"
+      height="20"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={2}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <path d="M4 8h3l2-3h6l2 3h3v11H4z" />
+      <circle cx="12" cy="13" r="3.5" />
+    </svg>,
   );
 
   return (
@@ -1308,24 +1332,8 @@ function CoBuyerSelfie({ index }: { index: number }) {
         aria-label="Selfie method"
         className="flex w-full md:w-fit gap-0 rounded-lg md:rounded-[12px] bg-gray-100 p-0.5 md:p-1"
       >
-        {methodButton(
-          "camera",
-          "Take Selfie",
-          <svg
-            width="20"
-            height="20"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth={2}
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            aria-hidden="true"
-          >
-            <path d="M4 8h3l2-3h6l2 3h3v11H4z" />
-            <circle cx="12" cy="13" r="3.5" />
-          </svg>,
-        )}
+        {/* Phones: Upload Photo first (the default), Take Selfie on the right. */}
+        {!isPhone && takeSelfieTab}
         {methodButton(
           "upload",
           "Upload Photo",
@@ -1343,6 +1351,7 @@ function CoBuyerSelfie({ index }: { index: number }) {
             <path d="M12 15V4M7 9l5-5 5 5M4 15v4h16v-4" />
           </svg>,
         )}
+        {isPhone && takeSelfieTab}
       </div>
 
       {photo ? (
@@ -1363,7 +1372,7 @@ function CoBuyerSelfie({ index }: { index: number }) {
           </button>
         </div>
       ) : method === "camera" ? (
-        <SelfieCamera onCapture={setPhoto} />
+        <SelfieCamera key={cameraKey} onCapture={setPhoto} />
       ) : method === "upload" ? (
         <button
           type="button"

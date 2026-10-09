@@ -334,6 +334,8 @@ export function usePhoneOrientation() {
  */
 export async function lockLandscape(): Promise<boolean> {
   const orientation = screen.orientation as ScreenOrientation & { lock?: (o: string) => Promise<void> };
+  // Desktop screens can't rotate: skip, so a narrow desktop window doesn't flash into full screen.
+  if (!window.matchMedia("(pointer: coarse)").matches) return false;
   if (!orientation?.lock || !document.documentElement.requestFullscreen) return false;
   try {
     if (!document.fullscreenElement) await document.documentElement.requestFullscreen();
@@ -442,7 +444,9 @@ export function RotateToLandscapePrompt({
  * Live selfie camera for the co-buyer selfie. On a phone it only runs in
  * landscape, full screen (16:9 fits the short landscape viewport there);
  * upright, it shows a rotate prompt and can't capture. Desktop and tablets
- * get the inline camera.
+ * get the inline camera. It mounts when "Take Selfie" is tapped, so on a
+ * phone it turns the screen sideways right away (that tap still counts as
+ * the user gesture full screen needs).
  */
 export function SelfieCamera({ onCapture }: { onCapture: (dataUrl: string) => void }) {
   const { isPhone, isPortrait } = usePhoneOrientation();
@@ -453,13 +457,19 @@ export function SelfieCamera({ onCapture }: { onCapture: (dataUrl: string) => vo
     if (isPortrait) setClosed(false);
   }, [isPortrait]);
 
-  if (!isPhone) return <CameraView onCapture={onCapture} />;
-
   const openCamera = async () => {
     setClosed(false);
     // Once the screen turns, the orientation listener swaps in the camera.
     if (isPortrait) setRotateFailed(!(await lockLandscape()));
   };
+
+  useEffect(() => {
+    if (isPhone && isPortrait) openCamera();
+    // Mount only: this is the "Take Selfie" tap.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  if (!isPhone) return <CameraView onCapture={onCapture} />;
 
   if (isPortrait || closed) {
     return (
